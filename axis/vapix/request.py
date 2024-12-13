@@ -2,6 +2,7 @@ import requests
 import requests.auth
 from .defaults import ApiPathType
 from .defaults import MethodType
+from .defaults import RequestParamType
 from abc import ABC, abstractmethod
 
 class ApiVersion:
@@ -16,17 +17,17 @@ class ApiVersion:
 class JsonRequestConfig:
     def __init__(self, method: MethodType, context: str, version: ApiVersion | None= None, params: dict | None = None, channel: int | None= None, capture_mode_id: int| None= None):
         self.json_request_config = {
-            "context": context,
-            "method": method.value
+            RequestParamType.CONTEXT.value: context,
+            RequestParamType.METHOD.value: method.value
         }
         if version != None:
-            self.json_request_config["apiVersion"] = version.__str__()
+            self.json_request_config[RequestParamType.API_VERSION.value] = version.__str__()
         if params != None:
-            self.json_request_config["params"] = params
+            self.json_request_config[RequestParamType.PARAMS.value] = params
         if channel != None:
-            self.json_request_config["channel"] = channel
+            self.json_request_config[RequestParamType.CHANNEL.value] = channel
         if capture_mode_id != None:
-            self.json_request_config["captureModeId"] = capture_mode_id            
+            self.json_request_config[RequestParamType.CAPTURE_MODE_ID.value] = capture_mode_id            
     def get_config(self):
         return self.json_request_config
     def __repr__(self):

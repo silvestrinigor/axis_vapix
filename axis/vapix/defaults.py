@@ -14,6 +14,13 @@ class DevicePropertyType(Enum):
     SOC_SERIAL_NUMBER = "SocSerialNumber"
     VERSION = "Version"
     WEB_URL = "WebURL"
+class RequestParamType(Enum):
+    API_VERSION = "apiVersion"
+    PARAMS = "params"
+    CHANNEL = "channel"
+    CAPTURE_MODE_ID = "captureModeId"
+    CONTEXT = "context"
+    METHOD = "method"
 class MethodType(Enum):
     GET_PROPERTIES = "getProperties"
     GET_ALL_PROPERTIES = "getAllProperties"
@@ -98,6 +105,7 @@ class ResponseType(Enum):
     DATA = "data"
     API_VERSION = "apiVersion"
     METHOD = "method"
+    ERROR = "error"
 class ResponseDataType(Enum):
     API_LIST = "apiList"
     PROPERTY_LIST = "propertyList"
@@ -107,4 +115,3 @@ class ResponseDataApiType(Enum):
     NAME = "name"
     DOCK_LINK = "dockLink"
     STATUS = "status"
-    

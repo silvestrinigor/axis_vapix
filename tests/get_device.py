@@ -9,4 +9,4 @@ from tests import HOST, PORT, PASSWORD, USERNAME
 import axis
 
 device = axis.vapix.devices.Device(host= HOST, port= PORT, username= USERNAME, password= PASSWORD)
-print(device.type)
+print(device.version)
