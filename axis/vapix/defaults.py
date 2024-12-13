@@ -61,6 +61,8 @@ class ApiPathType(Enum):
     AXIS_CGI_APPLICATIONS_LIST = "axis-cgi/applications/list.cgi"
     LOCAL_OBJECT_ANALYTICS = "local/objectanalytics/control.cgi"
     LOCAL_LOITERING_GUARD = "local/loiteringguard/control.cgi"
+class ApiType(Enum):
+    AXIS_CGI_NETWORK_SETTINGS = "network-settings"
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
     ENABLE_DST = "enableDst"
@@ -92,3 +94,17 @@ class TimeZoneType(Enum):
     ASIA_SINGAPORE = "Asia/Singapore"
     AUSTRALIA_SYDNEY = "Australia/Sydney"
     AFRICA_JOHANNESBURG = "Africa/Johannesburg"
+class ResponseType(Enum):
+    DATA = "data"
+    API_VERSION = "apiVersion"
+    METHOD = "method"
+class ResponseDataType(Enum):
+    API_LIST = "apiList"
+    PROPERTY_LIST = "propertyList"
+class ResponseDataApiType(Enum):
+    ID = "id"
+    VERSION = "version"
+    NAME = "name"
+    DOCK_LINK = "dockLink"
+    STATUS = "status"
+    
