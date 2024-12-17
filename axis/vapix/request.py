@@ -13,7 +13,7 @@ class ApiVersion:
         return f"{self.major}.{self.minor}"
     def __str__(self):
         return f"{self.major}.{self.minor}"  
-    
+  
 class JsonRequestConfig:
     def __init__(self, method: MethodType, context: str, version: ApiVersion | None= None, params: dict | None = None, channel: int | None= None, capture_mode_id: int| None= None):
         self.json_request_config = {

@@ -70,6 +70,8 @@ class ApiPathType(Enum):
     LOCAL_LOITERING_GUARD = "local/loiteringguard/control.cgi"
 class ApiType(Enum):
     AXIS_CGI_NETWORK_SETTINGS = "network-settings"
+    AXIS_CGI_TIME = "time-service"
+    AXIS_CGI_BASIC_DEVICE_INFO = "basic-device-info"
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
     ENABLE_DST = "enableDst"
@@ -109,6 +111,14 @@ class ResponseType(Enum):
 class ResponseDataType(Enum):
     API_LIST = "apiList"
     PROPERTY_LIST = "propertyList"
+    DATE_TIME = "dateTime"
+    LOCAL_DATE_TIME = "localDateTime"
+    TIME_ZONE = "timeZone"
+    POSIX_TIME_ZONE = "posixTimeZone"
+    DST_ENABLE = "dstEnabled"
+    IMAGE_FILES = "imageFiles"
+    IMAGE_OVERLAYS = "imageOverlays"
+    TEXT_OVERLAYS = "textOverlays"
 class ResponseDataApiType(Enum):
     ID = "id"
     VERSION = "version"
