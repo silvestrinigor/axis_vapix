@@ -22,6 +22,7 @@ class RequestParamType(Enum):
     CAPTURE_MODE_ID = "captureModeId"
     CONTEXT = "context"
     METHOD = "method"
+    FACTORY_DEFAULT_MODE = "factoryDefaultMode"
 class MethodType(Enum):
     GET_PROPERTIES = "getProperties"
     GET_ALL_PROPERTIES = "getAllProperties"
@@ -53,6 +54,9 @@ class MethodType(Enum):
     SET_HOSTNAME_CONFIGURATION = "setHostnameConfiguration"
     SET_IPV4_ADDRESS_CONFIGURATION = "setIPv4AddressConfiguration"
     SET_RESOLVER_CONFIGURATION = "setResolverConfiguration"
+    STATUS = "status"
+    ROLLBACK = "rollback"
+    REBOOT = "reboot"
 class ApiPathType(Enum):
     AXIS_CGI_API_DISCOVERY = "axis-cgi/apidiscovery.cgi"
     AXIS_CGI_AUDIO_DEVICE_CONTROL = "axis-cgi/audiodevicecontrol.cgi"
@@ -82,6 +86,7 @@ class ApiType(Enum):
     AXIS_CGI_BASIC_DEVICE_INFO = "basic-device-info"
     AXIS_CGI_DYNAMIC_OVERLAY = "dynamicoverlay"
     AXIS_CGI_NTP = "ntp"
+    AXIS_CGI_FIRMWARE_MANAGEMENT = "fwmgr"
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
     ENABLE_DST = "enableDst"
@@ -191,6 +196,9 @@ class ServersSourceType(Enum):
     DHCP = "DHCP"
     STATIC = "static"
     NONE = None
+class FactoryDefaultModeType(Enum):
+    SOFT = "soft"
+    HARD = "hard"
 class IPAddressConfigurationModeType(Enum):
     DHCP = "DHCP"
     STATIC = "static"

@@ -7,7 +7,7 @@ from .defaults import ParamType
 from .defaults import OverlayPositionType
 from .defaults import OverlayColorType
 from .defaults import TimeZoneType
-from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration, HostnameConfiguration, IPv4AddressConfiguration, NetworkResolverConfiguration
+from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration, HostnameConfiguration, IPv4AddressConfiguration, NetworkResolverConfiguration, FactoryDefaultModeType
 from datetime import datetime
 from .utils import serialize_datetime
 
@@ -150,3 +150,20 @@ def set_network_resolver(axis_request: AxisRequest, configuration: NetworkResolv
     params = configuration.get_all_params()
     request_config = JsonRequestConfig(method= MethodType.SET_RESOLVER_CONFIGURATION, version= axis_request.api_version, context= axis_request.request_context, params=params)
     return axis_request.request_post(ApiPathType.AXIS_CGI_NETWORK_SETTINGS, request_config)
+
+def get_firmware_status(axis_request: AxisRequest):
+    request_config = JsonRequestConfig(method= MethodType.STATUS, version= axis_request.api_version, context= axis_request.request_context)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_FIRMWARE_MANAGEMENT, request_config)
+
+def set_firmware_rollback(axis_request: AxisRequest):
+    request_config = JsonRequestConfig(method= MethodType.ROLLBACK, version= axis_request.api_version, context= axis_request.request_context)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_FIRMWARE_MANAGEMENT, request_config)
+
+def set_firmware_factory_default(axis_request: AxisRequest, mode: FactoryDefaultModeType):
+    request_config = JsonRequestConfig(method= MethodType.ROLLBACK, version= axis_request.api_version, context= axis_request.request_context, factory_default_mode= mode)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_FIRMWARE_MANAGEMENT, request_config)
+
+def set_firmware_reboot(axis_request: AxisRequest):
+    request_config = JsonRequestConfig(method= MethodType.REBOOT, version= axis_request.api_version, context= axis_request.request_context)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_FIRMWARE_MANAGEMENT, request_config)
+

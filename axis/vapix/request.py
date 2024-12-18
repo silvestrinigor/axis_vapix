@@ -3,6 +3,7 @@ import requests.auth
 from .defaults import ApiPathType
 from .defaults import MethodType
 from .defaults import RequestParamType
+from .defaults import FactoryDefaultModeType
 from abc import ABC, abstractmethod
 
 class ApiVersion:
@@ -15,7 +16,7 @@ class ApiVersion:
         return f"{self.major}.{self.minor}"  
   
 class JsonRequestConfig:
-    def __init__(self, method: MethodType, context: str, version: ApiVersion | None= None, params: dict | None = None, channel: int | None= None, capture_mode_id: int| None= None):
+    def __init__(self, method: MethodType, context: str, version: ApiVersion | None= None, params: dict | None = None, channel: int | None= None, capture_mode_id: int| None= None, factory_default_mode: FactoryDefaultModeType | None= None):
         self.json_request_config = {
             RequestParamType.CONTEXT.value: context,
             RequestParamType.METHOD.value: method.value
@@ -28,6 +29,8 @@ class JsonRequestConfig:
             self.json_request_config[RequestParamType.CHANNEL.value] = channel
         if capture_mode_id != None:
             self.json_request_config[RequestParamType.CAPTURE_MODE_ID.value] = capture_mode_id            
+        if factory_default_mode != None:
+            self.json_request_config[RequestParamType.FACTORY_DEFAULT_MODE.value] = factory_default_mode                      
     def get_config(self):
         return self.json_request_config
     def __repr__(self):
