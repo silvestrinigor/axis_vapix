@@ -72,12 +72,14 @@ class ApiType(Enum):
     AXIS_CGI_NETWORK_SETTINGS = "network-settings"
     AXIS_CGI_TIME = "time-service"
     AXIS_CGI_BASIC_DEVICE_INFO = "basic-device-info"
+    AXIS_CGI_DYNAMIC_OVERLAY = "dynamicoverlay"
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
     ENABLE_DST = "enableDst"
     PROPERTY_LIST = "propertyList"
     CAMERA = "camera"
     TEXT = "text"
+    TEXT_BG_COLOR = "textBGColor"
     POSITION = "position"
     TEXT_COLOR = "textColor"
     IDENTITY = "identity"
@@ -88,6 +90,17 @@ class ParamType(Enum):
     DURATION = "duration"
     DATE_TIME = "dateTime"
     TIME_ZONE = "timeZone"
+    INDICATOR = "indicator"
+    INDICATOR_BG = "indicatorBG"
+    INDICATOR_COLOR = "indicatorColor"
+    INDICATOR_OL = "indicatorOL"
+    INDICATOR_SIZE = "indicatorSize"
+    PT_POSITION = "ptPosition"
+    REFERENCE = "reference"
+    SCALABLE = "scalable"
+    SCROLL_SPEED = "scrollSpeed"
+    SIZE = "size"
+    TEXT_LENGTH = "textLength"
 class OverlayPositionType(Enum):
     BOTTOM_RIGHT = "bottomRight"
 class OverlayColorType(Enum):
@@ -125,3 +138,8 @@ class ResponseDataApiType(Enum):
     NAME = "name"
     DOCK_LINK = "dockLink"
     STATUS = "status"
+class TextOverlay:
+    camera:int
+    font_size:int
+    def __init__(self, camera:int):
+        camera:int = camera

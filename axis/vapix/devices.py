@@ -75,10 +75,6 @@ class Device:
         self._request_maker.api_version = handlers.ApisInfoResponseHandler(self._apis_list_response).get_supported_api_version(defaults.ApiType.AXIS_CGI_TIME)
         response = methods.get_date_time_info(self._request_maker)
         return handlers.DateTimeInfoResponseHandler(response=response).is_dst_enable
-    
-    @property
-    def overlays(self):
-        pass
 
     def set_posix_time_zone(self, posix_time_zone, enable_dst: bool):
         self._request_maker.api_version = handlers.ApisInfoResponseHandler(self._apis_list_response).get_supported_api_version(defaults.ApiType.AXIS_CGI_TIME)
@@ -109,14 +105,5 @@ class Device:
     
     def _update_apis_json_info(self):
         self._apis_list_response =  methods.get_api_list(self._request_maker)
-        
-    
-class Camera(Device):
-    def __init__(self, host, port, username, password):
-        super().__init__(host, port, username, password)
-
-class Bridge(Device):
-    def __init__(self, host, port, username, password):
-        super().__init__(host, port, username, password)
         
         

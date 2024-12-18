@@ -52,13 +52,6 @@ class DateTimeInfoResponseHandler(AxisResponseHandler):
     def is_dst_enable(self):
         data = self.get_response_data()
         return bool(data[defaults.ResponseDataType.DST_ENABLE.value])
-    
-class Api:
-    id: str
-    version: str
-    name: str
-    doc_link: str
-    status: str
 
 class ApisInfoResponseHandler(AxisResponseHandler):
     def __init__(self, response):
@@ -66,18 +59,10 @@ class ApisInfoResponseHandler(AxisResponseHandler):
     
     @property
     def api_list(self):
-        api_list: list[Api] = []
+        api_list: list[dict] = []
         json_data_info = self.get_response_data()[defaults.ResponseDataType.API_LIST.value]
         for api_json in json_data_info:
-            api = Api()
-            api(
-                id=api_json['id'],
-                version=api_json['version'],
-                name=api_json['name'],
-                doc_link=api_json['doc_link'],
-                status=api_json['status']
-            )
-            api_list.append(api)
+            api_list.append(api_json)
         return api_list
     
     def is_this_api_supported(self, api_type: defaults.ApiType):
@@ -100,33 +85,3 @@ class ApisInfoResponseHandler(AxisResponseHandler):
             if api[defaults.ResponseDataApiType.ID.value] == api_type.value:
                 return set_string_to_apiversion_type(api[defaults.ResponseDataApiType.VERSION.value])
         return None
-
-class ListOverlaysResponseHandler(AxisResponseHandler):
-    def __init__(self, response):
-        super().__init__(response)
-        
-    @property
-    def image_files(self):
-        image_files: list[str] = []
-        json_image_files = self.get_response_data()[defaults.ResponseDataType.IMAGE_FILES.value]
-        for image_file_json in json_image_files:
-            api = Api()
-            api(
-                id=api_json['id'],
-                version=api_json['version'],
-                name=api_json['name'],
-                doc_link=api_json['doc_link'],
-                status=api_json['status']
-            )
-            api_list.append(api)
-        return api_list
-    
-    @property
-    def image_overlays(self):
-        pass
-    
-    @property
-    def text_overlays(self):
-        pass
-
-    
