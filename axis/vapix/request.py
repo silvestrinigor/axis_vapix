@@ -49,7 +49,7 @@ class AxisRequest(ABC):
     def request_get(self, api: ApiPathType, request_config: JsonRequestConfig):
         return requests.Response
 
-class AxisRequestMaker(AxisRequest):
+class AxisDefaultRequestMaker(AxisRequest):
     def __init__(self, host: str, port:int, username: str, password: str):
         self._username = username
         self._password = password

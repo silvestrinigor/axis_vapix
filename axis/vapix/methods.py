@@ -7,7 +7,7 @@ from .defaults import ParamType
 from .defaults import OverlayPositionType
 from .defaults import OverlayColorType
 from .defaults import TimeZoneType
-from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration
+from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration, HostnameConfiguration, IPv4AddressConfiguration, NetworkResolverConfiguration
 from datetime import datetime
 from .utils import serialize_datetime
 
@@ -132,3 +132,21 @@ def set_ntp_client_configuration(axis_request: AxisRequest, configuration: NTPCl
     request_config = JsonRequestConfig(method= MethodType.SET_NTP_CLIENT_CONFIGURATION, version= axis_request.api_version, context= axis_request.request_context, params= params)
     return axis_request.request_post(ApiPathType.AXIS_CGI_NTP, request_config)
 
+def get_network_info(axis_request: AxisRequest):
+    request_config = JsonRequestConfig(method= MethodType.GET_NETWORK_INFO, version= axis_request.api_version, context= axis_request.request_context)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_NETWORK_SETTINGS, request_config)
+
+def set_network_hostname(axis_request: AxisRequest, configuration: HostnameConfiguration):
+    params = configuration.get_all_params()
+    request_config = JsonRequestConfig(method= MethodType.SET_HOSTNAME_CONFIGURATION, version= axis_request.api_version, context= axis_request.request_context, params=params)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_NETWORK_SETTINGS, request_config)
+
+def set_network_ipv4_address(axis_request: AxisRequest, configuration: IPv4AddressConfiguration):
+    params = configuration.get_all_params()
+    request_config = JsonRequestConfig(method= MethodType.SET_IPV4_ADDRESS_CONFIGURATION, version= axis_request.api_version, context= axis_request.request_context, params=params)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_NETWORK_SETTINGS, request_config)
+
+def set_network_resolver(axis_request: AxisRequest, configuration: NetworkResolverConfiguration):
+    params = configuration.get_all_params()
+    request_config = JsonRequestConfig(method= MethodType.SET_RESOLVER_CONFIGURATION, version= axis_request.api_version, context= axis_request.request_context, params=params)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_NETWORK_SETTINGS, request_config)

@@ -7,7 +7,7 @@ from datetime import datetime
 
 class Device:
     def __init__(self, host:str, port: int, username: str, password: str):
-        self._request_maker = request.AxisRequestMaker(host=host, port=port, username=username, password=password)
+        self._request_maker = request.AxisDefaultRequestMaker(host=host, port=port, username=username, password=password)
         self._apis_list_response: request.requests.Response
         self._update_apis_json_info()
 

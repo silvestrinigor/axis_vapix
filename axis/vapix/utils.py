@@ -8,7 +8,7 @@ def serialize_datetime(date_time: datetime):
     serialized_date_time = date_time_utc.strftime("%Y-%m-%dT%H:%M:$SZ")
     return serialized_date_time
 
-def set_string_to_apiversion_type(api_version: str):
+def get_apiversion_type_from_string(api_version: str):
     parts = api_version.split('.')
     if len(parts) != 2:
         raise ValueError(f"Invalid API version format: '{api_version}'. Expected 'major.minor'.")

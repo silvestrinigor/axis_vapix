@@ -9,7 +9,7 @@ import axis.vapix.handlers
 from tests import HOST, PORT, PASSWORD, USERNAME
 import axis
 
-axis_request = axis.vapix.request.AxisRequestMaker(host= HOST, port= PORT, username= USERNAME, password= PASSWORD)
+axis_request = axis.vapix.request.AxisDefaultRequestMaker(host= HOST, port= PORT, username= USERNAME, password= PASSWORD)
 #response = axis.vapix.methods.get_all_properties(axis_request)
 #response = axis.vapix.methods.get_properties(axis_request, [axis.defaults.DeviceProperty.ARCHTECTURE])
 #response = axis.vapix.methods.get_supported_versions(axis_request, axis.defaults.AxisApi.AXIS_CGI_BASIC_DEVICE_INFO)

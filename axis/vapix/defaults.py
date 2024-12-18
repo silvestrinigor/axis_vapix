@@ -1,4 +1,5 @@
 from enum import Enum
+from abc import ABC, abstractmethod
 class DevicePropertyType(Enum):
     ARCHITECTURE = "Architecture"
     BRAND = "Brand"
@@ -48,6 +49,10 @@ class MethodType(Enum):
     RESET_TIME_ZONE = "resetTimeZone"
     GET_NTP_INFO = "getNTPInfo"
     SET_NTP_CLIENT_CONFIGURATION = "setNTPClientConfiguration"
+    GET_NETWORK_INFO = "getNetworkInfo"
+    SET_HOSTNAME_CONFIGURATION = "setHostnameConfiguration"
+    SET_IPV4_ADDRESS_CONFIGURATION = "setIPv4AddressConfiguration"
+    SET_RESOLVER_CONFIGURATION = "setResolverConfiguration"
 class ApiPathType(Enum):
     AXIS_CGI_API_DISCOVERY = "axis-cgi/apidiscovery.cgi"
     AXIS_CGI_AUDIO_DEVICE_CONTROL = "axis-cgi/audiodevicecontrol.cgi"
@@ -110,6 +115,20 @@ class ParamType(Enum):
     ENABLE = "enable"
     SERVERS_SOURCE = "serversSource"
     STATIC_SERVERS = "staticServers"
+    USE_DHCP_HOSTNAME = "useDhcpHostname"
+    STATIC_HOSTNAME = "staticHostname"
+    STATIC_ADDRESS_CONFIGURATION = "staticAddressConfigurations"
+    DEVICE_NAME = "deviceName"
+    CONFIGURATION_MODE = "configurationMode"
+    STATIC_DEFAULT_ROUTER = "staticDefaultRouter"
+    USE_DHCP_RESOLVER_INFO = "useDhcpResolverInfo"
+    STATIC_NAME_SERVERS = "staticNameServers"
+    STATIC_SEARCH_DOMAINS = "staticSearchDomains"
+    STATIC_DOMAIN_NAME = "staticDomainName"
+class StaticAddressConfigurationParamsType(Enum):
+    ADRESS = "address"
+    PREFIX_LENGTH = "prefixLength"
+    BROADCAST = "broadcast"
 class OverlayPositionType(Enum):
     BOTTOM_RIGHT = "bottomRight"
     TOP_RIGHT = "topRight"
@@ -172,7 +191,15 @@ class ServersSourceType(Enum):
     DHCP = "DHCP"
     STATIC = "static"
     NONE = None
-class TextOverlay:
+class IPAddressConfigurationModeType(Enum):
+    DHCP = "DHCP"
+    STATIC = "static"
+    NONE = None
+class ParamConfig(ABC):
+    @abstractmethod
+    def get_all_params(self):
+        pass
+class TextOverlay(ParamConfig):
     camera:int = None
     font_size:int = None
     identity: int = None
@@ -202,7 +229,7 @@ class TextOverlay:
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
-class ImageOverlay:
+class ImageOverlay(ParamConfig):
     camera:int = None
     identity: int = None
     overlay_path: str = None
@@ -220,7 +247,7 @@ class ImageOverlay:
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
-class NTPClientConfiguration:
+class NTPClientConfiguration(ParamConfig):
     enable: bool = None
     servers_source: ServersSourceType = None
     static_servers_list: list[str] = None
@@ -234,6 +261,62 @@ class NTPClientConfiguration:
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
+class HostnameConfiguration(ParamConfig):
+    use_dhcp_hostname: bool = None
+    static_hostname: str = None
     
+    def get_all_params(self):
+        all_params = {
+            ParamType.USE_DHCP_HOSTNAME.value: self.use_dhcp_hostname,
+            ParamType.STATIC_HOSTNAME.value: self.static_hostname
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+class StaticAddressConfigurations(ParamConfig):
+    address: str = None
+    prefix_length: int = None
+    broadcast: str = None
+    
+    def get_all_params(self):
+        all_params = {
+            StaticAddressConfigurationParamsType.ADRESS.value: self.address,
+            StaticAddressConfigurationParamsType.PREFIX_LENGTH.value: self.prefix_length,
+            StaticAddressConfigurationParamsType.BROADCAST.value: self.broadcast
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+    
+    def __repr__(self):
+        self.get_all_params()
+class IPv4AddressConfiguration(ParamConfig):
+    device_name: str = "eth0"
+    configuration_mode: IPAddressConfigurationModeType = IPAddressConfigurationModeType.NONE
+    static_address_configurations: list[StaticAddressConfigurations] = None
+    
+    def get_all_params(self):
+        all_params = {
+            ParamType.DEVICE_NAME.value: self.device_name,
+            ParamType.CONFIGURATION_MODE.value: self.configuration_mode.value,
+            ParamType.STATIC_ADDRESS_CONFIGURATION.value: self.static_address_configurations
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+class NetworkResolverConfiguration(ParamConfig):
+    use_dhcp_resolver_info: bool = None
+    static_name_servers: list[str] = None
+    static_search_domains: list[str] = None
+    static_domain_name: str = None
 
-
+    def get_all_params(self):
+        all_params = {
+            ParamType.USE_DHCP_RESOLVER_INFO.value: self.use_dhcp_resolver_info,
+            ParamType.STATIC_NAME_SERVERS.value: self.static_name_servers,
+            ParamType.STATIC_SEARCH_DOMAINS.value: self.static_search_domains,
+            ParamType.STATIC_DOMAIN_NAME.value: self.static_domain_name
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params

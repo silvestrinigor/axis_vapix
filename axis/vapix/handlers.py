@@ -1,7 +1,7 @@
 from requests import Response
 from . import defaults
 from . import request
-from .utils import set_string_to_apiversion_type
+from .utils import get_apiversion_type_from_string
 import json
 from datetime import datetime
 
@@ -83,5 +83,5 @@ class ApisInfoResponseHandler(AxisResponseHandler):
         api_list = self.response.json().get(defaults.ResponseType.DATA.value, {}).get(defaults.ResponseDataType.API_LIST.value, [])
         for api in api_list:
             if api[defaults.ResponseDataApiType.ID.value] == api_type.value:
-                return set_string_to_apiversion_type(api[defaults.ResponseDataApiType.VERSION.value])
+                return get_apiversion_type_from_string(api[defaults.ResponseDataApiType.VERSION.value])
         return None
