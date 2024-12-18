@@ -46,6 +46,8 @@ class MethodType(Enum):
     SET_TIME_ZONE = "setTimeZone"
     SET_POSIX_TIME_ZONE = "setPosixTimeZone"
     RESET_TIME_ZONE = "resetTimeZone"
+    GET_NTP_INFO = "getNTPInfo"
+    SET_NTP_CLIENT_CONFIGURATION = "setNTPClientConfiguration"
 class ApiPathType(Enum):
     AXIS_CGI_API_DISCOVERY = "axis-cgi/apidiscovery.cgi"
     AXIS_CGI_AUDIO_DEVICE_CONTROL = "axis-cgi/audiodevicecontrol.cgi"
@@ -61,6 +63,7 @@ class ApiPathType(Enum):
     AXIS_CGI_ADMIN_LEGACY_PARAMETER_HANDLING = "axis-cgi/admin/param.cgi?action="
     AXIS_CGI_NETWORK_SETTINGS = "axis-cgi/network_settings.cgi"
     AXIS_CGI_TIME = "axis-cgi/time.cgi"
+    AXIS_CGI_NTP = "axis-cgi/ntp.cgi"
     AXIS_CGI_APPLICATIONS_UPLOAD = "axis-cgi/applications/upload.cgi"
     AXIS_CGI_APPLICATIONS_CONTROL = "axis-cgi/applications/control.cgi?"
     AXIS_CGI_APPLICATIONS_CONFIG = "axis-cgi/applications/config.cgi?"
@@ -73,6 +76,7 @@ class ApiType(Enum):
     AXIS_CGI_TIME = "time-service"
     AXIS_CGI_BASIC_DEVICE_INFO = "basic-device-info"
     AXIS_CGI_DYNAMIC_OVERLAY = "dynamicoverlay"
+    AXIS_CGI_NTP = "ntp"
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
     ENABLE_DST = "enableDst"
@@ -82,6 +86,7 @@ class ParamType(Enum):
     TEXT_BG_COLOR = "textBGColor"
     POSITION = "position"
     TEXT_COLOR = "textColor"
+    TEXT_OL_COLOR = "textOLColor"
     IDENTITY = "identity"
     OVERLAY_PATH = "overlayPath"
     FONT_SIZE = "fontSize"
@@ -101,11 +106,36 @@ class ParamType(Enum):
     SCROLL_SPEED = "scrollSpeed"
     SIZE = "size"
     TEXT_LENGTH = "textLength"
+    VISIBLE = "visible"
+    ENABLE = "enable"
+    SERVERS_SOURCE = "serversSource"
+    STATIC_SERVERS = "staticServers"
 class OverlayPositionType(Enum):
     BOTTOM_RIGHT = "bottomRight"
+    TOP_RIGHT = "topRight"
+    BOTTOM = "bottom"
+    TOP = "top"
+    BOTTOM_LEFT = "bottomLeft"
+    TOP_LEFT = "topleft"
+    NONE = None
+class OverlayPositionCustomValue:
+    def __init__(self, x: float, y: float):
+        self.x: float = x
+        self.y: float = y
+    
+    @property
+    def value(self):
+        return [self.x, self.y]
 class OverlayColorType(Enum):
     WHITE = "white"
+    BLACK = "black"
+    GREY = "grey"
+    MOSAIC = "mosaic" # Hardware dependent
+    CAMELEON = "cameleon" # Hardware dependent
     RED = "red"
+    TRANSPARENT = "transparent"
+    SEMI_TRANSPARENT = "semiTransparent"
+    NONE = None
 class TimeZoneType(Enum):
     EUROPE_STOCKHOLM = "Europe/Stockholm"
     EUROPE_LONDON = "Europe/London"
@@ -138,8 +168,72 @@ class ResponseDataApiType(Enum):
     NAME = "name"
     DOCK_LINK = "dockLink"
     STATUS = "status"
+class ServersSourceType(Enum):
+    DHCP = "DHCP"
+    STATIC = "static"
+    NONE = None
 class TextOverlay:
-    camera:int
-    font_size:int
-    def __init__(self, camera:int):
-        camera:int = camera
+    camera:int = None
+    font_size:int = None
+    identity: int = None
+    indicator: str = None
+    position: OverlayPositionType | OverlayPositionCustomValue = OverlayPositionType.NONE
+    text: str = None
+    text_bg_color: OverlayColorType = OverlayColorType.NONE
+    text_color: OverlayColorType = OverlayColorType.NONE
+    text_length: int = None
+    text_ol_color: OverlayColorType = OverlayColorType.NONE
+    visible: bool = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.CAMERA.value: self.camera,
+            ParamType.FONT_SIZE.value: self.font_size,
+            ParamType.IDENTITY.value: self.identity,
+            ParamType.INDICATOR.value: self.indicator,
+            ParamType.POSITION.value: self.position.value,
+            ParamType.TEXT.value: self.text,
+            ParamType.TEXT_BG_COLOR.value: self.text_bg_color.value,
+            ParamType.TEXT_COLOR.value: self.text_color.value,
+            ParamType.TEXT_LENGTH.value: self.text_length,
+            ParamType.TEXT_OL_COLOR.value: self.text_ol_color.value,
+            ParamType.VISIBLE.value: self.visible
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+class ImageOverlay:
+    camera:int = None
+    identity: int = None
+    overlay_path: str = None
+    position: OverlayPositionType | OverlayPositionCustomValue = OverlayPositionType.NONE
+    visible: bool = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.CAMERA.value: self.camera,
+            ParamType.OVERLAY_PATH.value: self.overlay_path,
+            ParamType.IDENTITY.value: self.identity,
+            ParamType.POSITION.value: self.position.value,
+            ParamType.VISIBLE.value: self.visible
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+class NTPClientConfiguration:
+    enable: bool = None
+    servers_source: ServersSourceType = None
+    static_servers_list: list[str] = None
+    
+    def get_all_params(self):
+        all_params = {
+            ParamType.ENABLE.value: self.enable,
+            ParamType.SERVERS_SOURCE.value: self.servers_source.value,
+            ParamType.STATIC_SERVERS.value: self.static_servers_list
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+    
+
+

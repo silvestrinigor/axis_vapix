@@ -105,5 +105,3 @@ class Device:
     
     def _update_apis_json_info(self):
         self._apis_list_response =  methods.get_api_list(self._request_maker)
-        
-        

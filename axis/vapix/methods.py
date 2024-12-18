@@ -7,6 +7,7 @@ from .defaults import ParamType
 from .defaults import OverlayPositionType
 from .defaults import OverlayColorType
 from .defaults import TimeZoneType
+from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration
 from datetime import datetime
 from .utils import serialize_datetime
 
@@ -31,23 +32,13 @@ def get_api_list(axis_request: AxisRequest):
     request_config = JsonRequestConfig(method= MethodType.GET_API_LIST, version= axis_request.api_version, context= axis_request.request_context)
     return axis_request.request_post(ApiPathType.AXIS_CGI_API_DISCOVERY, request_config)
 
-def add_dynamic_overlay_image(axis_request: AxisRequest, camera: int, overlay_path: str):
-    params = {ParamType.CAMERA.value: camera, ParamType.OVERLAY_PATH.value: overlay_path}
+def add_dynamic_overlay_image(axis_request: AxisRequest, image_overlay: ImageOverlay):
+    params = image_overlay.get_all_params()
     request_config = JsonRequestConfig(method= MethodType.ADD_IMAGE, version= axis_request.api_version, context= axis_request.request_context, params= params)
     return axis_request.request_post(ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY, request_config)
 
-def add_dynamic_overlay_text(axis_request: AxisRequest, camera: int, text: str, position: OverlayPositionType = None, font_size: int= None, text_color: OverlayColorType= None, back_ground_color: OverlayColorType = None, **kwargs):
-    params = {ParamType.CAMERA.value: camera, ParamType.TEXT.value: text}
-    if position != None:
-        params[ParamType.POSITION.value] = position.value
-    if font_size != None:
-        params[ParamType.FONT_SIZE.value] = font_size
-    if text_color != None:
-        params[ParamType.TEXT_COLOR.value] = text_color.value
-    if back_ground_color != None:
-        params[ParamType.TEXT_BACK_GROUND_COLOR.value] = back_ground_color.value
-    for key, value in kwargs.items():
-        params[key] = value
+def add_dynamic_overlay_text(axis_request: AxisRequest, text_overlay: TextOverlay):
+    params = text_overlay.get_all_params()
     request_config = JsonRequestConfig(method= MethodType.ADD_TEXT, version= axis_request.api_version, context= axis_request.request_context, params= params)
     return axis_request.request_post(ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY, request_config)
 
@@ -56,31 +47,13 @@ def list_overlays(axis_request: AxisRequest):
     request_config = JsonRequestConfig(method= MethodType.LIST, version= axis_request.api_version, context= axis_request.request_context, params= params)
     return axis_request.request_post(ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY, request_config)
 
-def set_dynamic_overlay_text(axis_request: AxisRequest, identity: int, text: str = None, position: OverlayPositionType = None, font_size: int= None, text_color: OverlayColorType= None, back_ground_color: OverlayColorType= None, **kwargs):
-    params = {ParamType.IDENTITY.value: identity}
-    if text != None:      
-        params[ParamType.TEXT.value] = text
-    if position != None:
-        params[ParamType.POSITION.value] = position.value
-    if font_size != None:
-        params[ParamType.FONT_SIZE.value] = font_size
-    if text_color != None:
-        params[ParamType.TEXT_COLOR.value] = text_color.value
-    if back_ground_color != None:
-        params[ParamType.TEXT_BACK_GROUND_COLOR.value] = back_ground_color.value
-    for key, value in kwargs.items():
-        params[key] = value
+def set_dynamic_overlay_text(axis_request: AxisRequest, text_overlay: TextOverlay):
+    params = text_overlay.get_all_params()
     request_config = JsonRequestConfig(method= MethodType.SET_TEXT, version= axis_request.api_version, context= axis_request.request_context, params= params)
     return axis_request.request_post(ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY, request_config)
 
-def set_dynamic_overlay_image(axis_request: AxisRequest, identity: int, camera: int= None, overlay_path: str= None, **kwargs):
-    params = {ParamType.IDENTITY.value: identity}
-    if overlay_path != None:
-        params[ParamType.OVERLAY_PATH.value] = overlay_path
-    if camera != None:
-        params[ParamType.CAMERA.value] = camera
-    for key, value in kwargs.items():
-        params[key] = value
+def set_dynamic_overlay_image(axis_request: AxisRequest, image_overlay: ImageOverlay):
+    params = image_overlay.get_all_params()
     request_config = JsonRequestConfig(method= MethodType.SET_IMAGE, version= axis_request.api_version, context= axis_request.request_context, params= params)
     return axis_request.request_post(ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY, request_config)
 
@@ -149,4 +122,13 @@ def set_posix_time_zone(axis_request: AxisRequest, posix_time_zone: str, enable_
 def reset_time_zone(axis_request: AxisRequest):
     request_config = JsonRequestConfig(method= MethodType.RESET_TIME_ZONE, version= axis_request.api_version, context= axis_request.request_context)
     return axis_request.request_post(ApiPathType.AXIS_CGI_TIME, request_config)
+
+def get_ntp_info(axis_request: AxisRequest):
+    request_config = JsonRequestConfig(method= MethodType.GET_NTP_INFO, version= axis_request.api_version, context= axis_request.request_context)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_NTP, request_config)
+
+def set_ntp_client_configuration(axis_request: AxisRequest, configuration: NTPClientConfiguration):
+    params = configuration.get_all_params()
+    request_config = JsonRequestConfig(method= MethodType.SET_NTP_CLIENT_CONFIGURATION, version= axis_request.api_version, context= axis_request.request_context, params= params)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_NTP, request_config)
 
