@@ -80,6 +80,11 @@ class ApiPathType(Enum):
     AXIS_CGI_APPLICATIONS_LIST = "axis-cgi/applications/list.cgi"
     LOCAL_OBJECT_ANALYTICS = "local/objectanalytics/control.cgi"
     LOCAL_LOITERING_GUARD = "local/loiteringguard/control.cgi"
+    AXIS_CGI_SYSTEM_SETTINGS_PWDGRP = "axis-cgi/pwdgrp.cgi?"
+    AXIS_CGI_SYSTEM_SETTINGS_FACTORYDEFAULT = "axis-cgi/factorydefault.cgi"
+    AXIS_CGI_SYSTEM_SETTINGS_HARDFACTORYDEFAULT = "axis-cgi/hardfactorydefault.cgi"
+    AXIS_CGI_SYSTEM_SETTINGS_FIRMWARE_UPGRADE = "axis-cgi/firmwareupgrade.cgi?"
+    AXIS_CGI_SYSTEM_SETTINGS_RESTART = "axis-cgi/restart.cgi"
 class ApiType(Enum):
     AXIS_CGI_NETWORK_SETTINGS = "network-settings"
     AXIS_CGI_TIME = "time-service"
@@ -87,6 +92,13 @@ class ApiType(Enum):
     AXIS_CGI_DYNAMIC_OVERLAY = "dynamicoverlay"
     AXIS_CGI_NTP = "ntp"
     AXIS_CGI_FIRMWARE_MANAGEMENT = "fwmgr"
+    AXIS_CGI_SYSTEM_SETTINGS_PWDGRP = "user-management"
+class FirmwareUpgradeType(Enum):
+    NORMAL = "normal"
+    FACTORY_DEFAULT = "factorydefault"
+    NONE = None
+class RequestUrlParamType(Enum):
+    TYPE = "type="
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
     ENABLE_DST = "enableDst"
@@ -170,6 +182,7 @@ class TimeZoneType(Enum):
     ASIA_SINGAPORE = "Asia/Singapore"
     AUSTRALIA_SYDNEY = "Australia/Sydney"
     AFRICA_JOHANNESBURG = "Africa/Johannesburg"
+    AMERICA_SAO_PAULO = "America/Sao_Paulo"
 class ResponseType(Enum):
     DATA = "data"
     API_VERSION = "apiVersion"
@@ -328,3 +341,5 @@ class NetworkResolverConfiguration(ParamConfig):
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
+class AxisVapixExeption(Exception): ...
+class AxisVapixVersionNotSupportedExeption(AxisVapixExeption): ...

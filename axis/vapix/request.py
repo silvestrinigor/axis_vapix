@@ -36,7 +36,7 @@ class JsonRequestConfig:
     def __repr__(self):
         return self.json_request_config
     def __str__(self):
-        return self.json_request_config
+        return str(self.json_request_config)
     
 class AxisRequest(ABC):
     _username: str
@@ -46,10 +46,10 @@ class AxisRequest(ABC):
     request_context: str
     
     @abstractmethod
-    def request_post(self, api: ApiPathType, request_config: JsonRequestConfig):
+    def request_post(self, api: ApiPathType, request_config: JsonRequestConfig = None, url_params: str = "", files: dict = None) -> requests.Response:
         return requests.Response
     @abstractmethod
-    def request_get(self, api: ApiPathType, request_config: JsonRequestConfig):
+    def request_get(self, api: ApiPathType, request_config: JsonRequestConfig = None, url_params: str = "", files: dict = None) -> requests.Response:
         return requests.Response
 
 class AxisDefaultRequestMaker(AxisRequest):
@@ -62,8 +62,12 @@ class AxisDefaultRequestMaker(AxisRequest):
         self.api_version: ApiVersion = ApiVersion(1,1)
         self.request_context: str = ""
     
-    def request_post(self, api: ApiPathType, request_config: JsonRequestConfig):
-        return requests.post(url= self._url + api.value, auth= self.auth, json= request_config.get_config())
+    def request_post(self, api: ApiPathType, request_config: JsonRequestConfig | None = None, url_params: str = "", files: dict | None= None):
+        if request_config == None:
+            return requests.post(url= self._url + api.value + url_params, auth= self.auth, files=files)
+        return requests.post(url= self._url + api.value + url_params, auth= self.auth, json= request_config.get_config(), files=files)
 
-    def request_get(self, api: ApiPathType, request_config: JsonRequestConfig):
-        return requests.get(url= self._url + api.value, auth= self.auth, json= request_config.get_config())
+    def request_get(self, api: ApiPathType, request_config: JsonRequestConfig | None = None, url_params: str = "", files:dict | None= None):
+        if request_config == None:
+            return requests.get(url= self._url + api.value + url_params, auth= self.auth, files=files)
+        return requests.get(url= self._url + api.value + url_params, auth= self.auth, json= request_config.get_config(), files=files)

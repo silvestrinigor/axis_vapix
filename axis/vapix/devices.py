@@ -46,6 +46,7 @@ class Device:
 
     @date_time.setter
     def date_time(self, date_time: datetime):
+        self._request_maker.api_version = handlers.ApisInfoResponseHandler(self._apis_list_response).get_supported_api_version(defaults.ApiType.AXIS_CGI_TIME)
         response = methods.set_date_time(self._request_maker, date_time=date_time)
         if response.status_code != 200 or handlers.is_response_with_error(response=response) == True:
             raise Exception()

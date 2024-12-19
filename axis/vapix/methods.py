@@ -7,8 +7,10 @@ from .defaults import ParamType
 from .defaults import OverlayPositionType
 from .defaults import OverlayColorType
 from .defaults import TimeZoneType
-from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration, HostnameConfiguration, IPv4AddressConfiguration, NetworkResolverConfiguration, FactoryDefaultModeType
+from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration, HostnameConfiguration, IPv4AddressConfiguration, NetworkResolverConfiguration, FactoryDefaultModeType, FirmwareUpgradeType, RequestUrlParamType
 from datetime import datetime
+import requests
+import io
 from .utils import serialize_datetime
 
 def get_supported_versions(axis_request: AxisRequest, api: ApiPathType):
@@ -107,6 +109,7 @@ def get_all_date_time_api_info(axis_request: AxisRequest):
 def set_date_time(axis_request: AxisRequest, date_time: datetime):
     params = {ParamType.DATE_TIME.value: serialize_datetime(date_time)}
     request_config = JsonRequestConfig(method= MethodType.SET_DATE_TIME, version= axis_request.api_version, context= axis_request.request_context, params= params)
+    print(request_config)
     return axis_request.request_post(ApiPathType.AXIS_CGI_TIME, request_config)
 
 def set_time_zone(axis_request: AxisRequest, time_zone: TimeZoneType):
@@ -166,4 +169,9 @@ def set_firmware_factory_default(axis_request: AxisRequest, mode: FactoryDefault
 def set_firmware_reboot(axis_request: AxisRequest):
     request_config = JsonRequestConfig(method= MethodType.REBOOT, version= axis_request.api_version, context= axis_request.request_context)
     return axis_request.request_post(ApiPathType.AXIS_CGI_FIRMWARE_MANAGEMENT, request_config)
+
+def upgrade_firmware_system_settings(axis_request: AxisRequest, file_name: str, file_obj: io.BufferedReader,  type: FirmwareUpgradeType = FirmwareUpgradeType.NORMAL) -> requests.Response:
+    url_params = RequestUrlParamType.TYPE.value + type.value
+    files = {file_name: file_obj}
+    return axis_request.request_post(ApiPathType.AXIS_CGI_SYSTEM_SETTINGS_FIRMWARE_UPGRADE, url_params=url_params, files=files)
 

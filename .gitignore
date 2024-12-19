@@ -1,7 +1,9 @@
 .env
 env
+firmwares
 __pycache__/
 *.py[cod]
 .vscode/
 .idea/
 *.swp
+devices_list
