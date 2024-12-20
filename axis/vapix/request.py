@@ -68,6 +68,7 @@ class AxisDefaultRequestMaker(AxisRequest):
         return requests.post(url= self._url + api.value + url_params, auth= self.auth, json= request_config.get_config(), files=files)
 
     def request_get(self, api: ApiPathType, request_config: JsonRequestConfig | None = None, url_params: str = "", files:dict | None= None):
+        print(self._url + api.value + url_params)
         if request_config == None:
             return requests.get(url= self._url + api.value + url_params, auth= self.auth, files=files)
         return requests.get(url= self._url + api.value + url_params, auth= self.auth, json= request_config.get_config(), files=files)

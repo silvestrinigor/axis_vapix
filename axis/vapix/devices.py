@@ -105,4 +105,8 @@ class Device:
         return False
     
     def _update_apis_json_info(self):
+        self._request_maker.api_version = request.ApiVersion(1,0)
         self._apis_list_response =  methods.get_api_list(self._request_maker)
+        if handlers.is_response_with_error(self._apis_list_response) or self._apis_list_response.status_code != 200:
+            print(str(self._apis_list_response.status_code) + self._apis_list_response.text)
+            raise Exception

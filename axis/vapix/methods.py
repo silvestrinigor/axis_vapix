@@ -7,10 +7,11 @@ from .defaults import ParamType
 from .defaults import OverlayPositionType
 from .defaults import OverlayColorType
 from .defaults import TimeZoneType
-from .defaults import TextOverlay, ImageOverlay, NTPClientConfiguration, HostnameConfiguration, IPv4AddressConfiguration, NetworkResolverConfiguration, FactoryDefaultModeType, FirmwareUpgradeType, RequestUrlParamType
+from .defaults import TextOverlay, ImageOverlay, ActionType, NTPClientConfiguration, HostnameConfiguration, IPv4AddressConfiguration, NetworkResolverConfiguration, FactoryDefaultModeType, FirmwareUpgradeType, RequestUrlParamType
 from datetime import datetime
 import requests
 import io
+import urllib.parse
 from .utils import serialize_datetime
 
 def get_supported_versions(axis_request: AxisRequest, api: ApiPathType):
@@ -109,7 +110,6 @@ def get_all_date_time_api_info(axis_request: AxisRequest):
 def set_date_time(axis_request: AxisRequest, date_time: datetime):
     params = {ParamType.DATE_TIME.value: serialize_datetime(date_time)}
     request_config = JsonRequestConfig(method= MethodType.SET_DATE_TIME, version= axis_request.api_version, context= axis_request.request_context, params= params)
-    print(request_config)
     return axis_request.request_post(ApiPathType.AXIS_CGI_TIME, request_config)
 
 def set_time_zone(axis_request: AxisRequest, time_zone: TimeZoneType):
@@ -174,4 +174,32 @@ def upgrade_firmware_system_settings(axis_request: AxisRequest, file_name: str, 
     url_params = RequestUrlParamType.TYPE.value + type.value
     files = {file_name: file_obj}
     return axis_request.request_post(ApiPathType.AXIS_CGI_SYSTEM_SETTINGS_FIRMWARE_UPGRADE, url_params=url_params, files=files)
+
+def upgrade_firmware(axis_request: AxisRequest, file_name: str, file_obj: io.BufferedReader, auto_rool_back = None, factory_default_mode: FactoryDefaultModeType = FactoryDefaultModeType.NONE, auto_commit = None) -> requests.Response:
+    params = {
+        ParamType.FACTORY_DEFAULT_MODE.value: factory_default_mode.value,
+        ParamType.AUTO_COMMIT.value: auto_commit,
+        ParamType.AUTO_ROLLBACK.value: auto_rool_back
+    }
+    params = {key: value for key, value in params.items() if value is not None}
+    files = {file_name: file_obj}
+    request_config = JsonRequestConfig(method= MethodType.ROLLBACK, version= axis_request.api_version, context= axis_request.request_context, files=files, params=params)
+    return axis_request.request_post(ApiPathType.AXIS_CGI_FIRMWARE_MANAGEMENT, request_config)
+
+def param_handle(axis_request: AxisRequest, action: ActionType, **keyargs) -> requests.Response:
+    url_params = RequestUrlParamType.ACTION.value + action.value
+    if keyargs:
+        encoded_params = urllib.parse.urlencode(keyargs)
+        url_params = f"{url_params}&{encoded_params}"
+    if action == ActionType.LIST:
+        return axis_request.request_get(ApiPathType.AXIS_CGI_PARAM, url_params=url_params)
+    else:
+        return axis_request.request_post(ApiPathType.AXIS_CGI_PARAM, url_params=url_params)
+
+
+
+
+
+
+
 

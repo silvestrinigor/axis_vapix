@@ -6,8 +6,7 @@ import json
 from datetime import datetime
 
 def is_response_with_error(response: Response) -> bool:
-    json.loads(response.text)
-    if defaults.ResponseType.ERROR.value in response:
+    if defaults.ResponseType.ERROR.value in response.text:
         return True
     else:
         return False

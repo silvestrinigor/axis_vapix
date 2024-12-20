@@ -85,6 +85,7 @@ class ApiPathType(Enum):
     AXIS_CGI_SYSTEM_SETTINGS_HARDFACTORYDEFAULT = "axis-cgi/hardfactorydefault.cgi"
     AXIS_CGI_SYSTEM_SETTINGS_FIRMWARE_UPGRADE = "axis-cgi/firmwareupgrade.cgi?"
     AXIS_CGI_SYSTEM_SETTINGS_RESTART = "axis-cgi/restart.cgi"
+    AXIS_CGI_PARAM = "axis-cgi/param.cgi?"
 class ApiType(Enum):
     AXIS_CGI_NETWORK_SETTINGS = "network-settings"
     AXIS_CGI_TIME = "time-service"
@@ -93,12 +94,22 @@ class ApiType(Enum):
     AXIS_CGI_NTP = "ntp"
     AXIS_CGI_FIRMWARE_MANAGEMENT = "fwmgr"
     AXIS_CGI_SYSTEM_SETTINGS_PWDGRP = "user-management"
+    AXIS_CGI_PARAM = "param-cgi"
 class FirmwareUpgradeType(Enum):
     NORMAL = "normal"
     FACTORY_DEFAULT = "factorydefault"
     NONE = None
 class RequestUrlParamType(Enum):
     TYPE = "type="
+    ACTION = "action="
+    USERGROUP = "usergroup="
+    GROUP = "group"
+class ActionType(Enum):
+    ADD = "add"
+    REMOVE = "remove"
+    UPDATE = "update"
+    LIST = "list"
+    LIST_DEFINITIONS =  "listdefinitions"
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
     ENABLE_DST = "enableDst"
@@ -142,6 +153,9 @@ class ParamType(Enum):
     STATIC_NAME_SERVERS = "staticNameServers"
     STATIC_SEARCH_DOMAINS = "staticSearchDomains"
     STATIC_DOMAIN_NAME = "staticDomainName"
+    AUTO_ROLLBACK = "autoRollback"
+    AUTO_COMMIT = "autoCommit"
+    FACTORY_DEFAULT_MODE = "factoryDefaultMode"
 class StaticAddressConfigurationParamsType(Enum):
     ADRESS = "address"
     PREFIX_LENGTH = "prefixLength"
@@ -183,6 +197,8 @@ class TimeZoneType(Enum):
     AUSTRALIA_SYDNEY = "Australia/Sydney"
     AFRICA_JOHANNESBURG = "Africa/Johannesburg"
     AMERICA_SAO_PAULO = "America/Sao_Paulo"
+    AMERICA_MANAUS = "America/Manaus"
+    AMERICA_ACRE = "America/Acre"
 class ResponseType(Enum):
     DATA = "data"
     API_VERSION = "apiVersion"
@@ -212,6 +228,7 @@ class ServersSourceType(Enum):
 class FactoryDefaultModeType(Enum):
     SOFT = "soft"
     HARD = "hard"
+    NONE = None
 class IPAddressConfigurationModeType(Enum):
     DHCP = "DHCP"
     STATIC = "static"
@@ -330,7 +347,7 @@ class NetworkResolverConfiguration(ParamConfig):
     static_name_servers: list[str] = None
     static_search_domains: list[str] = None
     static_domain_name: str = None
-
+    
     def get_all_params(self):
         all_params = {
             ParamType.USE_DHCP_RESOLVER_INFO.value: self.use_dhcp_resolver_info,
