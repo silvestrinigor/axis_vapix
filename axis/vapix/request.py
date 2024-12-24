@@ -1,74 +1,69 @@
 import requests
 import requests.auth
-from .defaults import ApiPathType
-from .defaults import MethodType
-from .defaults import RequestParamType
-from .defaults import FactoryDefaultModeType
-from abc import ABC, abstractmethod
+import grequests
+from .types import RequestMethod
+from .abc_classes import IRequestBuilder, IRequestMaker
 
-class ApiVersion:
-    def __init__(self, major:int, minor:int):
-        self.major:int = major
-        self.minor:int = minor
-    def __repr__(self):
-        return f"{self.major}.{self.minor}"
-    def __str__(self):
-        return f"{self.major}.{self.minor}"  
-  
-class JsonRequestConfig:
-    def __init__(self, method: MethodType, context: str, version: ApiVersion | None= None, params: dict | None = None, channel: int | None= None, capture_mode_id: int| None= None, factory_default_mode: FactoryDefaultModeType | None= None):
-        self.json_request_config = {
-            RequestParamType.CONTEXT.value: context,
-            RequestParamType.METHOD.value: method.value
+class RequestBuilder(IRequestBuilder):
+    def __init__(self, method: RequestMethod, url):
+        self.method: RequestMethod = method.value
+        self.url = url
+        self.headers = {}
+        self.params = {}
+        self.data = None
+        self.json_data = None
+        self.files = None
+        self.timeout = None
+        self.auth = None
+
+    def set_headers(self, headers: dict):
+        self.headers.update(headers)
+        return self
+
+    def set_params(self, params: dict):
+        self.params.update(params)
+        return self
+
+    def set_data(self, data: dict):
+        self.data = data
+        return self
+
+    def set_json(self, json_data: dict):
+        self.json_data = json_data
+        return self
+
+    def set_files(self, files: dict):
+        self.files = files
+        return self
+
+    def set_auth(self, username: str, password: str, auth_type: type):
+        if not issubclass(auth_type, requests.auth.AuthBase):
+            raise ValueError("auth_type must be a subclass of requests.auth.AuthBase")
+        self.auth = auth_type(username, password)
+        return self
+
+    def get_kwargs(self):
+        request_kwargs = {
+            'headers': self.headers, 
+            'params': self.params,
+            'data': self.data, 
+            'json': self.json_data,
+            'files': self.files, 
+            'timeout': self.timeout,
+            'auth': self.auth
         }
-        if version != None:
-            self.json_request_config[RequestParamType.API_VERSION.value] = version.__str__()
-        if params != None:
-            self.json_request_config[RequestParamType.PARAMS.value] = params
-        if channel != None:
-            self.json_request_config[RequestParamType.CHANNEL.value] = channel
-        if capture_mode_id != None:
-            self.json_request_config[RequestParamType.CAPTURE_MODE_ID.value] = capture_mode_id            
-        if factory_default_mode != None:
-            self.json_request_config[RequestParamType.FACTORY_DEFAULT_MODE.value] = factory_default_mode                      
-    def get_config(self):
-        return self.json_request_config
-    def __repr__(self):
-        return self.json_request_config
-    def __str__(self):
-        return str(self.json_request_config)
-    
-class AxisRequest(ABC):
-    _username: str
-    _password: str
-    _url: str
-    api_version: ApiVersion
-    request_context: str
-    
-    @abstractmethod
-    def request_post(self, api: ApiPathType, request_config: JsonRequestConfig = None, url_params: str = "", files: dict = None) -> requests.Response:
-        return requests.Response
-    @abstractmethod
-    def request_get(self, api: ApiPathType, request_config: JsonRequestConfig = None, url_params: str = "", files: dict = None) -> requests.Response:
-        return requests.Response
+        request_kwargs = {key: value for key, value in request_kwargs.items() if value is not None}
+        return request_kwargs
 
-class AxisDefaultRequestMaker(AxisRequest):
-    def __init__(self, host: str, port:int, username: str, password: str):
-        self._username = username
-        self._password = password
-        self._url = f"http://{host}:{port}/"
-        self.timeout:int = 10
-        self.auth: requests.auth = requests.auth.HTTPDigestAuth(username, password)
-        self.api_version: ApiVersion = ApiVersion(1,1)
-        self.request_context: str = ""
-    
-    def request_post(self, api: ApiPathType, request_config: JsonRequestConfig | None = None, url_params: str = "", files: dict | None= None):
-        if request_config == None:
-            return requests.post(url= self._url + api.value + url_params, auth= self.auth, files=files)
-        return requests.post(url= self._url + api.value + url_params, auth= self.auth, json= request_config.get_config(), files=files)
+class RequestMaker(IRequestMaker):
+    def __init__(self):
+        return
 
-    def request_get(self, api: ApiPathType, request_config: JsonRequestConfig | None = None, url_params: str = "", files:dict | None= None):
-        print(self._url + api.value + url_params)
-        if request_config == None:
-            return requests.get(url= self._url + api.value + url_params, auth= self.auth, files=files)
-        return requests.get(url= self._url + api.value + url_params, auth= self.auth, json= request_config.get_config(), files=files)
+    def send_request(self, request_build: RequestBuilder) -> requests.Response:
+        return requests.request(request_build.method, request_build.url, **request_build.get_kwargs())
+
+    def get_async_request(self, request_builder: RequestBuilder) -> grequests.AsyncRequest:
+        return grequests.request(request_builder.method, request_builder.url, **request_builder.get_kwargs())
+
+    def send_async_requests(self, request_list) -> list:
+        return grequests.map(request_list)
