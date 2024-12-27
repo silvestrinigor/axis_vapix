@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 import axis.vapix.devices
-import axis.vapix.axis_methods
+import axis.vapix.methods
 import axis.vapix.types
 import axis.vapix.request
 import time

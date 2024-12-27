@@ -1,6 +1,7 @@
 from requests import Response
 from . import types
-from . import request
+from . import defaults
+from . import exeptions
 from .utils import get_apiversion_type_from_string
 import json
 from datetime import datetime
@@ -71,7 +72,7 @@ class ApisInfoResponseHandler(AxisResponseHandler):
                 return True
         return False
 
-    def is_this_api_version_supported(self, api_type: types.ApiType, api_version: request.ApiVersion):
+    def is_this_api_version_supported(self, api_type: types.ApiType, api_version: defaults.ApiVersion):
         api_list = self.response.json().get(types.ResponseType.DATA.value, {}).get(types.ResponseDataType.API_LIST.value, [])
         for api in api_list:
             if api[types.ResponseDataApiType.ID.value] == api_type.value and api[types.ResponseDataApiType.VERSION.value] == api_version.__str__():
@@ -83,4 +84,4 @@ class ApisInfoResponseHandler(AxisResponseHandler):
         for api in api_list:
             if api[types.ResponseDataApiType.ID.value] == api_type.value:
                 return get_apiversion_type_from_string(api[types.ResponseDataApiType.VERSION.value])
-        raise types.AxisVapixVersionNotSupportedExeption()
+        raise exeptions.AxisVapixVersionNotSupportedExeption()

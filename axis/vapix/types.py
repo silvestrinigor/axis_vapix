@@ -30,6 +30,8 @@ class RequestMethod(Enum):
     POST = "POST"
 
 class MethodType(Enum):
+    FACTORY_DEFAULT = "factoryDefault"
+    UPGRADE = "upgrade"
     GET_PROPERTIES = "getProperties"
     GET_ALL_PROPERTIES = "getAllProperties"
     GET_ALL_UNRESTRICTED_PROPERTIES = "getAllUnrestrictedProperties"
@@ -252,7 +254,19 @@ class FactoryDefaultModeType(Enum):
     HARD = "hard"
     NONE = None
 
+class AutoCommitType(Enum):
+    NEVER = "never"
+    BOOT = "boot"
+    STARTED = "started"
+    DEFAULT = "default"
+    NONE = None
+
 class IPAddressConfigurationModeType(Enum):
     DHCP = "DHCP"
     STATIC = "static"
     NONE = None
+
+class ContentType(Enum):
+    APPLICATION_JSON = "application/json"
+    APPLICATION_OCTETSTREAM = "application/octet-stream"
+    MUILTPART_FORMDATA = "multipart/form-data"

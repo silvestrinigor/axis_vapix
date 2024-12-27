@@ -149,7 +149,8 @@ class AxisDevice:
         return f"http://{self.host}:{self.port}/"
     
 class AxisRequestBody(IAxisRequestBody):
-    request_body: dict = {}
+    def __init__(self):
+        self.request_body = {}
     
     def add__or_set_api_version(self, api_version: ApiVersion):
         self.add_or_set_request_param(RequestParamType.API_VERSION, api_version.__str__())
@@ -160,10 +161,17 @@ class AxisRequestBody(IAxisRequestBody):
     def add_or_set_method(self, method: MethodType):
         self.add_or_set_request_param(RequestParamType.METHOD, method.value)
     
-    def add_or_set_method_params(self, params: dict):
-        self.add_or_set_request_param(RequestParamType.PARAMS, params)
+    def add_or_set_method_params(self, param_type: ParamType, value):
+        if RequestParamType.PARAMS.value not in self.request_body:
+            self.request_body[RequestParamType.PARAMS.value] = {}
+        if not isinstance(self.request_body[RequestParamType.PARAMS.value], dict):
+            raise ValueError("PARAMS must be a dictionary.")
+        self.request_body[RequestParamType.PARAMS.value][param_type.value] = value
+        request_params = self.request_body[RequestParamType.PARAMS.value]
+        request_params = {key: value for key, value in request_params.items() if value is not None}
+        self.request_body[RequestParamType.PARAMS.value] = request_params
     
-    def add_or_set_request_param(self, param_type, value):
+    def add_or_set_request_param(self, param_type: RequestParamType, value):
         self.request_body[param_type.value] = value
     
     def get_request_body(self):

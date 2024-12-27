@@ -8,8 +8,8 @@ class RequestBuilder(IRequestBuilder):
     def __init__(self, method: RequestMethod, url):
         self.method: RequestMethod = method.value
         self.url = url
-        self.headers = {}
-        self.params = {}
+        self.headers = None
+        self.params = None
         self.data = None
         self.json_data = None
         self.files = None
@@ -17,10 +17,14 @@ class RequestBuilder(IRequestBuilder):
         self.auth = None
 
     def set_headers(self, headers: dict):
+        if self.headers == None:
+            self.headers = {}
         self.headers.update(headers)
         return self
 
     def set_params(self, params: dict):
+        if self.params == None:
+            self.params = {}
         self.params.update(params)
         return self
 
@@ -57,7 +61,7 @@ class RequestBuilder(IRequestBuilder):
 
 class RequestMaker(IRequestMaker):
     def __init__(self):
-        return
+        pass
 
     def send_request(self, request_build: RequestBuilder) -> requests.Response:
         return requests.request(request_build.method, request_build.url, **request_build.get_kwargs())
@@ -65,5 +69,5 @@ class RequestMaker(IRequestMaker):
     def get_async_request(self, request_builder: RequestBuilder) -> grequests.AsyncRequest:
         return grequests.request(request_builder.method, request_builder.url, **request_builder.get_kwargs())
 
-    def send_async_requests(self, request_list) -> list:
+    def send_async_requests(self, request_list: list[grequests.AsyncRequest]) -> list:
         return grequests.map(request_list)

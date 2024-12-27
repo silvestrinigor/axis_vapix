@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 import axis.vapix.devices
-import axis.vapix.axis_methods
+import axis.vapix.methods
 import axis.vapix.types
 import axis.vapix.request
 import axis.vapix.handlers
@@ -17,7 +17,7 @@ axis_request = axis.vapix.request.AxisDefaultRequestMaker(host= HOST, port= PORT
 #response = axis.vapix.methods.get_api_list(axis_request)
 #response = axis.vapix.methods.add_dynamic_overlay_text(axis_request, 1, "teste", axis.defaults.OverlayPosition.BOTTOM_RIGHT, text_color= axis.defaults.OverlayTextColor.RED)
 #response = axis.vapix.methods.add_dynamic_overlay_image(axis_request, 1, "axis(128x44).ovl")
-response = axis.vapix.axis_methods.list_overlays(axis_request)
+response = axis.vapix.methods.list_overlays(axis_request)
 
 content = axis.vapix.handlers.ListOverlaysResponseHandler(response).image_overlays
 print(content)

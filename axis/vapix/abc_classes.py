@@ -75,3 +75,13 @@ class IParamConfig(ABC):
     def get_all_params(self) -> dict:
         pass
 
+class IAxisRequestManager(ABC):
+    device: object
+    request_context: str
+    request_api_version: object
+    _request_auth: type
+    
+    @abstractmethod
+    def make_request_build(self):
+        pass
+
