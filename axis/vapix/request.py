@@ -58,6 +58,9 @@ class RequestBuilder(IRequestBuilder):
         }
         request_kwargs = {key: value for key, value in request_kwargs.items() if value is not None}
         return request_kwargs
+    
+    def send_request(self):
+        return RequestMaker().send_request(self.get_kwargs())
 
 class RequestMaker(IRequestMaker):
     def __init__(self):

@@ -1,43 +1,44 @@
+import gevent.monkey
+gevent.monkey.patch_all(thread=False, select=False)
 from . import methods
 from . import request
 from . import handlers
 from . import types
+from . import request
+from . import defaults
+from . import utils
 import json
 from datetime import datetime
 
-class Device:
-    def __init__(self, host:str, port: int, username: str, password: str):
-        self._request_maker = request.AxisDefaultRequestMaker(host=host, port=port, username=username, password=password)
-        self._apis_list_response: request.requests.Response
-        self._update_apis_json_info()
+class DeviceManager():
+    def __init__(self, host, port, username, password):
+        self.device = defaults.AxisDevice(host, port, username, password)
+
+    def _make_device_request(self, request_build: request.RequestBuilder) -> request.requests.Response:
+        response = request.RequestMaker().send_request(request_build)
+        return response
 
     @property
     def serial_number(self):
-        self._request_maker.api_version = handlers.ApisInfoResponseHandler(self._apis_list_response).get_supported_api_version(types.ApiType.AXIS_CGI_BASIC_DEVICE_INFO)
-        properties = [types.DevicePropertyType.SERIAL_NUMBER]
-        response = methods.get_properties(axis_request=self._request_maker, properties=properties)
-        if response.status_code != 200 or handlers.is_response_with_error(response=response) == True:
-            raise Exception()
-        return json.loads(response.text)[types.ResponseType.DATA.value][types.ResponseDataType.PROPERTY_LIST.value][types.DevicePropertyType.SERIAL_NUMBER.value]
+        keywargs = {types.RequestUrlParamType.GROUP.value:'root.Properties.System.SerialNumber'}
+        request_build = methods.param_handle(self.device, types.ActionType.LIST, **keywargs)
+        response = self._make_device_request(request_build)
+        return utils.serialize_axis_response_content(response.text, keywargs)
 
     @property
     def version(self):
-        self._request_maker.api_version = handlers.ApisInfoResponseHandler(self._apis_list_response).get_supported_api_version(types.ApiType.AXIS_CGI_BASIC_DEVICE_INFO)
-        properties = [types.DevicePropertyType.VERSION]
-        response = methods.get_properties(axis_request=self._request_maker, properties=properties)
-        if response.status_code != 200 or handlers.is_response_with_error(response=response) == True:
-            raise Exception()
-        return json.loads(response.text)[types.ResponseType.DATA.value][types.ResponseDataType.PROPERTY_LIST.value][types.DevicePropertyType.VERSION.value]
-    
+        keywargs = {types.RequestUrlParamType.GROUP.value:'root.Properties.Firmware.Version'}
+        request_build = methods.param_handle(self.device, types.ActionType.LIST, **keywargs)
+        response = self._make_device_request(request_build)
+        return utils.serialize_axis_response_content(response.text, keywargs)
+
     @property
     def type(self):
-        self._request_maker.api_version = handlers.ApisInfoResponseHandler(self._apis_list_response).get_supported_api_version(types.ApiType.AXIS_CGI_BASIC_DEVICE_INFO)
-        properties = [types.DevicePropertyType.PROD_TYPE]
-        response = methods.get_properties(axis_request=self._request_maker, properties=properties)
-        if response.status_code != 200 or handlers.is_response_with_error(response=response) == True:
-            raise Exception()
-        return json.loads(response.text)[types.ResponseType.DATA.value][types.ResponseDataType.PROPERTY_LIST.value][types.DevicePropertyType.PROD_TYPE.value]
-    
+        keywargs = {types.RequestUrlParamType.GROUP.value:'root.Brand.ProdType'}
+        request_build = methods.param_handle(self.device, types.ActionType.LIST, **keywargs)
+        response = self._make_device_request(request_build)
+        return utils.serialize_axis_response_content(response.text, keywargs)
+"""
     @property
     def date_time(self):
         self._request_maker.api_version = handlers.ApisInfoResponseHandler(self._apis_list_response).get_supported_api_version(types.ApiType.AXIS_CGI_TIME)
@@ -110,3 +111,4 @@ class Device:
         if handlers.is_response_with_error(self._apis_list_response) or self._apis_list_response.status_code != 200:
             print(str(self._apis_list_response.status_code) + self._apis_list_response.text)
             raise Exception
+"""

@@ -8,7 +8,7 @@ import io
 import urllib
 import json
 from datetime import datetime
-from utils import serialize_datetime
+from .utils import serialize_datetime
 
 def get_supported_versions(device: AxisDevice, api: ApiPathType, context: str = None):
     url = device.get_base_url() + api.value
@@ -427,7 +427,7 @@ def upgrade_firmware(device: AxisDevice, file_obj: io.BufferedReader, api_versio
     request_build.set_files({'file': ('firmware_file.bin', file_obj, ContentType.APPLICATION_OCTETSTREAM.value)})
     return request_build
 
-def param_handle(device: AxisDevice, action: ActionType, **keyargs) -> requests.Response:
+def param_handle(device: AxisDevice, action: ActionType, **keyargs):
     url = device.get_base_url() + ApiPathType.AXIS_CGI_PARAM.value + RequestUrlParamType.ACTION.value + action.value
     if keyargs:
         encoded_params = urllib.parse.urlencode(keyargs)

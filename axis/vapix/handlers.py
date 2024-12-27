@@ -2,15 +2,9 @@ from requests import Response
 from . import types
 from . import defaults
 from . import exeptions
-from .utils import get_apiversion_type_from_string
+from .utils import get_apiversion_type_from_string, is_response_with_error
 import json
 from datetime import datetime
-
-def is_response_with_error(response: Response) -> bool:
-    if types.ResponseType.ERROR.value in response.text:
-        return True
-    else:
-        return False
 
 class AxisResponseHandler:
     def __init__(self, response: Response):

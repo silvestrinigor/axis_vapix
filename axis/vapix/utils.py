@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 from .defaults import ApiVersion
+from .types import ResponseType
+from requests import Response
 
 def serialize_datetime(date_time: datetime) -> str:
     if not _is_timezone_aware(date_time=date_time): 
@@ -11,7 +13,7 @@ def serialize_datetime(date_time: datetime) -> str:
 def _is_timezone_aware(date_time: datetime) -> bool:
     return date_time.tzinfo is not None and date_time.tzinfo.utcoffset(date_time) is not None
 
-def get_apiversion_type_from_string(api_version: str):
+def get_apiversion_type_from_string(api_version: str) -> ApiVersion:
     parts = api_version.split('.')
     if len(parts) != 2:
         raise ValueError(f"Invalid API version format: '{api_version}'. Expected 'major.minor'.")
@@ -21,3 +23,16 @@ def get_apiversion_type_from_string(api_version: str):
     except ValueError:
         raise ValueError(f"Invalid version numbers in '{api_version}'. Both major and minor must be integers.")
     return ApiVersion(major, minor)
+
+def is_response_with_error(response: Response) -> bool:
+    if ResponseType.ERROR.value in response.text:
+        return True
+    else:
+        return False
+    
+def serialize_axis_response_content(text: str, keyargs: dict):
+    for values in keyargs.values():
+        print(values)
+        text = text.strip(f"{values}=")
+    return text.rstrip('\n')
+
