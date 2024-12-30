@@ -138,6 +138,16 @@ class ApiVersion:
     def __str__(self):
         return f"{self.major}.{self.minor}"
     
+class FirmwareVersion:
+    def __init__(self, major:int, minor:int, revision:int):
+        self.major:int = major
+        self.minor:int = minor
+        self.revision:int = revision
+    def __repr__(self):
+        return f"{self.major}.{self.minor}.{self.revision}"
+    def __str__(self):
+        return f"{self.major}.{self.minor}.{self.revision}"
+    
 class AxisDevice:
     def __init__(self, host, port, username, password):
         self.host = host

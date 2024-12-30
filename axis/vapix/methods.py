@@ -96,6 +96,7 @@ def list_overlays(device: AxisDevice, api_version: ApiVersion, context: str = No
     request_body_class.add_or_set_context(context)
     request_body_class.add__or_set_api_version(api_version)
     request_body_class.add_or_set_method(MethodType.LIST)
+    request_body_class.add_or_set_request_param(RequestParamType.PARAMS, {})
     request_build = RequestBuilder(method=RequestMethod.POST, url=url)
     request_build.set_json(request_body_class.get_request_body())
     request_build.set_auth(device.username,device.password, requests.auth.HTTPDigestAuth)
@@ -259,7 +260,7 @@ def set_time_zone(device: AxisDevice, api_version: ApiVersion, time_zone: TimeZo
     request_body_class.add__or_set_api_version(api_version)
     request_body_class.add_or_set_context(context)
     request_body_class.add_or_set_method(MethodType.SET_TIME_ZONE)
-    request_body_class.add_or_set_method_params(ParamType.TIME_ZONE, time_zone)
+    request_body_class.add_or_set_method_params(ParamType.TIME_ZONE, time_zone.value)
     url = device.get_base_url() + ApiPathType.AXIS_CGI_TIME.value
     request_build = RequestBuilder(method=RequestMethod.POST, url=url)
     request_build.set_json(request_body_class.get_request_body())

@@ -79,3 +79,4 @@ class ApisInfoResponseHandler(AxisResponseHandler):
             if api[types.ResponseDataApiType.ID.value] == api_type.value:
                 return get_apiversion_type_from_string(api[types.ResponseDataApiType.VERSION.value])
         raise exeptions.AxisVapixVersionNotSupportedExeption()
+    

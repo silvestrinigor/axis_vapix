@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from .defaults import ApiVersion
+from .defaults import ApiVersion, FirmwareVersion
 from .types import ResponseType
 from requests import Response
 
@@ -23,6 +23,18 @@ def get_apiversion_type_from_string(api_version: str) -> ApiVersion:
     except ValueError:
         raise ValueError(f"Invalid version numbers in '{api_version}'. Both major and minor must be integers.")
     return ApiVersion(major, minor)
+
+def get_firmwareversion_type_from_string(firmwareversion: str) -> ApiVersion:
+    parts = firmwareversion.split('.')
+    if len(parts) < 3:
+        raise ValueError(f"Invalid Firmware version format: '{firmwareversion}'. Expected 'major.minor.revision'.")
+    try:
+        major = int(parts[0])
+        minor = int(parts[1])
+        revision = int(parts[2])
+    except ValueError:
+        raise ValueError(f"Invalid version numbers in '{firmwareversion}'. Both major and minor must be integers.")
+    return FirmwareVersion(major, minor, revision)
 
 def is_response_with_error(response: Response) -> bool:
     if ResponseType.ERROR.value in response.text:
