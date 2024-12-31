@@ -1,7 +1,7 @@
-from .abc_classes import IParamConfig, IAxisRequestBody
 from .types import OverlayPositionType, OverlayColorType, OverlayPositionCustomValue, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType
+from packaging.version import Version
 
-class TextOverlay(IParamConfig):
+class TextOverlay:
     camera:int = None
     font_size:int = None
     identity: int = None
@@ -32,7 +32,7 @@ class TextOverlay(IParamConfig):
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
     
-class ImageOverlay(IParamConfig):
+class ImageOverlay:
     camera:int = None
     identity: int = None
     overlay_path: str = None
@@ -51,7 +51,7 @@ class ImageOverlay(IParamConfig):
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
     
-class NTPClientConfiguration(IParamConfig):
+class NTPClientConfiguration:
     enable: bool = None
     servers_source: ServersSourceType = None
     static_servers_list: list[str] = None
@@ -66,7 +66,7 @@ class NTPClientConfiguration(IParamConfig):
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
     
-class HostnameConfiguration(IParamConfig):
+class HostnameConfiguration:
     use_dhcp_hostname: bool = None
     static_hostname: str = None
     
@@ -79,7 +79,7 @@ class HostnameConfiguration(IParamConfig):
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
     
-class StaticAddressConfigurations(IParamConfig):
+class StaticAddressConfigurations:
     address: str = None
     prefix_length: int = None
     broadcast: str = None
@@ -97,7 +97,7 @@ class StaticAddressConfigurations(IParamConfig):
     def __repr__(self):
         self.get_all_params()
         
-class IPv4AddressConfiguration(IParamConfig):
+class IPv4AddressConfiguration:
     device_name: str = "eth0"
     configuration_mode: IPAddressConfigurationModeType = IPAddressConfigurationModeType.NONE
     static_address_configurations: list[StaticAddressConfigurations] = None
@@ -112,7 +112,7 @@ class IPv4AddressConfiguration(IParamConfig):
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
     
-class NetworkResolverConfiguration(IParamConfig):
+class NetworkResolverConfiguration:
     use_dhcp_resolver_info: bool = None
     static_name_servers: list[str] = None
     static_search_domains: list[str] = None
@@ -128,27 +128,12 @@ class NetworkResolverConfiguration(IParamConfig):
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
-    
-class ApiVersion:
-    def __init__(self, major:int, minor:int):
-        self.major:int = major
-        self.minor:int = minor
-    def __repr__(self):
-        return f"{self.major}.{self.minor}"
-    def __str__(self):
-        return f"{self.major}.{self.minor}"
-    
-class FirmwareVersion:
-    def __init__(self, major:int, minor:int, revision:int):
-        self.major:int = major
-        self.minor:int = minor
-        self.revision:int = revision
-    def __repr__(self):
-        return f"{self.major}.{self.minor}.{self.revision}"
-    def __str__(self):
-        return f"{self.major}.{self.minor}.{self.revision}"
-    
+        
 class AxisDevice:
+    firmware_version: Version
+    prod_type: str
+    address: str
+    
     def __init__(self, host, port, username, password):
         self.host = host
         self.port = port
@@ -158,11 +143,11 @@ class AxisDevice:
     def get_base_url(self):
         return f"http://{self.host}:{self.port}/"
     
-class AxisRequestBody(IAxisRequestBody):
+class AxisRequestBody:
     def __init__(self):
         self.request_body = {}
     
-    def add__or_set_api_version(self, api_version: ApiVersion):
+    def add__or_set_api_version(self, api_version: Version):
         self.add_or_set_request_param(RequestParamType.API_VERSION, api_version.__str__())
     
     def add_or_set_context(self, text:str):
@@ -186,5 +171,4 @@ class AxisRequestBody(IAxisRequestBody):
     
     def get_request_body(self):
         return {key: value for key, value in self.request_body.items() if value is not None}
-    
     

@@ -1,10 +1,6 @@
-import requests
-import requests.auth
-import grequests
 from .types import RequestMethod
-from .abc_classes import IRequestBuilder, IRequestMaker
 
-class RequestBuilder(IRequestBuilder):
+class RequestBuilder:
     def __init__(self, method: RequestMethod, url):
         self.method: RequestMethod = method.value
         self.url = url
@@ -40,12 +36,6 @@ class RequestBuilder(IRequestBuilder):
         self.files = files
         return self
 
-    def set_auth(self, username: str, password: str, auth_type: type):
-        if not issubclass(auth_type, requests.auth.AuthBase):
-            raise ValueError("auth_type must be a subclass of requests.auth.AuthBase")
-        self.auth = auth_type(username, password)
-        return self
-
     def get_kwargs(self):
         request_kwargs = {
             'headers': self.headers, 
@@ -58,19 +48,4 @@ class RequestBuilder(IRequestBuilder):
         }
         request_kwargs = {key: value for key, value in request_kwargs.items() if value is not None}
         return request_kwargs
-    
-    def send_request(self):
-        return RequestMaker().send_request(self.get_kwargs())
 
-class RequestMaker(IRequestMaker):
-    def __init__(self):
-        pass
-
-    def send_request(self, request_build: RequestBuilder) -> requests.Response:
-        return requests.request(request_build.method, request_build.url, **request_build.get_kwargs())
-
-    def get_async_request(self, request_builder: RequestBuilder) -> grequests.AsyncRequest:
-        return grequests.request(request_builder.method, request_builder.url, **request_builder.get_kwargs())
-
-    def send_async_requests(self, request_list: list[grequests.AsyncRequest]) -> list:
-        return grequests.map(request_list)
