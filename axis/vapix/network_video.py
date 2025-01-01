@@ -116,9 +116,14 @@ class RequestCertificateManagementApi(RequestNetworkSettings):
 
 class RequestClearView(RequestNetworkVideo):
     # TODO: Implement this class
+    """
+    Property: Properties.API.HTTP.Version=3
+    Property: Properties.ClearView.ClearView=yes
+    Firmware: 7.10 and later
+    """
     def __init__(self, host: str, port: int, api_version=None, context=None):
         super().__init__(host, port, api_version, context)
-
+        
 
 class RequestNetworkSettingsApi(RequestNetworkVideo):
     # TODO: Implement this class
