@@ -65,6 +65,16 @@ class MethodType(Enum):
     STATUS = "status"
     ROLLBACK = "rollback"
     REBOOT = "reboot"
+    GET_CONFIGURATION_CAPABILITIES = "getConfigurationCapabilities"
+    GET_CONFIGURATION = "getConfiguration"
+    SEND_ALARM = "sendAlarm"
+    GET_ACCUMULATED_COUNTS = "getAccumulatedCounts"
+    RESET_ACCUMULATED_COUNTS = "resetAccumulatedCounts"
+    RESET_PASSTHROUGH = "resetPassthrough"
+    GET_OCCUPANCY = "getOccupancy"
+    LIST_PRODUCERS = "listProducers"
+    SET_ENABLED_PRODUCERS = "setEnabledProducers"
+    GET_SUPPORTED_METADATA = "getSupportedMetadata"
 
 class ApiPathType(Enum):
     AXIS_CGI_ANALYTICS_METADATA_CONFIG = "axis-cgi/analyticsmetadataconfig.cgi"
@@ -177,7 +187,13 @@ class ParamType(Enum):
     AUTO_ROLLBACK = "autoRollback"
     AUTO_COMMIT = "autoCommit"
     FACTORY_DEFAULT_MODE = "factoryDefaultMode"
-
+    SCENARIO = "scenario"
+    PRODUCERS = "producers"
+    NAME = "name"
+    ENABLED = "enabled"
+    CHANNEL = "channel"
+    VIDEO_CHANNELS = "videochannels"
+    
 class StaticAddressConfigurationParamsType(Enum):
     ADRESS = "address"
     PREFIX_LENGTH = "prefixLength"
@@ -211,20 +227,6 @@ class OverlayColorType(Enum):
     TRANSPARENT = "transparent"
     SEMI_TRANSPARENT = "semiTransparent"
     NONE = None
-
-class TimeZoneType(Enum):
-    EUROPE_STOCKHOLM = "Europe/Stockholm"
-    EUROPE_LONDON = "Europe/London"
-    EUROPE_PARIS = "Europe/Paris"
-    AMERICA_NEW_YORK = "America/New_York"
-    AMERICA_LOS_ANGELES = "America/Los_Angeles"
-    ASIA_TOKYO = "Asia/Tokyo"
-    ASIA_SINGAPORE = "Asia/Singapore"
-    AUSTRALIA_SYDNEY = "Australia/Sydney"
-    AFRICA_JOHANNESBURG = "Africa/Johannesburg"
-    AMERICA_SAO_PAULO = "America/Sao_Paulo"
-    AMERICA_MANAUS = "America/Manaus"
-    AMERICA_ACRE = "America/Acre"
 
 class ResponseType(Enum):
     DATA = "data"

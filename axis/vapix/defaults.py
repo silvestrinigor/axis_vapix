@@ -130,3 +130,33 @@ class NetworkResolverConfiguration:
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
     
+class AnalyticsMetadataVideoChannel:
+    channel: int | None = None
+    enabled: bool | None = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.CHANNEL.value: self.channel,
+            ParamType.ENABLED.value: self.enabled
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+    
+class AnalyticsMetadataProducer:
+    name: str | None = None
+    video_channels: list[AnalyticsMetadataVideoChannel] | None = None
+
+    def get_all_params(self):
+        video_channels = []
+        for video_channel in self.video_channels:
+            video_channels.append(video_channel.get_all_params())
+            
+        all_params = {
+            ParamType.NAME.value: self.name,
+            ParamType.VIDEO_CHANNELS.value: video_channels
+        }
+        # Remove any keys with None values
+        all_params = {key: value for key, value in all_params.items() if value is not None}
+        return all_params
+    

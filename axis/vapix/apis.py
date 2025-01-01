@@ -1,13 +1,17 @@
 from requests import Request, Response
 from packaging.version import Version
 from datetime import datetime
-import json
 import io
 
-from .types import DevicePropertyType, ParamType, RequestParamType, MethodType, ApiPathType, TimeZoneType, ActionType
+from .types import DevicePropertyType, ParamType, RequestParamType, MethodType, ApiPathType, ActionType, RequestUrlParamType
 from .utils import serialize_datetime
+from .defaults import OverlayPositionType, OverlayColorType, OverlayPositionCustomValue, AnalyticsMetadataProducer
 
 class RequestAxisVapix:
+    """
+    A class to interact with the Axis VAPIX API.
+    Axis API documentation: https://developer.axis.com/vapix/
+    """
     def __init__(self, host: str, port: int, api_version: str | None = None, context: str | None = None):
         self._api_verion = api_version
         self._context = context
@@ -16,12 +20,27 @@ class RequestAxisVapix:
         self._api_path_type: ApiPathType = ApiPathType.NONE
     
     def _get_basic_request_body(self):
+        """
+        Constructs a basic request body dictionary with API version and context if they are set.
+
+        Returns:
+            dict: A dictionary containing the API version and context if they are not None.
+        """
         request_body = {}
         if self._api_verion != None: request_body[RequestParamType.API_VERSION.value] = self._api_verion
         if self._context != None: request_body[RequestParamType.CONTEXT.value] = self._context 
         return request_body
 
     def _get_supported_versions(self):
+        """
+        Constructs a request to get the supported versions of the API.
+
+        Returns:
+            Request: A POST request object to get the supported versions.
+        
+        Raises:
+            ValueError: If the API path type is not set.
+        """
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_SUPPORTED_VERSIONS.value
         # Check if api_path_type is None and raise an exception
@@ -37,14 +56,26 @@ class RequestAnalyticsMetadataProducerConfiguration(RequestAxisVapix):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_ANALYTICS_METADATA_CONFIG
 
-    def list_producers(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def list_producers(self, producers: list[str]):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.LIST_PRODUCERS.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def set_enable_producers(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def set_enable_producers(self, producers: list[AnalyticsMetadataProducer]):
+        producers = {}
+        for producer in producers:
+            producers.append(producer.get_all_params())
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.SET_ENABLED_PRODUCERS.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def get_supported_metadata(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def get_supported_metadata(self, producers: list[str]):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.GET_SUPPORTED_METADATA.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
@@ -66,27 +97,44 @@ class RequestApiDiscoveryService(RequestAxisVapix):
     def get_supported_versions(self):
         return super()._get_supported_versions()
 
-class RequestAplicationApi(RequestAxisVapix): # TODO: Implement this class
+class RequestAplicationApi(RequestAxisVapix):
     """
     Property: Properties.EmbeddedDevelopment.Version exists.
     list.cgi requries:
     Property: Properties.EmbeddedDevelopment.Version=1.20 and later.
     """
-    def __init__(self, host: str, port: int, api_version: str = None, context = None):
-        super().__init__(host, port, api_version, context)
+    def __init__(self, host: str, port: int, context = None):
+        super().__init__(host, port, context=context)
 
-    def upload(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-
-    def control_application(self) : # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-
-    def configure_application(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def upload(self, file_obj: io.BufferedReader): # TODO: Test if this function works
+        self._api_path_type = ApiPathType.AXIS_CGI_APPLICATIONS_UPLOAD
+        files = {'file': ('application_file.bin', file_obj, 'application/octet-stream')}
+        request = Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", files=files)
+        self._api_path_type = ApiPathType.NONE
+        return request
     
-    def list(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-
+    def control_application(self, action: ActionType, **kwargs): # TODO: Test if this function works
+        uri = ""
+        for key, value in kwargs.items():
+            uri += f"&{key}={value}"
+        self._api_path_type = ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL
+        request = Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}?{RequestUrlParamType.ACTION.value}={action.value}{uri}")
+        self._api_path_type = ApiPathType.NONE
+        return request
+    
+    def configure_application(self, action: ActionType, config_name:str, config_value): # TODO: Test if this function works
+        uri = ""
+        self._api_path_type = ApiPathType.AXIS_CGI_APPLICATIONS_CONFIG
+        request = Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}?{RequestUrlParamType.ACTION.value}={action.value}&{config_name}={config_value}")
+        self._api_path_type = ApiPathType.NONE
+        return request
+    
+    def list(self): # TODO: Test if this function works
+        self._api_path_type = ApiPathType.AXIS_CGI_APPLICATIONS_LIST
+        request = Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}")
+        self._api_path_type = ApiPathType.NONE
+        return request
+    
 class RequestBasicDeviceInformation(RequestAxisVapix):
     """
     Firmware: 8.40 and later
@@ -379,17 +427,23 @@ class RequestTimeApi(RequestAxisVapix):
         request_body[RequestParamType.PARAMS.value] = {ParamType.DATE_TIME.value: serialize_datetime(date_time)}
         return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
     
-    def set_time_zone(self, timezone: TimeZoneType):
+    def set_time_zone(self, timezone: str):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.SET_TIME_ZONE.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.TIME_ZONE.value: timezone.value}
+        request_body[RequestParamType.PARAMS.value] = {ParamType.TIME_ZONE.value: timezone}
         return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
     
-    def set_posix_time_zone(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def set_posix_time_zone(self, posix_timezone: str, enable_dst: bool):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.SET_POSIX_TIME_ZONE.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.POSIX_TIME_ZONE.value: posix_timezone}
+        request_body[RequestParamType.PARAMS.value][ParamType.ENABLE_DST.value] = enable_dst
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
     
-    def reset_time_zone(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def reset_time_zone(self):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.RESET_TIME_ZONE.value
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
     
     def get_suported_versions(self):
         return super()._get_supported_versions()
@@ -403,37 +457,56 @@ class RequestVideoStreaming(RequestAxisVapix): # TODO: Implement this class
         super().__init__(host, port, api_version, context)
         raise NotImplementedError("This function is not implemented yet.")
     
-class RequestObjectAnalyticsApi(RequestAxisVapix): # TODO: Implement this class
+class RequestObjectAnalyticsApi(RequestAxisVapix):
     """
     Use /axis-cgi/applications/list.cgi to check if the application is installed on your Axis device.
     """
     def __init__(self, host: str, port: int, api_version: str = None, context = None):
         super().__init__(host, port, api_version, context)
-        raise NotImplementedError("This function is not implemented yet.")
+        self._api_path_type = ApiPathType.LOCAL_OBJECT_ANALYTICS
 
-    def get_configuration_capabilities(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
-    def get_configuration(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
+    def get_configuration_capabilities(self):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION_CAPABILITIES.value
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
+    def get_configuration(self):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION.value
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
     def set_configuration(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
     
-    def send_alarm(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
-    def get_accumulated_count(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
-    def reset_accumulated_counts(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
-    def reset_passthrough(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
-    def get_occupancy(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def send_alarm(self, scenario: int):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.SEND_ALARM.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
+    def get_accumulated_count(self, scenario: int):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.GET_ACCUMULATED_COUNTS.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
+    def reset_accumulated_counts(self, scenario: int):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.RESET_ACCUMULATED_COUNTS.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
+    def reset_passthrough(self, scenario: int):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.RESET_PASSTHROUGH.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
+    def get_occupancy(self, scenario: int):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.GET_OCCUPANCY.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
@@ -482,3 +555,6 @@ class ResponseAxisCgi: # TODO: Implement this class
         # Check if the error key exists and is properly structured
         error = json_data.get("error")
         return isinstance(error, dict)
+    
+
+
