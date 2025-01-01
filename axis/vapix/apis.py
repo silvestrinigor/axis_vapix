@@ -576,5 +576,19 @@ class ResponseAxisCgi: # TODO: Implement this class
         error = json_data.get("error")
         return isinstance(error, dict)
     
+    def is_textplain_response_with_error(self):
+        # Check if the response has a text/plain Content-Type
+        if self._response.headers.get("Content-Type") != "text/plain":
+            raise ValueError("Response is not in text/plain format")
+        # Check for successful HTTP status code
+        if self._response.status_code != 200:
+            raise ValueError(f"Unexpected response status code: {self._response.status_code}")
+        # Safely attempt to parse text
+        try:
+            text_data = self._response.text
+        except ValueError:
+            raise ValueError("Response body is not valid text")
+        # Check if the error key exists and is properly structured
+        return "Error".lower() in text_data.lower()
 
 
