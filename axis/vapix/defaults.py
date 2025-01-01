@@ -1,5 +1,6 @@
-from .types import OverlayPositionType, OverlayColorType, OverlayPositionCustomValue, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType
+from .types import OverlayPositionType, OverlayColorType, OverlayPositionCustomValue, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType, RequestMethod
 from packaging.version import Version
+from requests import auth
 
 class TextOverlay:
     camera:int = None
@@ -130,45 +131,19 @@ class NetworkResolverConfiguration:
         return all_params
         
 class AxisDevice:
-    firmware_version: Version
-    prod_type: str
-    address: str
-    
-    def __init__(self, host, port, username, password):
+    def __init__(
+        self,
+        host,
+        port,
+        username,
+        password
+        ):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
-        
-    def get_base_url(self):
-        return f"http://{self.host}:{self.port}/"
-    
-class AxisRequestBody:
-    def __init__(self):
-        self.request_body = {}
-    
-    def add__or_set_api_version(self, api_version: Version):
-        self.add_or_set_request_param(RequestParamType.API_VERSION, api_version.__str__())
-    
-    def add_or_set_context(self, text:str):
-        self.add_or_set_request_param(RequestParamType.CONTEXT, text)
-    
-    def add_or_set_method(self, method: MethodType):
-        self.add_or_set_request_param(RequestParamType.METHOD, method.value)
-    
-    def add_or_set_method_params(self, param_type: ParamType, value):
-        if RequestParamType.PARAMS.value not in self.request_body:
-            self.request_body[RequestParamType.PARAMS.value] = {}
-        if not isinstance(self.request_body[RequestParamType.PARAMS.value], dict):
-            raise ValueError("PARAMS must be a dictionary.")
-        self.request_body[RequestParamType.PARAMS.value][param_type.value] = value
-        request_params = self.request_body[RequestParamType.PARAMS.value]
-        request_params = {key: value for key, value in request_params.items() if value is not None}
-        self.request_body[RequestParamType.PARAMS.value] = request_params
-    
-    def add_or_set_request_param(self, param_type: RequestParamType, value):
-        self.request_body[param_type.value] = value
-    
-    def get_request_body(self):
-        return {key: value for key, value in self.request_body.items() if value is not None}
-    
+        self.base_url = f"http://{self.host}:{self.port}/"
+        self.firmware_version: Version | None = None
+        self.prod_type = None
+        self.address = None
+        self.auth = auth.HTTPDigestAuth(username, password)

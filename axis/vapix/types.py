@@ -95,6 +95,7 @@ class ApiPathType(Enum):
     AXIS_CGI_SYSTEM_SETTINGS_FIRMWARE_UPGRADE = "axis-cgi/firmwareupgrade.cgi?"
     AXIS_CGI_SYSTEM_SETTINGS_RESTART = "axis-cgi/restart.cgi"
     AXIS_CGI_PARAM = "axis-cgi/param.cgi?"
+    NONE = None
 
 class ApiType(Enum):
     AXIS_CGI_NETWORK_SETTINGS = "network-settings"
