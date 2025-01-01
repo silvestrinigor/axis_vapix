@@ -67,6 +67,7 @@ class MethodType(Enum):
     REBOOT = "reboot"
 
 class ApiPathType(Enum):
+    AXIS_CGI_ANALYTICS_METADATA_CONFIG = "axis-cgi/analyticsmetadataconfig.cgi"
     AXIS_CGI_API_DISCOVERY = "axis-cgi/apidiscovery.cgi"
     AXIS_CGI_AUDIO_DEVICE_CONTROL = "axis-cgi/audiodevicecontrol.cgi"
     AXIS_CGI_AUDIO_TRANSMIT = "axis-cgi/audio/transmit.cgi"
@@ -74,7 +75,8 @@ class ApiPathType(Enum):
     AXIS_CGI_BASIC_DEVICE_INFO = "axis-cgi/basicdeviceinfo.cgi"
     AXIS_CGI_CAPTURE_MODE = "axis-cgi/capturemode.cgi"
     AXIS_CGI_CLEAR_VIEW = "axis-cgi/clearviewcontrol.cgi"
-    AXIS_CGI_DYNAMIC_OVERLAY = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi"
+    AXIS_CGI_DYNAMIC_OVERLAY_API = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi" # Dynamic overlay API
+    AXIS_CGI_DYNAMIC_OVERLAY = "axis-cgi/dynamicoverlay.cgi?" # Dynamic text overlay
     AXIS_CGI_FIND_MY_DEVICE = "axis-cgi/findmydevice.cgi"
     AXIS_CGI_FIRMWARE_MANAGEMENT = "axis-cgi/firmwaremanagement.cgi"
     AXIS_CGI_LEGACY_PARAMETER_HANDLING = "axis-cgi/param.cgi?action="
