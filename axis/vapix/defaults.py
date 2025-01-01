@@ -3,17 +3,17 @@ from packaging.version import Version
 from requests import auth
 
 class TextOverlay:
-    camera:int = None
-    font_size:int = None
-    identity: int = None
-    indicator: str = None
+    camera:int | None= None
+    font_size:int | None = None
+    identity: int | None = None
+    indicator: str | None = None
     position: OverlayPositionType | OverlayPositionCustomValue = OverlayPositionType.NONE
-    text: str = None
+    text: str | None = None
     text_bg_color: OverlayColorType = OverlayColorType.NONE
     text_color: OverlayColorType = OverlayColorType.NONE
-    text_length: int = None
+    text_length: int | None = None
     text_ol_color: OverlayColorType = OverlayColorType.NONE
-    visible: bool = None
+    visible: bool | None = None
 
     def get_all_params(self):
         all_params = {
@@ -32,13 +32,13 @@ class TextOverlay:
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
-    
+
 class ImageOverlay:
-    camera:int = None
-    identity: int = None
-    overlay_path: str = None
+    camera:int | None = None
+    identity: int | None = None
+    overlay_path: str | None = None
     position: OverlayPositionType | OverlayPositionCustomValue = OverlayPositionType.NONE
-    visible: bool = None
+    visible: bool | None = None
 
     def get_all_params(self):
         all_params = {
@@ -53,9 +53,9 @@ class ImageOverlay:
         return all_params
     
 class NTPClientConfiguration:
-    enable: bool = None
-    servers_source: ServersSourceType = None
-    static_servers_list: list[str] = None
+    enable: bool | None = None
+    servers_source: ServersSourceType | None = None
+    static_servers_list: list[str] | None = None
     
     def get_all_params(self):
         all_params = {
@@ -68,8 +68,8 @@ class NTPClientConfiguration:
         return all_params
     
 class HostnameConfiguration:
-    use_dhcp_hostname: bool = None
-    static_hostname: str = None
+    use_dhcp_hostname: bool | None = None
+    static_hostname: str | None = None
     
     def get_all_params(self):
         all_params = {
@@ -81,9 +81,9 @@ class HostnameConfiguration:
         return all_params
     
 class StaticAddressConfigurations:
-    address: str = None
-    prefix_length: int = None
-    broadcast: str = None
+    address: str | None = None
+    prefix_length: int | None = None
+    broadcast: str | None = None
     
     def get_all_params(self):
         all_params = {
@@ -99,7 +99,7 @@ class StaticAddressConfigurations:
         self.get_all_params()
         
 class IPv4AddressConfiguration:
-    device_name: str = "eth0"
+    device_name: str | None = "eth0"
     configuration_mode: IPAddressConfigurationModeType = IPAddressConfigurationModeType.NONE
     static_address_configurations: list[StaticAddressConfigurations] = None
     
@@ -114,10 +114,10 @@ class IPv4AddressConfiguration:
         return all_params
     
 class NetworkResolverConfiguration:
-    use_dhcp_resolver_info: bool = None
-    static_name_servers: list[str] = None
-    static_search_domains: list[str] = None
-    static_domain_name: str = None
+    use_dhcp_resolver_info: bool | None = None
+    static_name_servers: list[str] | None = None
+    static_search_domains: list[str] | None = None
+    static_domain_name: str | None = None
     
     def get_all_params(self):
         all_params = {
@@ -129,21 +129,4 @@ class NetworkResolverConfiguration:
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
-        
-class AxisDevice:
-    def __init__(
-        self,
-        host,
-        port,
-        username,
-        password
-        ):
-        self.host = host
-        self.port = port
-        self.username = username
-        self.password = password
-        self.base_url = f"http://{self.host}:{self.port}/"
-        self.firmware_version: Version | None = None
-        self.prod_type = None
-        self.address = None
-        self.auth = auth.HTTPDigestAuth(username, password)
+    

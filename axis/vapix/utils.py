@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-from .types import ResponseType
 from packaging import version
 import re
 
@@ -21,18 +20,6 @@ def get_firmwareversion_type_from_string(firmwareversion: str):
         return version.parse(firmwareversion)
     except:
         return _parse_to_packaging_version(firmwareversion)
-
-def is_response_with_error(response) -> bool:
-    if ResponseType.ERROR.value in response.text:
-        return True
-    else:
-        return False
-    
-def serialize_axis_response_content(text: str, keyargs: dict):
-    for values in keyargs.values():
-        print(values)
-        text = text.strip(f"{values}=")
-    return text.rstrip('\n')
 
 def _parse_to_packaging_version(version_str):
     pattern = r"(\d+)\.(\d+)(?:-(.*))?"

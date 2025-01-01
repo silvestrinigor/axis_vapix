@@ -126,6 +126,10 @@ class ActionType(Enum):
     UPDATE = "update"
     LIST = "list"
     LIST_DEFINITIONS =  "listdefinitions"
+    START = "start"
+    STOP = "stop"
+    RESTART = "restart"
+    NONE = None
 
 class ParamType(Enum):
     POSIX_TIME_ZONE = "posixTimeZone"
