@@ -1,11 +1,11 @@
-from axis.vapix import apis
-from axis.vapix.types import RequestUrlParamType, ActionType
-from axis.vapix.exeptions import AxisVapixExeption, AxisVapixVersionNotSupportedExeption
+from . import apis
+from .types import RequestUrlParamType, ActionType
+from .exeptions import AxisVapixExeption, AxisVapixVersionNotSupportedExeption
 import requests
 import requests.auth
 from packaging.version import Version
-from utils import get_firmwareversion_type_from_string
-from utils import get_apiversion_type_from_string
+from .utils import get_firmwareversion_type_from_string
+from .utils import get_apiversion_type_from_string
 from datetime import datetime
 
 class Device:
@@ -39,8 +39,9 @@ class Device:
         request = apis.RequestTimeApi(self._host, self._port).get_date_time_info()
         request.auth = self._session.auth
         response = self._session.send(request.prepare())
+        print(response.text)
         self._ensure_response_status_ok(response)
-        self._ensure_response_textplain(response)
+        self._ensure_response_json(response)
         print(response.text)
 
     def _ensure_device_properties_available(self):
@@ -53,6 +54,10 @@ class Device:
 
     def _ensure_response_textplain(self, response: requests.Response):
         if apis.ResponseAxisCgi(response).is_textplain_response_with_error():
+            raise AxisVapixExeption(response.text)
+
+    def _ensure_response_json(self, response: requests.Response):
+        if apis.ResponseAxisCgi(response).is_json_response_with_error():
             raise AxisVapixExeption(response.text)
 
     def get_properties(self):
