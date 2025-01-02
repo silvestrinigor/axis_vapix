@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from packaging import version
 import re
+import pytz
 
 def serialize_datetime(date_time: datetime) -> str:
     if not _is_timezone_aware(date_time=date_time): 
@@ -36,4 +37,7 @@ def _parse_to_packaging_version(version_str):
         return parsed_version
     else:
         raise ValueError(f"Invalid version format: {version_str}")
+
+def get_all_timezones():
+    return pytz.all_timezones
 

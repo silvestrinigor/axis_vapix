@@ -25,10 +25,6 @@ class RequestParamType(Enum):
     METHOD = "method"
     FACTORY_DEFAULT_MODE = "factoryDefaultMode"
 
-class RequestMethod(Enum):
-    GET = "GET"
-    POST = "POST"
-
 class MethodType(Enum):
     FACTORY_DEFAULT = "factoryDefault"
     UPGRADE = "upgrade"
@@ -68,6 +64,7 @@ class MethodType(Enum):
     GET_CONFIGURATION_CAPABILITIES = "getConfigurationCapabilities"
     GET_CONFIGURATION = "getConfiguration"
     SEND_ALARM = "sendAlarm"
+    SEND_ALARM_EVENT = "sendAlarmEvent"
     GET_ACCUMULATED_COUNTS = "getAccumulatedCounts"
     RESET_ACCUMULATED_COUNTS = "resetAccumulatedCounts"
     RESET_PASSTHROUGH = "resetPassthrough"
@@ -91,7 +88,7 @@ class ApiPathType(Enum):
     AXIS_CGI_FIRMWARE_MANAGEMENT = "axis-cgi/firmwaremanagement.cgi"
     AXIS_CGI_LEGACY_PARAMETER_HANDLING = "axis-cgi/param.cgi?action="
     AXIS_CGI_ADMIN_LEGACY_PARAMETER_HANDLING = "axis-cgi/admin/param.cgi?action="
-    AXIS_CGI_NETWORK_SETTINGS = "axis-cgi/network_settings.cgi"
+    AXIS_CGI_NETWORK_SETTINGS_API = "axis-cgi/network_settings.cgi"
     AXIS_CGI_TIME = "axis-cgi/time.cgi"
     AXIS_CGI_NTP = "axis-cgi/ntp.cgi"
     AXIS_CGI_APPLICATIONS_UPLOAD = "axis-cgi/applications/upload.cgi"
@@ -109,16 +106,6 @@ class ApiPathType(Enum):
     AXIS_CGI_PARAM = "axis-cgi/param.cgi?"
     NONE = None
 
-class ApiType(Enum):
-    AXIS_CGI_NETWORK_SETTINGS = "network-settings"
-    AXIS_CGI_TIME = "time-service"
-    AXIS_CGI_BASIC_DEVICE_INFO = "basic-device-info"
-    AXIS_CGI_DYNAMIC_OVERLAY = "dynamicoverlay"
-    AXIS_CGI_NTP = "ntp"
-    AXIS_CGI_FIRMWARE_MANAGEMENT = "fwmgr"
-    AXIS_CGI_SYSTEM_SETTINGS_PWDGRP = "user-management"
-    AXIS_CGI_PARAM = "param-cgi"
-
 class FirmwareUpgradeType(Enum):
     NORMAL = "normal"
     FACTORY_DEFAULT = "factorydefault"
@@ -135,7 +122,7 @@ class ActionType(Enum):
     REMOVE = "remove"
     UPDATE = "update"
     LIST = "list"
-    LIST_DEFINITIONS =  "listdefinitions"
+    LIST_DEFINITIONS = "listdefinitions"
     START = "start"
     STOP = "stop"
     RESTART = "restart"
@@ -193,6 +180,7 @@ class ParamType(Enum):
     ENABLED = "enabled"
     CHANNEL = "channel"
     VIDEO_CHANNELS = "videochannels"
+    PROFILE = "profile"
     
 class StaticAddressConfigurationParamsType(Enum):
     ADRESS = "address"

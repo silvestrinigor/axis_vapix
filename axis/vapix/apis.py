@@ -1,11 +1,11 @@
 from requests import Request, Response
-from packaging.version import Version
 from datetime import datetime
 import io
+import json
 
-from .types import DevicePropertyType, ParamType, RequestParamType, MethodType, ApiPathType, ActionType, RequestUrlParamType
+from .types import DevicePropertyType, ParamType, RequestParamType, MethodType, ApiPathType, ActionType, RequestUrlParamType, OverlayPositionType, OverlayColorType
 from .utils import serialize_datetime
-from .defaults import OverlayPositionType, OverlayColorType, OverlayPositionCustomValue, AnalyticsMetadataProducer
+from .defaults import OverlayPositionCustomValue, AnalyticsMetadataProducer, TextOverlay, ImageOverlay
 
 class RequestAxisVapix:
     """
@@ -259,7 +259,7 @@ class RequestDecoderApi(RequestAxisVapix): # TODO: Implement this class
     def get_supported_versions(self):
         return super()._get_supported_versions()
 
-class RequestNetworkSettingsApi(RequestAxisVapix): # TODO: Implement this class
+class RequestNetworkSettingsApi(RequestAxisVapix):
     """
     API Discovery: id=network-settings
     Property: Properties.API.HTTP.Version=3
@@ -267,6 +267,48 @@ class RequestNetworkSettingsApi(RequestAxisVapix): # TODO: Implement this class
     """
     def __init__(self, host: str, port: int, api_version: str, context=None):
         super().__init__(host, port, api_version, context)
+        self._api_path_type = ApiPathType.AXIS_CGI_NETWORK_SETTINGS_API
+    
+    def add_vlan(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def get_network_info(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def remove_vlam(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def scan_wlan_networks(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_hostname_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_ipv4_address_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_ipv6_address_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_global_proxy_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_resolver_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_wired_8021x_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_wlan_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def set_wlan_station_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def test_wlan_station_configuration(self): # TODO: Implement this function
+        raise NotImplementedError("This function is not implemented yet.")
+    
+    def wlan_switch_apto_station(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
 
 class RequestNetworkSettings(RequestAxisVapix): # TODO: Implement this class
@@ -278,16 +320,7 @@ class RequestNetworkSettings(RequestAxisVapix): # TODO: Implement this class
         super().__init__(host, port, api_version, context)
         raise NotImplementedError("This function is not implemented yet.")
 
-    def add_a_new_vlam(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-
-    def get_network_info(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-
-    def remove_vlam(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-
-class RequestDynamicOverlayApi(RequestAxisVapix): # TODO: Implement this class
+class RequestDynamicOverlayApi(RequestAxisVapix):
     """
     Property: Properties.API.HTTP.Version=3
     Property: Properties.DynamicOverlay.DynamicOverlay=yes
@@ -296,25 +329,49 @@ class RequestDynamicOverlayApi(RequestAxisVapix): # TODO: Implement this class
     """
     def __init__(self, host: str, port: int, api_version=None, context=None):
         super().__init__(host, port, api_version, context)
-        raise NotImplementedError("This function is not implemented yet.")
+        self._api_path_type = ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY
 
-    def add_image(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def add_image(self, image_overlay: ImageOverlay):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.ADD_IMAGE.value
+        request_body[RequestParamType.PARAMS.value] = image_overlay.get_all_params()
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def add_text(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def add_text(self, text_overlay: TextOverlay):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.ADD_TEXT.value
+        request_body[RequestParamType.PARAMS.value] = text_overlay.get_all_params()
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def list(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def list(self, camera: str | None = None, identity: int | None = None):
+        params = {}
+        if camera != None: params[ParamType.CAMERA.value] = camera
+        if identity != None: params[ParamType.IDENTITY.value] = identity
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.LIST.value
+        if params != {}: request_body[RequestParamType.PARAMS.value] = params
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def remove(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def remove(self, identity: int | None = None):
+        params = {
+            ParamType.IDENTITY.value: identity
+        }
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.REMOVE.value
+        if params != {}: request_body[RequestParamType.PARAMS.value] = params
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def set_image(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def set_image(self, image_overlay: ImageOverlay):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.SET_IMAGE.value
+        request_body[RequestParamType.PARAMS.value] = image_overlay.get_all_params()
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def set_text(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def set_text(self, text_overlay: TextOverlay):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.SET_TEXT.value
+        request_body[RequestParamType.PARAMS.value] = text_overlay.get_all_params()
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_overlay_capabilities(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
@@ -361,16 +418,16 @@ class RequestFirmwareManagementApi(RequestAxisVapix):
     def status(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
 
-    def upgrade(self, file_obj: io.BufferedReader, auto_rool_back = None, factory_default_mode = None, auto_commit = None):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.UPGRADE.value
-        request_body[RequestParamType.PARAMS.value] = {}
-        if auto_rool_back != None: request_body[RequestParamType.PARAMS.value][ParamType.AUTO_ROLLBACK.value] = auto_rool_back
-        if factory_default_mode != None: request_body[RequestParamType.PARAMS.value][ParamType.FACTORY_DEFAULT_MODE.value] = factory_default_mode
-        if auto_commit != None: request_body[RequestParamType.PARAMS.value][ParamType.AUTO_COMMIT.value] = auto_commit
-        files = {'file': ('firmware_file.bin', file_obj, 'application/octet-stream')}
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body, files=files)
-
+    def upgrade(self, file_path: str):        
+        json_data = b"""\
+        {
+        "apiVersion": "1.0",
+        "method": "upgrade"
+        }\
+        """
+        firmware = open(file_path, 'rb').read()
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", files=((None, json_data),(None, firmware)))
+        
     def commit(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
 
@@ -511,7 +568,7 @@ class RequestObjectAnalyticsApi(RequestAxisVapix):
     def get_supported_versions(self):
         return super()._get_supported_versions()
     
-class RequestLoiteringGuard(RequestAxisVapix): # TODO: Implement this class
+class RequestLoiteringGuard(RequestAxisVapix):
     """
     Software: EmbeddedDevelopment version 2.13 or higher is required for the ACAP to work.
     Property: Properties.EmbeddedDevelopment.Version=2.13
@@ -519,24 +576,31 @@ class RequestLoiteringGuard(RequestAxisVapix): # TODO: Implement this class
     """
     def __init__(self, host: str, port: int, api_version: str = None, context = None):
         super().__init__(host, port, api_version, context)
-        raise NotImplementedError("This function is not implemented yet.")
+        self._api_path_type = ApiPathType.LOCAL_LOITERING_GUARD
     
-    def get_configuration(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
+    def get_configuration(self):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION.value
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
     def set_configuration(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
     
-    def send_alarm_event(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
-    
-    def get_configuration_capabilities(self):
-        raise NotImplementedError("This function is not implemented yet.")
+    def send_alarm(self, profile: int):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.SEND_ALARM_EVENT.value
+        request_body[RequestParamType.PARAMS.value] = {ParamType.PROFILE.value: profile}
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+
+    def get_configuration(self):
+        request_body = self._get_basic_request_body()
+        request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION_CAPABILITIES.value
+        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
 
-class RequestParameterManagement(RequestAxisVapix): # TODO: Implement this class
+class RequestParameterManagement(RequestAxisVapix):
     """
     Property: Properties.API.HTTP.Version=3
     Firmware: 5.00 and later.
@@ -556,7 +620,7 @@ class RequestParameterManagement(RequestAxisVapix): # TODO: Implement this class
         request = Request(request_method, f"http://{self._host}:{self._port}/{self._api_path_type.value}{RequestUrlParamType.ACTION.value}{action.value}{uri}")
         return request
     
-class ResponseAxisCgi: # TODO: Implement this class
+class ResponseAxisCgi:
     def __init__(self, response: Response):
         self._response = response
 
@@ -577,9 +641,6 @@ class ResponseAxisCgi: # TODO: Implement this class
         return isinstance(error, dict)
     
     def is_textplain_response_with_error(self):
-        # Check if the response has a text/plain Content-Type
-        if self._response.headers.get("Content-Type") != "text/plain":
-            raise ValueError("Response is not in text/plain format")
         # Check for successful HTTP status code
         if self._response.status_code != 200:
             raise ValueError(f"Unexpected response status code: {self._response.status_code}")
@@ -592,3 +653,4 @@ class ResponseAxisCgi: # TODO: Implement this class
         return "Error".lower() in text_data.lower()
 
 
+ 
