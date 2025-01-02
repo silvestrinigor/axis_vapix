@@ -16,4 +16,4 @@ request = axis.vapix.apis.RequestParameterManagement(HOST, PORT).get_request(axi
 request.auth = requests.auth.HTTPDigestAuth(USERNAME, PASSWORD)
 
 
-axis.vapix.devices.Device(HOST, PORT, USERNAME, PASSWORD).get_device_properties()
+axis.vapix.devices.Device(HOST, PORT, USERNAME, PASSWORD).date_time
