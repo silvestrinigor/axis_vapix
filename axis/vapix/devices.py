@@ -16,24 +16,37 @@ class Device:
 
         self._firmware_version = None
         self._serial_number = None
-        self._prod_type = None
-        self._prod_nbr = None
+        
+        self._firmware_management_version = None
+        
+        self._is_device_properties_info_avaliable: bool = False
+        
+        
 
-
-    def get_device_properties(self):
-        """
-        Property: Properties.API.HTTP.Version=3
-        Firmware: 5.00 and later.
-        """
+    def get_properties(self):
         kewargs = {
            RequestUrlParamType.GROUP.value: "root.Properties",
-           RequestUrlParamType.GROUP.value: "root.Brand"
         }
         request = apis.RequestParameterManagement(self._host, self._port).get_request(ActionType.LIST, **kewargs)
+        request.auth = self._session.auth
         requestp = request.prepare()
         response = self._session.send(requestp)
         if response.status_code != 200:
             raise AxisVapixExeption(f"Error: {response.status_code} - {response.text}")
         if apis.ResponseAxisCgi(response).is_textplain_response_with_error():
             raise AxisVapixExeption(response.text)
-        print(response.text)
+        # Split the text into lines
+        lines = response.text.strip().split("\n")
+        # Loop through each line and process it
+        for line in lines:
+            # Split the line by '=' to separate the property path and value
+            key, value = line.split('=')
+            if key == "root.Properties.System.SerialNumber":
+                self._serial_number = value
+            if key == "root.Properties.Firmware.Version":
+                self._firmware_version = value
+            if key == "root.Properties.FirmwareManagement.Version":
+                self._firmware_management_version = value
+                
+        self._is_device_properties_info_avaliable = True
+

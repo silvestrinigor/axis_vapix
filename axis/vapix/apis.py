@@ -553,7 +553,7 @@ class RequestParameterManagement(RequestAxisVapix): # TODO: Implement this class
             request_method = "GET"
         else:
             request_method = "POST"
-        request = Request(request_method, f"http://{self._host}:{self._port}/{self._api_path_type.value}?{RequestUrlParamType.ACTION.value}={action.value}{uri}")
+        request = Request(request_method, f"http://{self._host}:{self._port}/{self._api_path_type.value}{RequestUrlParamType.ACTION.value}{action.value}{uri}")
         return request
     
 class ResponseAxisCgi: # TODO: Implement this class
