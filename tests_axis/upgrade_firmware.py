@@ -2,6 +2,8 @@ import sys
 import os
 import requests
 import requests.auth
+
+import axis.vapix.firmware_management_api
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 import axis.vapix
 from tests_axis import HOST, PORT, PASSWORD, USERNAME
