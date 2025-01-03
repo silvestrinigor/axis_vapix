@@ -2,7 +2,7 @@
 https://developer.axis.com/vapix/applications/loitering-guard
 """
 
-from requests import Request
+from ..request import AxisRequest
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import ApiVersion, LoiteringGuardConfiguration
@@ -16,24 +16,24 @@ class RequestLoiteringGuard(IRequestAxisVapix):
     def get_configuration(self):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def set_configuration(self, configuration: LoiteringGuardConfiguration):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.SET_CONFIGURATION.value
         request_body[RequestParamType.PARAMS.value] = configuration.get_all_params()
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
     
     def send_alarm(self, profile: int):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.SEND_ALARM_EVENT.value
         request_body[RequestParamType.PARAMS.value] = {ParamType.PROFILE.value: profile}
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_configuration(self):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION_CAPABILITIES.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()

@@ -2,7 +2,7 @@
 https://developer.axis.com/vapix/network-video/network-settings-api
 """
 
-from requests import Request
+from ..request import AxisRequest
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType
 from ..params import ApiVersion, RequestParamType, MethodType, IPv4AddressConfiguration, FirmwareVersion
@@ -24,12 +24,12 @@ class RequestNetworkSettingsApi(IRequestAxisVapix):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.PARAMS.value] = params
         request_body[RequestParamType.METHOD.value] = MethodType.ADD_VLAM.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_network_info(self): 
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_NETWORK_INFO.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def remove_vlam(self, master_device_name: str | None = None, vlan_id: int | None = None):
         params = {}
@@ -40,7 +40,7 @@ class RequestNetworkSettingsApi(IRequestAxisVapix):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.PARAMS.value] = params
         request_body[RequestParamType.METHOD.value] = MethodType.REMOVE_VLAM.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def scan_wlan_networks(self, device_name: str, refresh: bool | None = None):
         params = {}
@@ -50,7 +50,7 @@ class RequestNetworkSettingsApi(IRequestAxisVapix):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.PARAMS.value] = params
         request_body[RequestParamType.METHOD.value] = MethodType.SCAN_WLAN_NETWORKS.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def set_hostname_configuration(self, use_dhcp_hostname: bool | None = None, static_hostname: str | None = None):
         params = {}
@@ -61,13 +61,13 @@ class RequestNetworkSettingsApi(IRequestAxisVapix):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.PARAMS.value] = params
         request_body[RequestParamType.METHOD.value] = MethodType.SET_HOSTNAME_CONFIGURATION.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def set_ipv4_address_configuration(self, ipv4_configuration: IPv4AddressConfiguration):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.PARAMS.value] = ipv4_configuration.get_all_params()
         request_body[RequestParamType.METHOD.value] = MethodType.SET_IPV4_ADDRESS_CONFIGURATION.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def set_ipv6_address_configuration(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")

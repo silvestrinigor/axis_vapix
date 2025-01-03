@@ -6,6 +6,7 @@ from axis.vapix.utils import serialize_datetime, is_timezone_aware
 import unittest
 import datetime
 from datetime import datetime
+from requests import Request
 import pytz
 
 
@@ -23,7 +24,7 @@ class TestRequestTimeApi(unittest.TestCase):
         with self.assertRaises(ValueError):
             time_request.set_date_time(date_time)
 
-        self.assertIsInstance(time_request.set_date_time(date_time_aware), time_api.Request)
+        self.assertIsInstance(time_request.set_date_time(date_time_aware), Request)
 
 class TestSerializeDateTime(unittest.TestCase):
 

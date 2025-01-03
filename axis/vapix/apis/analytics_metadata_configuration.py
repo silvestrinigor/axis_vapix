@@ -2,7 +2,7 @@
 https://developer.axis.com/vapix/network-video/analytics-metadata-producer-configuration
 """
 
-from requests import Request
+from ..request import AxisRequest
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import AnalyticsMetadataProducer, ApiVersion
 from ..interfaces import IRequestAxisVapix
@@ -19,7 +19,7 @@ class RequestAnalyticsMetadataProducerConfiguration(IRequestAxisVapix):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.LIST_PRODUCERS.value
         request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def set_enable_producers(self, producers: list[AnalyticsMetadataProducer]):
         producers = {}
@@ -28,13 +28,13 @@ class RequestAnalyticsMetadataProducerConfiguration(IRequestAxisVapix):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.SET_ENABLED_PRODUCERS.value
         request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_metadata(self, producers: list[str]):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_SUPPORTED_METADATA.value
         request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()

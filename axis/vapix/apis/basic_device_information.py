@@ -2,7 +2,7 @@
 https://developer.axis.com/vapix/network-video/basic-device-information
 """
 
-from requests import Request
+from ..request import AxisRequest
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, DevicePropertyType, ParamType, RequestParamType, MethodType
 from ..params import ApiVersion, FirmwareVersion
@@ -21,17 +21,17 @@ class RequestBasicDeviceInformation(IRequestAxisVapix):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_PROPERTIES.value
         request_body[RequestParamType.PARAMS.value] = params
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_all_properties(self):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_ALL_PROPERTIES.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_all_unrestricted_properties(self):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_ALL_UNRESTRICTED_PROPERTIES.value
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
