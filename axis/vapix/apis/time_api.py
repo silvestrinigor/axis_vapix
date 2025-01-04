@@ -1,15 +1,13 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, RequestParamType, MethodType, ParamType
 from datetime import datetime
 from requests import Request
-from .utils import serialize_datetime
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType, RequestParamType, MethodType, ParamType
+from ..params import ApiVersion
+from ..utils import serialize_datetime
 
-class RequestTimeApi(RequestAxisVapix):
-    """
-    API Discovery: id=time-service
-    Firmware: 9.30 and later
-    """
-    def __init__(self, host: str, port: int, api_version: str = None, context = None):
+class RequestTimeApi(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_TIME
     

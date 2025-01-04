@@ -1,14 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType
 from requests import Request
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType
+from ..params import ApiVersion
 
-class RequestFirmwareManagementApi(RequestAxisVapix):
-    """
-    Property: Properties.FirmwareManagemenrequest_body_class = AxisRequestBodyt.Version=1.3
-    API Discovery: id=fwmgr
-    Firmware: 7.40 and later
-    """
-    def __init__(self, host: str, port: int, api_version: str, context = None):
+class RequestFirmwareManagementApi(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_FIRMWARE_MANAGEMENT
     

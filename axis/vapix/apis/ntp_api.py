@@ -1,13 +1,10 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType
+from ..params import ApiVersion
 
-class RequestNtpApi(RequestAxisVapix):
-    """
-    API Discovery: id=ntp
-    Property: Properties.API.HTTP.Version=3
-    Firmware: 9.10 and later
-    """
-    def __init__(self, host, port, api_version = None, context = None):
+class RequestNtpApi(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_NTP.value
         

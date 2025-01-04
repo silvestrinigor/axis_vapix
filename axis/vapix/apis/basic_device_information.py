@@ -1,14 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, DevicePropertyType, ParamType, RequestParamType, MethodType
 from requests import Request
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType, DevicePropertyType, ParamType, RequestParamType, MethodType
+from ..params import ApiVersion
 
-class RequestBasicDeviceInformation(RequestAxisVapix):
-    """
-    Firmware: 8.40 and later
-    API Discovery: id=basic-device-info
-    Property: BasicDeviceInfo.BasicDeviceInfo="yes"
-    """
-    def __init__(self, host: str, port: int, api_version: str, context=None):
+class RequestBasicDeviceInformation(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_BASIC_DEVICE_INFO
     

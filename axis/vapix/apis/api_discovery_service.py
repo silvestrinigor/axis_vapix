@@ -1,13 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, RequestParamType, MethodType
 from requests import Request
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType, RequestParamType, MethodType
+from ..params import ApiVersion
 
-class RequestApiDiscoveryService(RequestAxisVapix):
-    """
-    Firmware: 8.50 and later
-    Property: Properties.ApiDiscovery.ApiDiscovery="yes"
-    """
-    def __init__(self, host: str, port: int, api_version: str, context=None):
+class RequestApiDiscoveryService(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_API_DISCOVERY
 

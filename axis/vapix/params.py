@@ -1,6 +1,14 @@
-from .types import OverlayPositionType, OverlayColorType, OverlayPositionCustomValue, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType
 from packaging.version import Version
-from requests import auth
+from .types import OverlayPositionType, OverlayColorType, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType
+
+class OverlayPositionCustomValue:
+    def __init__(self, x: float, y: float):
+        self.x: float = x
+        self.y: float = y
+    
+    @property
+    def value(self):
+        return [self.x, self.y]
 
 class TextOverlay:
     camera:int | None= None
@@ -159,4 +167,12 @@ class AnalyticsMetadataProducer:
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}
         return all_params
-    
+
+class ApiVersion(Version):
+    def __init__(self, major: int, minor: int):
+        super().__init__(f"{major}.{minor}")
+
+class FirmwareVersion(Version):
+    def __init__(self, major: int, minor: int, patch: int):
+        super().__init__(f"{major}.{minor}.{patch}")
+

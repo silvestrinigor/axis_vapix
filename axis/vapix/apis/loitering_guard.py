@@ -1,14 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, RequestParamType, MethodType, ParamType
 from requests import Request
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType, RequestParamType, MethodType, ParamType
+from ..params import ApiVersion
 
-class RequestLoiteringGuard(RequestAxisVapix):
-    """
-    Software: EmbeddedDevelopment version 2.13 or higher is required for the ACAP to work.
-    Property: Properties.EmbeddedDevelopment.Version=2.13
-    In order to check if the ACAP is installed, use /axis-cgi/applications/list.cgi, which shows the status of all installed ACAPs. It also lists the url to the configuration page and the license state of the ACAP.
-    """
-    def __init__(self, host: str, port: int, api_version: str = None, context = None):
+class RequestLoiteringGuard(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.LOCAL_LOITERING_GUARD
     

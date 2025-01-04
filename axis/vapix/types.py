@@ -91,6 +91,7 @@ class ApiPathType(Enum):
     AXIS_CGI_NETWORK_SETTINGS_API = "axis-cgi/network_settings.cgi"
     AXIS_CGI_TIME = "axis-cgi/time.cgi"
     AXIS_CGI_NTP = "axis-cgi/ntp.cgi"
+    AXIS_CGI_APPLICATIONS = "axis-cgi/applications/"
     AXIS_CGI_APPLICATIONS_UPLOAD = "axis-cgi/applications/upload.cgi"
     AXIS_CGI_APPLICATIONS_CONTROL = "axis-cgi/applications/control.cgi?"
     AXIS_CGI_APPLICATIONS_CONFIG = "axis-cgi/applications/config.cgi?"
@@ -126,6 +127,8 @@ class ActionType(Enum):
     START = "start"
     STOP = "stop"
     RESTART = "restart"
+    GET = "get"
+    SET = "set"
     NONE = None
 
 class ParamType(Enum):
@@ -195,15 +198,6 @@ class OverlayPositionType(Enum):
     BOTTOM_LEFT = "bottomLeft"
     TOP_LEFT = "topleft"
     NONE = None
-
-class OverlayPositionCustomValue:
-    def __init__(self, x: float, y: float):
-        self.x: float = x
-        self.y: float = y
-    
-    @property
-    def value(self):
-        return [self.x, self.y]
 
 class OverlayColorType(Enum):
     WHITE = "white"

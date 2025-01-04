@@ -1,16 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, RequestParamType, ParamType, MethodType
-from .defaults import ImageOverlay, TextOverlay
 from requests import Request
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType, RequestParamType, ParamType, MethodType
+from ..params import ImageOverlay, TextOverlay, ApiVersion
 
-class RequestDynamicOverlayApi(RequestAxisVapix):
-    """
-    Property: Properties.API.HTTP.Version=3
-    Property: Properties.DynamicOverlay.DynamicOverlay=yes
-    Property: Properties.DynamicOverlay.Version=1.00
-    Firmware: 7.10 and later
-    """
-    def __init__(self, host: str, port: int, api_version=None, context=None):
+class RequestDynamicOverlayApi(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY
 
@@ -59,24 +54,17 @@ class RequestDynamicOverlayApi(RequestAxisVapix):
     def get_overlay_capabilities(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
 
-class RequestOverlayModifiers(RequestAxisVapix): # TODO: Implement this class
-    """
-    Property: Properties.OverlayModifiers.OverlayModifiers="yes"
-    Firmware: 5.1 and later
-    """
-    def __init__(self, host: str, port: int, api_version=None, context=None):
+class RequestOverlayModifiers(IRequestAxisVapix): # TODO: Implement this class
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         raise NotImplementedError("This function is not implemented yet.")
 
     def get_overlay_modifiers(self): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
 
-class RequestTextOverlay(RequestAxisVapix): # TODO: Implement this class
-    """
-    To use this functionality set Image.I#.Text.TextEnabled to yes and set Image.I#.Text.String to contain the modifier #D.
-    Access control: operator
-    Method: GET
-    """
-    def __init__(self, host: str, port: int, api_version=None, context=None):
+class RequestTextOverlay(IRequestAxisVapix): # TODO: Implement this class
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         raise NotImplementedError("This function is not implemented yet.")

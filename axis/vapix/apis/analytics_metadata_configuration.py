@@ -1,13 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, RequestParamType, MethodType, ParamType
-from .defaults import AnalyticsMetadataProducer
 from requests import Request
+from ..types import ApiPathType, RequestParamType, MethodType, ParamType
+from ..params import AnalyticsMetadataProducer, ApiVersion
+from ..interfaces import IRequestAxisVapix
 
-class RequestAnalyticsMetadataProducerConfiguration(RequestAxisVapix):
-    """
-    API Discovery: id=analytics-metadata-config
-    """
-    def __init__(self, host: str, port: int, api_version: str, context=None):
+class RequestAnalyticsMetadataProducerConfiguration(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.AXIS_CGI_ANALYTICS_METADATA_CONFIG
 

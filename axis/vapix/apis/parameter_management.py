@@ -1,13 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, ActionType, RequestUrlParamType
 from requests import Request
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType, ActionType, RequestUrlParamType
+from ..params import ApiVersion
 
-class RequestParameterManagement(RequestAxisVapix):
-    """
-    Property: Properties.API.HTTP.Version=3
-    Firmware: 5.00 and later.
-    """
-    def __init__(self, host, port, context = None):
+class RequestParameterManagement(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, context: str | None = None):
         super().__init__(host, port, context)
         self._api_path_type = ApiPathType.AXIS_CGI_PARAM
 

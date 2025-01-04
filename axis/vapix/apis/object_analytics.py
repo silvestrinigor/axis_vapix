@@ -1,12 +1,11 @@
-from .apis import RequestAxisVapix
-from .types import ApiPathType, RequestParamType, MethodType, ParamType
 from requests import Request
+from ..interfaces import IRequestAxisVapix
+from ..types import ApiPathType, RequestParamType, MethodType, ParamType
+from ..params import ApiVersion
 
-class RequestObjectAnalyticsApi(RequestAxisVapix):
-    """
-    Use /axis-cgi/applications/list.cgi to check if the application is installed on your Axis device.
-    """
-    def __init__(self, host: str, port: int, api_version: str = None, context = None):
+class RequestObjectAnalyticsApi(IRequestAxisVapix):
+
+    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
         self._api_path_type = ApiPathType.LOCAL_OBJECT_ANALYTICS
 
