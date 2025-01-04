@@ -1,5 +1,5 @@
 from packaging.version import Version
-from .types import OverlayPositionType, OverlayColorType, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType
+from .types import OverlayPositionType, OverlayColorType, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType, LinkLocalModeType
 
 class OverlayPositionCustomValue:
     def __init__(self, x: float, y: float):
@@ -108,14 +108,21 @@ class StaticAddressConfigurations:
         
 class IPv4AddressConfiguration:
     device_name: str | None = "eth0"
+    enable: bool | None = None
     configuration_mode: IPAddressConfigurationModeType = IPAddressConfigurationModeType.NONE
+    link_local_mode: LinkLocalModeType | None = None
     static_address_configurations: list[StaticAddressConfigurations] = None
-    
+    use_static_dhcp_fallback: bool | None = None
+    use_dhcp_static_routes: bool | None = None
     def get_all_params(self):
         all_params = {
             ParamType.DEVICE_NAME.value: self.device_name,
+            ParamType.ENABLE.value: self.enable,
             ParamType.CONFIGURATION_MODE.value: self.configuration_mode.value,
-            ParamType.STATIC_ADDRESS_CONFIGURATION.value: self.static_address_configurations
+            ParamType.LINK_LOCAL_MODE.value: self.link_local_mode.value,
+            ParamType.STATIC_ADDRESS_CONFIGURATION.value: self.static_address_configurations,
+            ParamType.USE_STATIC_DHCP_FALLBACK.value: self.use_static_dhcp_fallback,
+            ParamType.USE_DHCP_STATIC_ROUTES.value: self.use_dhcp_static_routes
         }
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}

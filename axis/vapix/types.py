@@ -72,6 +72,9 @@ class MethodType(Enum):
     LIST_PRODUCERS = "listProducers"
     SET_ENABLED_PRODUCERS = "setEnabledProducers"
     GET_SUPPORTED_METADATA = "getSupportedMetadata"
+    ADD_VLAM = "addVLAM"
+    REMOVE_VLAM = "removeVLAM"
+    SCAN_WLAN_NETWORKS = "scanWLANNetworks"
 
 class ApiPathType(Enum):
     AXIS_CGI_ANALYTICS_METADATA_CONFIG = "axis-cgi/analyticsmetadataconfig.cgi"
@@ -184,11 +187,19 @@ class ParamType(Enum):
     CHANNEL = "channel"
     VIDEO_CHANNELS = "videochannels"
     PROFILE = "profile"
+    USE_STATIC_DHCP_FALLBACK = "useStaticDHCPFallback"
+    USE_DHCP_STATIC_ROUTES = "useDHCPStaticRoutes"
+    LINK_LOCAL_MODE = "linkLocalMode"
     
 class StaticAddressConfigurationParamsType(Enum):
     ADRESS = "address"
     PREFIX_LENGTH = "prefixLength"
     BROADCAST = "broadcast"
+
+class LinkLocalModeType(Enum):
+    OFF = "off"
+    ON = "on"
+    FALLBACK = "fallback"
 
 class OverlayPositionType(Enum):
     BOTTOM_RIGHT = "bottomRight"
