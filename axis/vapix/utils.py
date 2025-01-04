@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-import pytz
 
 def serialize_datetime(date_time: datetime) -> str:
     if not is_timezone_aware(date_time=date_time): 
@@ -10,7 +9,3 @@ def serialize_datetime(date_time: datetime) -> str:
 
 def is_timezone_aware(date_time: datetime) -> bool:
     return date_time.tzinfo is not None and date_time.tzinfo.utcoffset(date_time) is not None
-
-def get_all_timezones():
-    return pytz.all_timezones
-
