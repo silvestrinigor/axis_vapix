@@ -26,25 +26,25 @@ class RequestAplicationApi(IRequestAxisVapix):
     def start_application(self, package: str, return_page: str | None = None): # TODO: Test if this function works
         uri = f"&{RequestUrlParamType.ACTION.value}={ActionType.START.value}&package={package}"
         if return_page != None: uri += f"&return_page={return_page}"
-        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}?{RequestUrlParamType.ACTION.value}={action.value}{uri}")
+        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}{uri}")
         return request
 
     def stop_application(self, package: str, return_page: str | None = None): # TODO: Test if this function works
         uri = f"&{RequestUrlParamType.ACTION.value}={ActionType.STOP.value}&package={package}"
         if return_page != None: uri += f"&return_page={return_page}"
-        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}?{RequestUrlParamType.ACTION.value}={action.value}{uri}")
+        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}{uri}")
         return request
 
     def restart_application(self, package: str, return_page: str | None = None): # TODO: Test if this function works
         uri = f"&{RequestUrlParamType.ACTION.value}={ActionType.RESTART.value}&package={package}"
         if return_page != None: uri += f"&return_page={return_page}"
-        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}?{RequestUrlParamType.ACTION.value}={action.value}{uri}")
+        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}{uri}")
         return request
     
     def remove_application(self, package: str, return_page: str | None = None): # TODO: Test if this function works
         uri = f"&{RequestUrlParamType.ACTION.value}={ActionType.REMOVE.value}&package={package}"
         if return_page != None: uri += f"&return_page={return_page}"
-        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}?{RequestUrlParamType.ACTION.value}={action.value}{uri}")
+        request = Request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_CONTROL.value}{uri}")
         return request
     
     def set_configure_application(self, config_name:str, config_value: bool): # TODO: Test if this function works
