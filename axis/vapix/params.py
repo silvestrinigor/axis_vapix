@@ -62,14 +62,17 @@ class ImageOverlay:
     
 class NTPClientConfiguration:
     enable: bool | None = None
+    nts_enable: bool | None = None
     servers_source: ServersSourceType | None = None
     static_servers_list: list[str] | None = None
-    
+    static_ntske_servers_list: list[str] | None = None
     def get_all_params(self):
         all_params = {
             ParamType.ENABLE.value: self.enable,
+            ParamType.NTS_ENABLE.value: self.nts_enable,
             ParamType.SERVERS_SOURCE.value: self.servers_source.value,
-            ParamType.STATIC_SERVERS.value: self.static_servers_list
+            ParamType.STATIC_SERVERS.value: self.static_servers_list,
+            ParamType.STATIC_NTSKE_SERVERS.value: self.static_ntske_servers_list
         }
         # Remove any keys with None values
         all_params = {key: value for key, value in all_params.items() if value is not None}

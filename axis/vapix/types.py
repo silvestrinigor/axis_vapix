@@ -190,7 +190,9 @@ class ParamType(Enum):
     USE_STATIC_DHCP_FALLBACK = "useStaticDHCPFallback"
     USE_DHCP_STATIC_ROUTES = "useDHCPStaticRoutes"
     LINK_LOCAL_MODE = "linkLocalMode"
-    
+    NTS_ENABLE = "ntsEnable"
+    STATIC_NTSKE_SERVERS = "staticNTSKEServers"
+
 class StaticAddressConfigurationParamsType(Enum):
     ADRESS = "address"
     PREFIX_LENGTH = "prefixLength"
