@@ -6,7 +6,7 @@ This project provides a Python-based API handler for interacting with Axis devic
 
 ## Usage
 
-```python3
+```python
 >>> import requests
 >>> from axis.vapix.apis import basic_device_information
 >>>
@@ -29,6 +29,13 @@ This project provides a Python-based API handler for interacting with Axis devic
   }
 }
 ```
+
+## Installation
+
+```bash
+$ pip install git+https://github.com/silvestrinigor/axis_vapix
+```
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
