@@ -3,10 +3,9 @@ import os
 import requests
 import requests.auth
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
-import axis.vapix.apis
+import axis.vapix
 import axis.vapix.apis.time_api
 import axis.vapix.utils
 from tests_axis import HOST, PORT, PASSWORD, USERNAME
 
 
-axis.vapix.apis

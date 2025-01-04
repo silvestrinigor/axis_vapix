@@ -6,15 +6,17 @@ This project provides a Python-based API handler for interacting with Axis devic
 
 ## Usage
 
-```python
+```python3
 >>> import requests
->>> import axis.vapix
->>> import axis.vapix.apis
-
->>> api_request = axis.vapix.apis.RequestBasicDeviceInformation(host="192.168.0.90", port=80, "1.0", context="test")
+>>> from axis.vapix.apis import basic_device_information
+>>>
+>>> api_version = basic_device_information.ApiVersion(1, 0)
+>>> api_request = basic_device_information.RequestBasicDeviceInformation(host="192.168.0.90", port=80, api_version=api_version, context="test")
+>>>
 >>> request = api_request.get_all_properties()
 >>> request.auth = requests.auth.HTTPBasicAuth("root", "pass")
 >>> request_p = request.prepare()
+>>>
 >>> response = requests.Session().send(request_p)
 >>> response.text
 {
@@ -26,5 +28,7 @@ This project provides a Python-based API handler for interacting with Axis devic
     }
   }
 }
-
 ```
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
