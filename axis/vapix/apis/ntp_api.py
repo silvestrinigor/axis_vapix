@@ -1,3 +1,7 @@
+"""
+https://developer.axis.com/vapix/network-video/ntp-api
+"""
+
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType
 from ..params import ApiVersion

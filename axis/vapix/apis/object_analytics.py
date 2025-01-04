@@ -1,3 +1,7 @@
+"""
+https://developer.axis.com/vapix/applications/axis-object-analytics-api
+"""
+
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType

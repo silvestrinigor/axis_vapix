@@ -1,5 +1,8 @@
+"""
+https://developer.axis.com/vapix/applications/application-api
+"""
+
 from requests import Request
-import io
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, ActionType, RequestUrlParamType
 from ..params import ApiVersion

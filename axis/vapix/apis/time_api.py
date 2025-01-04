@@ -1,3 +1,7 @@
+"""
+https://developer.axis.com/vapix/network-video/time-api
+"""
+
 from datetime import datetime
 from requests import Request
 from ..interfaces import IRequestAxisVapix

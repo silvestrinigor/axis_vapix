@@ -1,3 +1,7 @@
+"""
+https://developer.axis.com/vapix/network-video/analytics-metadata-producer-configuration
+"""
+
 from requests import Request
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import AnalyticsMetadataProducer, ApiVersion

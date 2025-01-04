@@ -1,3 +1,7 @@
+"""
+https://developer.axis.com/vapix/network-video/overlay-api
+"""
+
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, ParamType, MethodType
