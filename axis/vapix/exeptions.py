@@ -3,9 +3,18 @@ class AxisVapixException(Exception):
     def __init__(self, message: str = "An Axis Vapix error occurred"):
         super().__init__(message)
 
+class AxisVapixHTTPException(AxisVapixException):
+    """Base exception for Axis Vapix HTTP errors."""
+    def __init__(self, status_code: int, message: str):
+        super().__init__(f"Request failed with status code {status_code} and message: {message}")
+
 class AxisVapixVersionNotSupportedException(AxisVapixException): 
     def __init__(self):
         super().__init__("The specified version is not supported")
+
+class AxisVapixClientError(AxisVapixHTTPException): ...
+
+class AxisVapixServerError(AxisVapixHTTPException): ...
 
 class AxisVapixInternalErrorException(AxisVapixException): 
     def __init__(self):
@@ -39,7 +48,27 @@ class AxisVapixInvalidParameterException(AxisVapixException):
     def __init__(self):
         super().__init__("Invalid parameter(s)")
 
-code_exeptions: dict[int, type[AxisVapixException]] = {
+class AxisVapixMessageCouldNotBeParsedException(AxisVapixException):
+    def __init__(self):
+        super().__init__("Message could not be parsed or contains unknown parameters or values")
+
+class AxisVapixUnknownMethodException(AxisVapixException):
+    def __init__(self):
+        super().__init__("Unknown method in request")
+
+class AxisVapixApiVersionNotCompatibleException(AxisVapixException):
+    def __init__(self):
+        super().__init__("API version not compatible")
+
+class AxisVapixSystemBusyException(AxisVapixException):
+    def __init__(self):
+        super().__init__("System is busy with another firmware management request")
+
+class AxisVapixUnexpectedInternalErrorException(AxisVapixException):
+    def __init__(self):
+        super().__init__("Unexpected internal error")
+
+code_exceptions: dict[int, type[AxisVapixException]] = {
     2000: AxisVapixInvalidRequestException,
     4002: AxisVapixAuthorizationFailedException,
     2001: AxisVapixRequestBodyTooLargeException,
@@ -49,4 +78,9 @@ code_exeptions: dict[int, type[AxisVapixException]] = {
     4003: AxisVapixMissingParameterException,
     4004: AxisVapixInvalidParameterException,
     3000: AxisVapixInvalidJsonDataException,
+    400: AxisVapixMessageCouldNotBeParsedException,
+    405: AxisVapixUnknownMethodException,
+    417: AxisVapixApiVersionNotCompatibleException,
+    423: AxisVapixSystemBusyException,
+    500: AxisVapixUnexpectedInternalErrorException,
 }
