@@ -298,3 +298,165 @@ class LoiteringGuardConfiguration:
         }
         all_params = _remove_none_values(all_params)
         return all_params
+
+@dataclass
+class ObjectAnalyticsDevice:
+    id: int | None = None
+    device_type: str | None = None
+    rotation: str | None = None
+    is_active: bool | None = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.ID.value: self.id,
+            ParamType.TYPE.value: self.device_type,
+            ParamType.ROTATION.value: self.rotation,
+            ParamType.ACTIVE.value: self.is_active
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class ObjectAnalyticsMetadataOverlay:
+    id: int | None = None
+    draw_on_all_resolutions: bool | None = None
+    resolutions: list[int] | None = None # "resolutions": ["<width>x<height>", "<width>x<height>", ...]
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.ID.value: self.id,
+            ParamType.DRAW_ON_ALL_RESOLUTIONS.value: self.draw_on_all_resolutions,
+            ParamType.RESOLUTIONS.value: self.resolutions
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class PerspectiveBar:
+    height: int | None = None
+    points: list | None = None # "points": [[<x>, <y>], [<x>, <y>], ...]
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.HEIGHT.value: self.height,
+            ParamType.POINTS.value: self.points
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class ObjectAnalyticsPerspective:
+    id: int | None = None
+    bars: list[PerspectiveBar] | None = None
+
+@dataclass
+class ObjectAnalyticsTrigger:
+    trigger_type: str | None = None
+    vertices: list | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
+    alarm_direction: str | None = None # "alarmDirection": "leftToRight", "rightToLeft"
+    counting_direction: str | None = None # "countingDirection": "leftToRight", "rightToLeft"
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.TYPE.value: self.trigger_type,
+            ParamType.VERTICES.value: self.vertices,
+            ParamType.ALARM_DIRECTION.value: self.alarm_direction,
+            ParamType.COUNTING_DIRECTION.value: self.counting_direction
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class ScenarioFilter:
+    filter_type: str | None = None
+    width: int | None = None
+    height: int | None = None
+    time: int | None = None
+    distance: int | None = None
+    min_speed: float | None = None
+    max_speed: float | None = None
+    vertices: list | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.TYPE.value: self.filter_type,
+            ParamType.WIDTH.value: self.width,
+            ParamType.HEIGHT.value: self.height,
+            ParamType.TIME.value: self.time,
+            ParamType.DISTANCE.value: self.distance,
+            ParamType.MIN_SPEED.value: self.min_speed,
+            ParamType.MAX_SPEED.value: self.max_speed,
+            ParamType.VERTICES.value: self.vertices
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+
+
+@dataclass
+class ObjectAnalyticsObjectClassificator:
+    classificator_type: str | None = None
+    sub_types: list | None = None 
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.TYPE.value: self.classificator_type,
+            ParamType.SUB_TYPES.value: self.sub_types
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class ObjectAnalyticsScenario:
+    id: int | None = None
+    name: str | None = None
+    scenario_type: str | None = None
+    metadata_overlay: int | None = None
+    alarm_rate: str | None = None
+    devices: list[int] | None = None
+    triggers: list[ObjectAnalyticsTrigger] | None = None
+    filters: list[ScenarioFilter] | None = None
+    object_classificators: list[ObjectAnalyticsObjectClassificator] | None = None
+    perspectives: list[int] | None = None # "perspectives": [id]
+    presets: list[int] | None = None # "presets": [id]
+
+    def get_all_params(self):
+        triggers = [trigger.get_all_params() for trigger in (self.triggers or [])]
+        filters = [filter.get_all_params() for filter in (self.filters or [])]
+        object_classificators = [object_classificator.get_all_params() for object_classificator in (self.object_classificators or [])]
+        all_params = {
+            ParamType.ID.value: self.id,
+            ParamType.NAME.value: self.name,
+            ParamType.TYPE.value: self.scenario_type,
+            ParamType.METADATA_OVERLAY.value: self.metadata_overlay,
+            ParamType.ALARM_RATE.value: self.alarm_rate,
+            ParamType.DEVICES.value: self.devices,
+            ParamType.TRIGGERS.value: triggers,
+            ParamType.FILTERS.value: filters,
+            ParamType.CLASSIFICATORS.value: object_classificators,
+            ParamType.PERSPECTIVES.value: self.perspectives,
+            ParamType.PRESETS.value: self.presets
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class ObjectAnalyticsConfiguration:
+    devices: list[ObjectAnalyticsDevice] | None = None
+    metadata_overlay: list[ObjectAnalyticsMetadataOverlay] | None = None
+    perspectives: list[ObjectAnalyticsPerspective] | None = None
+    scenarios: list[ObjectAnalyticsScenario] | None = None
+
+    def get_all_params(self):
+        devices = [device.get_all_params() for device in (self.devices or [])]
+        metadata_overlay = [overlay.get_all_params() for overlay in (self.metadata_overlay or [])]
+        perspectives = [perspective.get_all_params() for perspective in (self.perspectives or [])]
+        scenarios = [scenario.get_all_params() for scenario in (self.scenarios or [])]
+        all_params = {
+            ParamType.DEVICES.value: devices,
+            ParamType.METADATA_OVERLAY.value: metadata_overlay,
+            ParamType.PERSPECTIVES.value: perspectives,
+            ParamType.SCENARIOS.value: scenarios
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
