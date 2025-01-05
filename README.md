@@ -17,7 +17,9 @@ This project provides a Python-based API handler for interacting with Axis devic
 >>> request.auth = requests.auth.HTTPBasicAuth("root", "pass")
 >>> request_p = request.prepare()
 >>>
->>> response = requests.Session().send(request_p)
+>>> 
+>>> with requests.Session() as session:
+>>>     response = session.send(request_p)
 >>> response.text
 {
   "apiVersion": "1.0",
