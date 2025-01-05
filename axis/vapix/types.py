@@ -75,6 +75,9 @@ class MethodType(Enum):
     ADD_VLAM = "addVLAM"
     REMOVE_VLAM = "removeVLAM"
     SCAN_WLAN_NETWORKS = "scanWLANNetworks"
+    COMMIT = "commit"
+    PURGE = "purge"
+    STOP_AUTO = "stopAuto"
 
 class ApiPathType(Enum):
     AXIS_CGI_ANALYTICS_METADATA_CONFIG = "axis-cgi/analyticsmetadataconfig.cgi"
@@ -274,3 +277,8 @@ class ContentType(Enum):
     APPLICATION_JSON = "application/json"
     APPLICATION_OCTETSTREAM = "application/octet-stream"
     MUILTPART_FORMDATA = "multipart/form-data"
+
+class AutoRollbackType(Enum):
+    NEVER = "never"
+    DEFAULT = "default"
+    NONE = None
