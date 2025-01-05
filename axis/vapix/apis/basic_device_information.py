@@ -5,7 +5,10 @@ https://developer.axis.com/vapix/network-video/basic-device-information
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, DevicePropertyType, ParamType, RequestParamType, MethodType
-from ..params import ApiVersion
+from ..params import ApiVersion, FirmwareVersion
+
+BASIC_DEVICE_INFORMATION_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 40, 0)
+BASIC_DEVICE_INFORMATION_API_DISCOVERY_API_ID = "basic-device-info"
 
 class RequestBasicDeviceInformation(IRequestAxisVapix):
 

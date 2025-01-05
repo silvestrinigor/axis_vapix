@@ -6,8 +6,11 @@ from datetime import datetime
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
-from ..params import ApiVersion
+from ..params import ApiVersion, FirmwareVersion
 from ..utils import serialize_datetime
+
+TIME_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 30, 0)
+TIME_API_DISCOVERY_API_ID = "time-service"
 
 class RequestTimeApi(IRequestAxisVapix):
 

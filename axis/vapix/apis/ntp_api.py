@@ -5,7 +5,10 @@ https://developer.axis.com/vapix/network-video/ntp-api
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, MethodType, RequestParamType
-from ..params import ApiVersion, NTPClientConfiguration
+from ..params import ApiVersion, NTPClientConfiguration, FirmwareVersion
+
+NTP_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 10, 0)
+NTP_API_DISCOVERY_API_ID = "ntp"
 
 class RequestNtpApi(IRequestAxisVapix):
 

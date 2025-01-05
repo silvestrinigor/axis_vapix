@@ -7,6 +7,8 @@ from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import AnalyticsMetadataProducer, ApiVersion
 from ..interfaces import IRequestAxisVapix
 
+ANALYTICS_METADATA_PRODUCER_CONFIGURATION_DISCOVERY_API_ID = "analytics-metadata-config"
+
 class RequestAnalyticsMetadataProducerConfiguration(IRequestAxisVapix):
 
     def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):

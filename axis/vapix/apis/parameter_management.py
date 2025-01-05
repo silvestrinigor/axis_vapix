@@ -5,6 +5,9 @@ https://developer.axis.com/vapix/network-video/parameter-management
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, ActionType, RequestUrlParamType
+from ..params import FirmwareVersion
+
+PARAMETER_MANAGEMENT_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(5, 0, 0)
 
 class RequestParameterManagement(IRequestAxisVapix):
 

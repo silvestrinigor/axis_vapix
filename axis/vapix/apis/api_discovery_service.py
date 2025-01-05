@@ -5,7 +5,9 @@ https://developer.axis.com/vapix/network-video/api-discovery-service
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType
-from ..params import ApiVersion
+from ..params import ApiVersion, FirmwareVersion
+
+API_DISCOVERY_SERVICE_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 50, 0)
 
 class RequestApiDiscoveryService(IRequestAxisVapix):
 

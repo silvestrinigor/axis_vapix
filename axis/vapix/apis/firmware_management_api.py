@@ -6,7 +6,10 @@ from requests import Request
 import json
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, FactoryDefaultModeType, AutoCommitType, AutoRollbackType, MethodType, RequestParamType, ParamType
-from ..params import ApiVersion
+from ..params import ApiVersion, FirmwareVersion
+
+FIRMWARE_MANAGEMENT_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(7, 40, 0)
+FIRMWARE_MANAGEMENT_API_DISCOVERY_API_ID = "fwmgr"
 
 class RequestFirmwareManagementApi(IRequestAxisVapix):
 

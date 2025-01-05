@@ -5,7 +5,9 @@ https://developer.axis.com/vapix/network-video/overlay-api
 from requests import Request
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, ParamType, MethodType
-from ..params import ImageOverlay, TextOverlay, ApiVersion
+from ..params import ImageOverlay, TextOverlay, ApiVersion, FirmwareVersion
+
+DYNAMIC_OVERLAY_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(7, 10, 0)
 
 class RequestDynamicOverlayApi(IRequestAxisVapix):
 
