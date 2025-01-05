@@ -1,6 +1,18 @@
+from dataclasses import dataclass, field, asdict
 from packaging.version import Version
 from .types import OverlayPositionType, OverlayColorType, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType, LinkLocalModeType
 
+def _remove_none_values(data: dict) -> dict:
+    """Utility function to recursively remove keys with None values."""
+    if not isinstance(data, dict):
+        return data
+    return {
+        key: _remove_none_values(value)
+        for key, value in data.items()
+        if value is not None
+    }
+
+@dataclass
 class OverlayPositionCustomValue:
     def __init__(self, x: float, y: float):
         self.x: float = x
@@ -10,6 +22,7 @@ class OverlayPositionCustomValue:
     def value(self):
         return [self.x, self.y]
 
+@dataclass
 class TextOverlay:
     camera:int | None= None
     font_size:int | None = None
@@ -37,10 +50,10 @@ class TextOverlay:
             ParamType.TEXT_OL_COLOR.value: self.text_ol_color.value,
             ParamType.VISIBLE.value: self.visible
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
 
+@dataclass
 class ImageOverlay:
     camera:int | None = None
     identity: int | None = None
@@ -56,10 +69,10 @@ class ImageOverlay:
             ParamType.POSITION.value: self.position.value,
             ParamType.VISIBLE.value: self.visible
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
-    
+
+@dataclass
 class NTPClientConfiguration:
     enable: bool | None = None
     nts_enable: bool | None = None
@@ -74,10 +87,10 @@ class NTPClientConfiguration:
             ParamType.STATIC_SERVERS.value: self.static_servers_list,
             ParamType.STATIC_NTSKE_SERVERS.value: self.static_ntske_servers_list
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
-    
+
+@dataclass
 class HostnameConfiguration:
     use_dhcp_hostname: bool | None = None
     static_hostname: str | None = None
@@ -87,10 +100,10 @@ class HostnameConfiguration:
             ParamType.USE_DHCP_HOSTNAME.value: self.use_dhcp_hostname,
             ParamType.STATIC_HOSTNAME.value: self.static_hostname
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
-    
+
+@dataclass
 class StaticAddressConfigurations:
     address: str | None = None
     prefix_length: int | None = None
@@ -102,13 +115,10 @@ class StaticAddressConfigurations:
             StaticAddressConfigurationParamsType.PREFIX_LENGTH.value: self.prefix_length,
             StaticAddressConfigurationParamsType.BROADCAST.value: self.broadcast
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
-    
-    def __repr__(self):
-        self.get_all_params()
-        
+
+@dataclass  
 class IPv4AddressConfiguration:
     device_name: str | None = "eth0"
     enable: bool | None = None
@@ -117,6 +127,7 @@ class IPv4AddressConfiguration:
     static_address_configurations: list[StaticAddressConfigurations] = None
     use_static_dhcp_fallback: bool | None = None
     use_dhcp_static_routes: bool | None = None
+
     def get_all_params(self):
         all_params = {
             ParamType.DEVICE_NAME.value: self.device_name,
@@ -127,10 +138,10 @@ class IPv4AddressConfiguration:
             ParamType.USE_STATIC_DHCP_FALLBACK.value: self.use_static_dhcp_fallback,
             ParamType.USE_DHCP_STATIC_ROUTES.value: self.use_dhcp_static_routes
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
-    
+
+@dataclass
 class NetworkResolverConfiguration:
     use_dhcp_resolver_info: bool | None = None
     static_name_servers: list[str] | None = None
@@ -144,10 +155,10 @@ class NetworkResolverConfiguration:
             ParamType.STATIC_SEARCH_DOMAINS.value: self.static_search_domains,
             ParamType.STATIC_DOMAIN_NAME.value: self.static_domain_name
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
-    
+
+@dataclass
 class AnalyticsMetadataVideoChannel:
     channel: int | None = None
     enabled: bool | None = None
@@ -157,10 +168,10 @@ class AnalyticsMetadataVideoChannel:
             ParamType.CHANNEL.value: self.channel,
             ParamType.ENABLED.value: self.enabled
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
-    
+
+@dataclass
 class AnalyticsMetadataProducer:
     name: str | None = None
     video_channels: list[AnalyticsMetadataVideoChannel] | None = None
@@ -174,8 +185,7 @@ class AnalyticsMetadataProducer:
             ParamType.NAME.value: self.name,
             ParamType.VIDEO_CHANNELS.value: video_channels
         }
-        # Remove any keys with None values
-        all_params = {key: value for key, value in all_params.items() if value is not None}
+        all_params = _remove_none_values(all_params)
         return all_params
 
 class ApiVersion(Version):
@@ -186,3 +196,105 @@ class FirmwareVersion(Version):
     def __init__(self, major: int, minor: int, patch: int):
         super().__init__(f"{major}.{minor}.{patch}")
 
+@dataclass
+class LoiteringGuardCamera:
+    active: bool | None = None
+    rotation: str | None = None
+    overlay_resolution: str | None = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.ACTIVE.value: self.active,
+            ParamType.ROTATION.value: self.rotation,
+            ParamType.OVERLAY_RESOLUTION.value: self.overlay_resolution
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class ProfileFilter:
+    filter_type: str | None = None
+    data: list | None = None
+    active: bool | None = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.TYPE.value: self.filter_type,
+            ParamType.DATA.value: self.data,
+            ParamType.ACTIVE.value: self.active
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class LoiteringGuardTrigger:
+    trigger_type: str | None = None
+    data: list | None = None
+    active: bool | None = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.TYPE.value: self.trigger_type,
+            ParamType.DATA.value: self.data,
+            ParamType.ACTIVE.value: self.active
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class LoiteringGuardPerspective:
+    trigger_type: str | None = None
+    data: list | None = None
+    height: int | None = None
+
+    def get_all_params(self):
+        all_params = {
+            ParamType.TYPE.value: self.trigger_type,
+            ParamType.DATA.value: self.data,
+            ParamType.HEIGHT.value: self.height
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class LoiteringGuardProfile:
+    name: str | None = None
+    uid: int | None = None
+    camera: int | None = None
+    alarm_overlay_enabled: bool | None = None
+    filters: list[ProfileFilter] | None = None
+    triggers: list[LoiteringGuardTrigger] | None = None
+    presets: list | None = None
+    perspectives: list[LoiteringGuardPerspective] | None = None
+
+    def get_all_params(self):
+        filters = [filter.get_all_params() for filter in (self.filters or [])]
+        triggers = [trigger.get_all_params() for trigger in (self.triggers or [])]
+        perspectives = [perspective.get_all_params() for perspective in (self.perspectives or [])]
+        all_params = {
+            ParamType.NAME.value: self.name,
+            ParamType.UID.value: self.uid,
+            ParamType.CAMERA.value: self.camera,
+            ParamType.ALARM_OVERLAY_ENABLED.value: self.alarm_overlay_enabled,
+            ParamType.FILTERS.value: filters,
+            ParamType.TRIGGERS.value: triggers,
+            ParamType.PRESETS.value: self.presets,
+            ParamType.PERSPECTIVES.value: perspectives
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params
+
+@dataclass
+class LoiteringGuardConfiguration:
+    cameras: list[LoiteringGuardCamera] | None = None
+    profiles: list[LoiteringGuardProfile] | None = None
+
+    def get_all_params(self):
+        cameras = [camera.get_all_params() for camera in (self.cameras or [])]
+        profiles = [profile.get_all_params() for profile in (self.profiles or [])]
+        all_params = {
+            ParamType.CAMERAS.value: cameras,
+            ParamType.PROFILES.value: profiles
+        }
+        all_params = _remove_none_values(all_params)
+        return all_params

@@ -78,6 +78,7 @@ class MethodType(Enum):
     COMMIT = "commit"
     PURGE = "purge"
     STOP_AUTO = "stopAuto"
+    SET_CONFIGURATION = "setConfiguration"
 
 class ApiPathType(Enum):
     AXIS_CGI_ANALYTICS_METADATA_CONFIG = "axis-cgi/analyticsmetadataconfig.cgi"
@@ -195,6 +196,20 @@ class ParamType(Enum):
     LINK_LOCAL_MODE = "linkLocalMode"
     NTS_ENABLE = "ntsEnable"
     STATIC_NTSKE_SERVERS = "staticNTSKEServers"
+    ACTIVE = "active"
+    ROTATION = "rotation"
+    OVERLAY_RESOLUTION = "overlayResolution"
+    DATA = "data"
+    TYPE = "type"
+    HEIGHT = "height"
+    UID = "uid"
+    ALARM_OVERLAY_ENABLED = "alarmOverlayEnabled"
+    FILTERS = "filters"
+    TRIGGERS = "triggers"
+    PRESETS = "presets"
+    PERSPECTIVES = "perspectives"
+    CAMERAS = "cameras"
+    PROFILES = "profiles"
 
 class StaticAddressConfigurationParamsType(Enum):
     ADRESS = "address"
