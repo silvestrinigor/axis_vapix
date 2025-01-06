@@ -1,5 +1,5 @@
 from abc import ABC
-from requests import Request
+from .request import AxisRequest
 from .types import ApiPathType, MethodType, RequestParamType
 from .params import ApiVersion
 
@@ -22,5 +22,5 @@ class IRequestAxisVapix(ABC):
         request_body[RequestParamType.METHOD.value] = MethodType.GET_SUPPORTED_VERSIONS.value
         if self._api_path_type.value == None: 
             raise ValueError("API path type is not set")
-        return Request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
