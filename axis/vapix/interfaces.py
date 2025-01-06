@@ -13,7 +13,7 @@ class IRequestAxisVapix(ABC):
 
     def _get_basic_request_body(self):
         request_body = {}
-        if self._api_version != None: request_body[RequestParamType.API_VERSION.value] = self._api_version
+        if self._api_version != None: request_body[RequestParamType.API_VERSION.value] = self._api_version.__str__()
         if self._context != None: request_body[RequestParamType.CONTEXT.value] = self._context 
         return request_body
 
@@ -22,5 +22,7 @@ class IRequestAxisVapix(ABC):
         request_body[RequestParamType.METHOD.value] = MethodType.GET_SUPPORTED_VERSIONS.value
         if self._api_path_type.value == None: 
             raise ValueError("API path type is not set")
-        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
+    def _create_request(self, method=None, url=None, headers=None, files=None, data=None, params=None, auth=None, cookies=None, hooks=None, json=None):
+        return AxisRequest(method, url, headers, files, data, params, auth, cookies, hooks, json)

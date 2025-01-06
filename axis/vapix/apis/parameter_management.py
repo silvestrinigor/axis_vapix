@@ -2,7 +2,6 @@
 https://developer.axis.com/vapix/network-video/parameter-management
 """
 
-from ..request import AxisRequest
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, ActionType, RequestUrlParamType
 from ..params import FirmwareVersion
@@ -23,5 +22,5 @@ class RequestParameterManagement(IRequestAxisVapix):
             request_method = "GET"
         else:
             request_method = "POST"
-        request = AxisRequest(request_method, f"http://{self._host}:{self._port}/{self._api_path_type.value}{RequestUrlParamType.ACTION.value}{action.value}{uri}")
+        request = self._create_request(request_method, f"http://{self._host}:{self._port}/{self._api_path_type.value}{RequestUrlParamType.ACTION.value}{action.value}{uri}")
         return request

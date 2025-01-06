@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "axis_vapix"
-version = "0.1.5"
+version = "0.1.6"
 description = "Python-based API handler for interacting with Axis devices using the VAPIX APIs"
 readme = "README.md"
 license = {file = "LICENSE"}

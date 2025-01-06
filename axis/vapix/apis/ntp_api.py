@@ -2,7 +2,6 @@
 https://developer.axis.com/vapix/network-video/ntp-api
 """
 
-from ..request import AxisRequest
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, MethodType, RequestParamType
 from ..params import ApiVersion, NTPClientConfiguration, FirmwareVersion
@@ -19,13 +18,13 @@ class RequestNtpApi(IRequestAxisVapix):
     def get_ntp_info(self): 
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_NTP_INFO.value
-        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def set_ntp_client_configuration(self, ntp_client_configuration: NTPClientConfiguration): 
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.SET_NTP_CLIENT_CONFIGURATION.value
         request_body[RequestParamType.PARAMS.value] = ntp_client_configuration.get_all_params()
-        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()

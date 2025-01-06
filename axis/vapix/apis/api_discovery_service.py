@@ -2,7 +2,6 @@
 https://developer.axis.com/vapix/network-video/api-discovery-service
 """
 
-from ..request import AxisRequest
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType
 from ..params import ApiVersion, FirmwareVersion
@@ -18,7 +17,7 @@ class RequestApiDiscoveryService(IRequestAxisVapix):
     def get_api_list(self):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_API_LIST.value
-        return AxisRequest("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
