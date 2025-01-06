@@ -13,7 +13,7 @@ class IRequestAxisVapix(ABC):
 
     def _get_basic_request_body(self):
         request_body = {}
-        if self._api_version != None: request_body[RequestParamType.API_VERSION.value] = self._api_version.__str__()
+        if self._api_version != None: request_body[RequestParamType.API_VERSION.value] = str(self._api_version)
         if self._context != None: request_body[RequestParamType.CONTEXT.value] = self._context 
         return request_body
 
