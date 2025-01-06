@@ -16,7 +16,6 @@ This project provides a Python-based API handler for interacting with Axis devic
 >>> request = api_request.get_all_properties()
 >>> request.auth = requests.auth.HTTPBasicAuth("root", "pass")
 >>> request_p = request.prepare()
->>>
 >>> 
 >>> with requests.Session() as session:
 >>>     response = session.send(request_p)
