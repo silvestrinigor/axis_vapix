@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project provides a Python-based API handler for interacting with Axis devices using the VAPIX APIs.
+This project provides a Python-based API handler for interacting with [Axis](https://www.axis.com/) devices using the [VAPIX APIs](https://developer.axis.com/vapix).
 
 ## Usage
 
