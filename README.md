@@ -8,6 +8,8 @@ This project provides a Python-based API handler for interacting with Axis devic
 
 ```python
 >>> import requests
+>>> import requests.auth
+>>>
 >>> from axis.vapix.apis import basic_device_information
 >>>
 >>> api_version = basic_device_information.ApiVersion(1, 0)
@@ -43,6 +45,7 @@ $ pip install git+https://github.com/silvestrinigor/axis_vapix
     ```python
     >>> import requests
     >>> import requests.auth
+    >>>
     >>> from axis.vapix.apis import time_api
     >>> 
     >>> api_version = time_api.ApiVersion(1,0)
