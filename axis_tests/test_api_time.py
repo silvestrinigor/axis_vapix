@@ -1,5 +1,7 @@
 import sys
 import os
+
+import requests.auth
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 from axis.vapix.apis import time_api
 from axis.vapix.utils import serialize_datetime, is_timezone_aware
@@ -7,8 +9,10 @@ import unittest
 import datetime
 from datetime import datetime
 from requests import Request
+import requests
 import pytz
-
+from axis_tests import HOST, PORT, USERNAME, PASSWORD
+from axis.vapix import request, handlers
 
 class TestRequestTimeApi(unittest.TestCase):
 
@@ -49,6 +53,27 @@ class TestSerializeDateTime(unittest.TestCase):
         date_time = datetime.now()
         self.assertFalse(is_timezone_aware(date_time))
 
+class TestSendTimeApiResponseHander(unittest.TestCase):
+    def setUp(self):
+        api_request = time_api.RequestTimeApi(HOST, PORT, time_api.ApiVersion(1,0))
+        request1 = api_request.get_all()
+        request1.auth = requests.auth.HTTPDigestAuth(USERNAME, PASSWORD)
+        request2 = api_request.get_date_time_info()
+        request2.auth = requests.auth.HTTPDigestAuth(USERNAME, PASSWORD)
+        request3 = api_request.get_suported_versions()
+        request3.auth = requests.auth.HTTPDigestAuth(USERNAME, PASSWORD)
+
+        with request.AxisVapixSession() as session:
+            self.response1 = session.send(request1.prepare())
+            self.response2 = session.send(request2.prepare())
+            self.response3 = session.send(request3.prepare())
+
+    def test_check_response(self):
+        self.assertTrue(handlers.AxisVapixResponseHandler(self.response1, None).is_response_success())
+        self.assertTrue(handlers.AxisVapixResponseHandler(self.response2, None).is_response_success())
+        self.assertTrue(handlers.AxisVapixResponseHandler(self.response3, None).is_response_success())
+        
+            
 if __name__ == '__main__':
     unittest.main()
 

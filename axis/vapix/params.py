@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field, asdict
-from packaging.version import Version
-from .types import OverlayPositionType, OverlayColorType, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, RequestParamType, MethodType, LinkLocalModeType
+from dataclasses import dataclass
+from packaging import version
+from .types import OverlayPositionType, OverlayColorType, ParamType, ServersSourceType, StaticAddressConfigurationParamsType, IPAddressConfigurationModeType, LinkLocalModeType
 
 def _remove_none_values(data: dict) -> dict:
     """Utility function to recursively remove keys with None values."""
@@ -188,11 +188,11 @@ class AnalyticsMetadataProducer:
         all_params = _remove_none_values(all_params)
         return all_params
 
-class ApiVersion(Version):
+class ApiVersion(version.Version):
     def __init__(self, major: int, minor: int):
         super().__init__(f"{major}.{minor}")
 
-class FirmwareVersion(Version):
+class FirmwareVersion(version.Version):
     def __init__(self, major: int, minor: int, patch: int):
         super().__init__(f"{major}.{minor}.{patch}")
 
