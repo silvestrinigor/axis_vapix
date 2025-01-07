@@ -8,8 +8,6 @@ This project provides a Python-based API handler for interacting with Axis devic
 
 ```python
 >>> import requests
->>> import requests.auth
->>>
 >>> from axis.vapix.apis import basic_device_information
 >>>
 >>> api_version = basic_device_information.ApiVersion(1, 0)
@@ -42,10 +40,10 @@ $ pip install git+https://github.com/silvestrinigor/axis_vapix
 ## Examples
 
 - Set time
+    
     ```python
     >>> import requests
     >>> import requests.auth
-    >>>
     >>> from axis.vapix.apis import time_api
     >>> 
     >>> api_version = time_api.ApiVersion(1,0)
@@ -74,6 +72,7 @@ $ pip install git+https://github.com/silvestrinigor/axis_vapix
     ```
     
 - Add text overlay
+    
     ```python
     >>> import requests
     >>> import requests.auth
@@ -102,6 +101,35 @@ $ pip install git+https://github.com/silvestrinigor/axis_vapix
     }
     ```
     
+
+## Tree
+
+```bash
+axix
+├── __init__.py
+└── vapix
+    ├── __init__.py
+    ├── apis
+    │   ├── analytics_metadata_configuration.py
+    │   ├── api_discovery_service.py
+    │   ├── application_api.py
+    │   ├── basic_device_information.py
+    │   ├── firmware_management_api.py
+    │   ├── loitering_guard.py
+    │   ├── network_settings_api.py
+    │   ├── ntp_api.py
+    │   ├── object_analytics.py
+    │   ├── overlay_api.py
+    │   ├── parameter_management.py
+    │   └── time_api.py
+    ├── exeptions.py
+    ├── handlers.py
+    ├── interfaces.py
+    ├── params.py
+    ├── request.py
+    ├── types.py
+    └── utils.py
+```
 
 ## License
 
