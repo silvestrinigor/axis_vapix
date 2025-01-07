@@ -1,5 +1,5 @@
 from abc import ABC
-from .request import AxisRequest
+from .request import AxisRequest, AxisRequestAsync
 from .types import ApiPathType, MethodType, RequestParamType
 from .params import ApiVersion
 
@@ -48,6 +48,7 @@ class IRequestAsyncAxisVapix(ABC):
             raise ValueError("API path type is not set")
         return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def _create_request(self): # TODO: Implement this function
-        raise NotImplementedError("This function is not implemented yet.")
+    def _create_request(self, method=None, url=None, headers=None, files=None, data=None, params=None, auth=None, cookies=None, hooks=None, json=None):
+        return AxisRequestAsync(method, url, headers, files, data, params, auth, cookies, hooks, json)
+    
     
