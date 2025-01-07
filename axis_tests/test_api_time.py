@@ -13,6 +13,7 @@ import requests
 import pytz
 from axis_tests import HOST, PORT, USERNAME, PASSWORD
 from axis.vapix import request, handlers
+import pytz
 
 class TestRequestTimeApi(unittest.TestCase):
 
@@ -67,11 +68,18 @@ class TestSendTimeApiResponseHander(unittest.TestCase):
             self.response1 = session.send(request1.prepare())
             self.response2 = session.send(request2.prepare())
             self.response3 = session.send(request3.prepare())
+            timezone = pytz.timezone("America/Sao_Paulo")
+            date_time = datetime.now(timezone)
+            request4 = api_request.set_date_time(date_time)
+            request4.auth = requests.auth.HTTPDigestAuth(USERNAME, PASSWORD)
+            self.response4 = session.send(request4.prepare())
+            
 
     def test_check_response(self):
         self.assertTrue(handlers.AxisVapixResponseHandler(self.response1, None).is_response_success())
         self.assertTrue(handlers.AxisVapixResponseHandler(self.response2, None).is_response_success())
         self.assertTrue(handlers.AxisVapixResponseHandler(self.response3, None).is_response_success())
+        self.assertTrue(handlers.AxisVapixResponseHandler(self.response4, None).is_response_success())
         
             
 if __name__ == '__main__':

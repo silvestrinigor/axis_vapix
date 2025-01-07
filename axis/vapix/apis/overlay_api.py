@@ -12,7 +12,7 @@ class RequestDynamicOverlayApi(IRequestAxisVapix):
 
     def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
         super().__init__(host, port, api_version, context)
-        self._api_path_type = ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY
+        self._api_path_type = ApiPathType.AXIS_CGI_DYNAMIC_OVERLAY_API
 
     def add_image(self, image_overlay: ImageOverlay):
         request_body = self._get_basic_request_body()
