@@ -3,8 +3,8 @@ https://developer.axis.com/vapix/network-video/network-settings-api
 """
 
 from ..interfaces import IRequestAxisVapix
-from ..types import ApiPathType
-from ..params import ApiVersion, RequestParamType, MethodType, IPv4AddressConfiguration, FirmwareVersion
+from ..types import ApiPathType, RequestParamType, MethodType
+from ..params import ApiVersion, IPv4AddressConfiguration, FirmwareVersion
 
 NETWORK_SETTINGS_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 5, 0)
 NETWORK_SETTINGS_API_DISCOVERY_API_ID = "network-settings"
