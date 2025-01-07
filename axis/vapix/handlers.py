@@ -1,4 +1,4 @@
-from requests import Request, Response, HTTPError
+from requests import Request, Response
 import re
 from .exeptions import AxisVapixException, AxisVapixHTTPException, AxisVapixClientError, AxisVapixServerError, code_exceptions
 
@@ -53,15 +53,26 @@ class AxisVapixResponseHandler:
         
     def _handle_json_error(self):
         try:
+            # Attempt to parse the JSON response
             self._response_json = self._response.json()
-            error = self._response_json.get("error", {})
+
+            # Check if the response contains an 'error' field
+            error = self._response_json.get("error", None)
+
+            # If 'error' is not found or is None, there's no error in the response
+            if error is None:
+                return  # No error in response, simply return
+
+            # If there's an 'error', extract the code and message
             error_code = error.get("code", "Unknown")
             error_message = error.get("message", "No error message provided.")
+
+            # Handle the error based on the error_code
             if error_code in code_exceptions:
-                raise code_exceptions[error_code]()
+                raise code_exceptions[error_code]()  # Raise the appropriate exception
             else:
                 raise AxisVapixException(f"Unknown error code {error_code}: {error_message}")
-        
+
         except ValueError:
+            # Catch JSON parsing errors
             raise AxisVapixException("Invalid JSON response received.")
-        
