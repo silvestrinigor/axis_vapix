@@ -5,6 +5,7 @@ https://developer.axis.com/vapix/network-video/basic-device-information
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, DevicePropertyType, ParamType, RequestParamType, MethodType
 from ..params import ApiVersion, FirmwareVersion
+from ..handlers import AxisVapixAsyncResponseHandler, AxisVapixResponseHandler
 from .. import request
 
 BASIC_DEVICE_INFORMATION_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 40, 0)
@@ -36,20 +37,23 @@ class RequestBasicDeviceInformation(IRequestAxisVapix):
     def get_supported_versions(self):
         return super()._get_supported_versions()
 
-    async def get_properties_async(self, properties: list[DevicePropertyType], session: request.AxisVapixAsyncSession):
-        params = {ParamType.PROPERTY_LIST.value: [prop.value for prop in properties]}
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_PROPERTIES.value
-        request_body[RequestParamType.PARAMS.value] = params
-        return await session.post(f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body, session=session, auth=session.auth)
+class BasicDeviceInformation(RequestBasicDeviceInformation):
+    def __init__(self, host, port, api_version, context = None):
+        super().__init__(host, port, api_version, context)
     
-    async def get_all_properties_async(self, session: request.AxisVapixAsyncSession):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_ALL_PROPERTIES.value
-        return await session.post(f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body, session=session, auth=session.auth)
+    def get_properties(self, properties, session: request.AxisVapixSession, auth):
+        request = super().get_properties(properties)
+        request.auth = auth
+        request.prepare()
+        response = session.send(request)
+        AxisVapixResponseHandler(response)
+        return response.json()
     
-    async def get_all_unrestricted_properties_async(self, session: request.AxisVapixAsyncSession):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_ALL_UNRESTRICTED_PROPERTIES.value
-        return await session.post(f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body, session=session, auth=session.auth)
-    
+    async def get_all_properties_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = self.get_all_properties()  # Get request information
+        
+        async with session.post(request.url, json=request.json, auth=auth) as response:
+            # Handle any errors in the response (raises exception if error exists)
+            await AxisVapixAsyncResponseHandler(response).handle_errors()
+            # If no error, return the JSON response
+            return await response.json()

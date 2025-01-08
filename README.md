@@ -39,7 +39,7 @@ $ pip install git+https://github.com/silvestrinigor/axis_vapix
 
 ## Examples
 
-- Set time
+- Create and send a request to set time in device
     
     ```python
     >>> import requests
@@ -71,7 +71,7 @@ $ pip install git+https://github.com/silvestrinigor/axis_vapix
     }
     ```
     
-- Add text overlay
+- Create and send a request to add text overlay in device
     
     ```python
     >>> import requests
@@ -99,6 +99,35 @@ $ pip install git+https://github.com/silvestrinigor/axis_vapix
         },
         "method": "addText"
     }
+    ```
+    
+- Get device info using async request
+    
+    ```python
+    from axis.vapix.apis import basic_device_information
+    import aiohttp
+    
+    async def main():
+        api_version = basic_device_information.ApiVersion(1,3)
+        api = basic_device_information.BasicDeviceInformation("192.168.0.90", "8000", api_version)
+    
+        async with aiohttp.ClientSession() as session:        
+            content =  await api.get_all_properties_async(session, auth=aiohttp.BasicAuth("root", "pass"))
+            print(content)
+    
+    if __name__ == '__main__':
+        asyncio.run(main())
+    
+    #output
+    """
+    {
+        'apiVersion': '1.3', 
+        'data': {
+        'propertyList': {
+            ...
+        }
+    }
+    """
     ```
     
 
