@@ -5,6 +5,7 @@ https://developer.axis.com/vapix/network-video/analytics-metadata-producer-confi
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import AnalyticsMetadataProducer, ApiVersion
 from ..interfaces import IRequestAxisVapix
+from .. import request
 
 ANALYTICS_METADATA_PRODUCER_CONFIGURATION_DISCOVERY_API_ID = "analytics-metadata-config"
 
@@ -37,3 +38,27 @@ class RequestAnalyticsMetadataProducerConfiguration(IRequestAxisVapix):
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
+
+class AnalyticsMetadataProducerConfiguration(RequestAnalyticsMetadataProducerConfiguration):
+    def __init__(self, host, port, api_version, context = None):
+        super().__init__(host, port, api_version, context)
+        
+    def list_producers(self, producers: list[str], session: request.AxisVapixSession, auth):
+        request = super().list_producers(producers)
+        request.auth = auth
+        self._send_request(request, session)
+    
+    def set_enable_producers(self, producers: list[str],session: request.AxisVapixSession, auth):
+        request = super().set_enable_producers(producers)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def get_supported_metadata(self, producers: list[str],session: request.AxisVapixSession, auth):
+        request = super().get_supported_metadata(producers)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def get_supported_versions(self, session: request.AxisVapixSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        self._send_request(request, session)

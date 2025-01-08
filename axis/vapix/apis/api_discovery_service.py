@@ -5,6 +5,7 @@ https://developer.axis.com/vapix/network-video/api-discovery-service
 from .. import interfaces
 from ..types import ApiPathType, RequestParamType, MethodType
 from ..params import ApiVersion, FirmwareVersion
+from .. import request
 
 API_DISCOVERY_SERVICE_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 50, 0)
 
@@ -21,3 +22,17 @@ class RequestApiDiscoveryService(interfaces.IRequestAxisVapix):
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
+
+class ApiDiscoveryService(RequestApiDiscoveryService):
+    def __init__(self, host, port, api_version, context = None):
+        super().__init__(host, port, api_version, context)
+        
+    def get_api_list(self, session: request.AxisVapixSession, auth):
+        request = super().get_api_list()
+        request.auth = auth
+        self._send_request(request, session)
+    
+    def get_supported_versions(self, session: request.AxisVapixSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        self._send_request(request, session)

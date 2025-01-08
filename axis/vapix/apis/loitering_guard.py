@@ -5,6 +5,7 @@ https://developer.axis.com/vapix/applications/loitering-guard
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import ApiVersion, LoiteringGuardConfiguration
+from .. import request
 
 class RequestLoiteringGuard(IRequestAxisVapix):
 
@@ -29,10 +30,39 @@ class RequestLoiteringGuard(IRequestAxisVapix):
         request_body[RequestParamType.PARAMS.value] = {ParamType.PROFILE.value: profile}
         return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
-    def get_configuration(self):
+    def get_configuration_capabilities(self):
         request_body = self._get_basic_request_body()
         request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION_CAPABILITIES.value
         return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
+
+class LoiteringGuard(RequestLoiteringGuard):
+    def __init__(self, host, port, api_version, context = None):
+        super().__init__(host, port, api_version, context)
+        
+    def get_configuration(self, session: request.AxisVapixSession, auth):
+        request = super().get_configuration()
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def set_configuration(self, configuration: LoiteringGuardConfiguration, session: request.AxisVapixSession, auth):
+        request = super().set_configuration(configuration)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def send_alarm(self, profile: int, session: request.AxisVapixSession, auth):
+        request = super().send_alarm(profile)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def get_configuration_capabilities(self, session: request.AxisVapixSession, auth):
+        request = super().get_configuration_capabilities()
+        request.auth = auth
+        self._send_request(request, session)
+
+    def get_supported_versions(self, session: request.AxisVapixSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        self._send_request(request, session)
