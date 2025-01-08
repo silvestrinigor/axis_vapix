@@ -10,10 +10,7 @@ setup(
     author_email="silvestrinigor@icloud.com",
     url="https://github.com/silvestrinigor/axis_vapix",
     packages=find_packages(where=".", exclude=["tests"]),
-    install_requires=[
-        "requests==2.32.3",
-        "packaging==24.2"
-        ],
+    install_requires=["requests==2.32.3", "packaging==24.2", "aiohttp==3.11.11", "pytz==2024.2"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
