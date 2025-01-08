@@ -5,6 +5,7 @@ https://developer.axis.com/vapix/applications/application-api
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, ActionType, RequestUrlParamType
 from ..params import ApiVersion
+from .. import request
 
 class RequestAplicationApi(IRequestAxisVapix):
 
@@ -67,3 +68,51 @@ class RequestAplicationApi(IRequestAxisVapix):
         request = self._create_request("POST", f"http://{self._host}:{self._port}/{ApiPathType.AXIS_CGI_APPLICATIONS_LIST.value}")
         return request
 
+class AplicationApi(RequestAplicationApi):
+    def __init__(self, host, port, api_version, context = None):
+        super().__init__(host, port, api_version, context)
+        
+    def upload(self, session: request.AxisVapixSession, auth):
+        request = super().get_all_properties()
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def control_application(self, action, session: request.AxisVapixSession, auth, **kwargs):
+        request = super().control_application(action, **kwargs)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def start_application(self, package, session: request.AxisVapixSession, auth, return_page = None):
+        request = super().start_application(package, return_page)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def stop_application(self, package, session: request.AxisVapixSession, auth, return_page = None):
+        request = super().stop_application(package, return_page)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def restart_application(self, package, session: request.AxisVapixSession, auth, return_page = None):
+        request = super().restart_application(package, return_page)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def remove_application(self, package, session: request.AxisVapixSession, auth, return_page = None):
+        request = super().remove_application(package, return_page)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def set_configure_application(self, config_name, config_value, session: request.AxisVapixSession, auth):
+        request = super().set_configure_application(config_name, config_value)
+        request.auth = auth
+        self._send_request(request, session)
+        
+    def get_configure_application(self, config_name, session: request.AxisVapixSession, auth):
+        request = super().get_configure_application(config_name)
+        request.auth = auth
+        self._send_request(request, session)
+    
+    def list(self, session: request.AxisVapixSession, auth):
+        request = super().list()
+        request.auth = auth
+        self._send_request(request, session)
