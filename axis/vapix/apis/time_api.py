@@ -7,6 +7,8 @@ from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import ApiVersion, FirmwareVersion
 from ..utils import serialize_datetime
+from .. import request
+from .. import handlers
 
 TIME_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 30, 0)
 TIME_API_DISCOVERY_API_ID = "time-service"
@@ -53,3 +55,20 @@ class RequestTimeApi(IRequestAxisVapix):
     
     def get_suported_versions(self):
         return super()._get_supported_versions()
+
+class TimeApi(RequestTimeApi):
+    def __init__(self, host, port, api_version, context = None):
+        super().__init__(host, port, api_version, context)
+        
+    async def set_current_date_time_async(self, time_zone, session: request.AxisVapixAsyncSession, auth):
+        from datetime import datetime
+        import pytz
+        
+        timezone = pytz.timezone(time_zone)
+        date_time = datetime.now(timezone)
+        
+        request = super().set_date_time(date_time)
+        response = await session.post(request.url, json=request.json, auth=auth)
+        
+        await handlers.AxisVapixAsyncResponseHandler(response).handle_errors()
+        return await response.json()
