@@ -60,7 +60,7 @@ class TimeApi(RequestTimeApi):
     def __init__(self, host, port, api_version, context = None):
         super().__init__(host, port, api_version, context)
         
-    async def set_current_date_time(self, time_zone, session: request.AxisVapixAsyncSession, auth):
+    async def set_current_date_time_async(self, time_zone, session: request.AxisVapixAsyncSession, auth):
         from datetime import datetime
         import pytz
         
