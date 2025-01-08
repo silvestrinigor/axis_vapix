@@ -44,16 +44,19 @@ class BasicDeviceInformation(RequestBasicDeviceInformation):
     def get_properties(self, properties, session: request.AxisVapixSession, auth):
         request = super().get_properties(properties)
         request.auth = auth
-        request.prepare()
-        response = session.send(request)
-        AxisVapixResponseHandler(response)
-        return response.json()
+        self._send_request(request, session)
+    
+    def get_all_properties(self, session: request.AxisVapixSession, auth):
+        request = super().get_all_properties()
+        request.auth = auth
+        self._send_request(request, session)
+    
+    def get_all_unrestricted_properties(self, session: request.AxisVapixSession, auth):
+        request = super().get_all_unrestricted_properties()
+        request.auth = auth
+        self._send_request(request, session)
     
     async def get_all_properties_async(self, session: request.AxisVapixAsyncSession, auth):
-        request = self.get_all_properties()  # Get request information
-        
-        async with session.post(request.url, json=request.json, auth=auth) as response:
-            # Handle any errors in the response (raises exception if error exists)
-            await AxisVapixAsyncResponseHandler(response).handle_errors()
-            # If no error, return the JSON response
-            return await response.json()
+        request = super().get_all_properties()  # Get request information
+        return await self._send_async_request(request, session, auth)
+

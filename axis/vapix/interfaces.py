@@ -1,5 +1,6 @@
 from abc import ABC
-from .request import AxisRequest
+from .request import AxisRequest, AxisVapixSession, AxisVapixAsyncSession
+from .handlers import AxisVapixResponseHandler, AxisVapixAsyncResponseHandler
 from .types import ApiPathType, MethodType, RequestParamType
 from .params import ApiVersion
 
@@ -26,3 +27,16 @@ class IRequestAxisVapix(ABC):
 
     def _create_request(self, method=None, url=None, headers=None, files=None, data=None, params=None, auth=None, cookies=None, hooks=None, json=None):
         return AxisRequest(method, url, headers, files, data, params, auth, cookies, hooks, json)
+
+    def _send_request(self, request: AxisRequest, session: AxisVapixSession):
+        request.prepare()
+        response = session.send(request)
+        AxisVapixResponseHandler(response)
+        return response.json()
+    
+    async def _send_async_request(self, request: AxisRequest, session: AxisVapixAsyncSession, auth):
+        async with session.post(request.url, json=request.json, auth=auth) as response:
+            # Handle any errors in the response (raises exception if error exists)
+            await AxisVapixAsyncResponseHandler(response).handle_errors()
+            # If no error, return the JSON response
+            return await response.json()
