@@ -73,7 +73,7 @@ class AplicationApi(RequestAplicationApi):
         super().__init__(host, port, api_version, context)
         
     def upload(self, session: request.AxisVapixSession, auth):
-        request = super().get_all_properties()
+        request = super().upload()
         request.auth = auth
         self._send_request(request, session)
         
