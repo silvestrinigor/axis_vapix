@@ -58,10 +58,5 @@ class BasicDeviceInformation(RequestBasicDeviceInformation):
     
     async def get_all_properties_async(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_all_properties()  # Get request information
-        
-        async with session.post(request.url, json=request.json, auth=auth) as response:
-            # Handle any errors in the response (raises exception if error exists)
-            await AxisVapixAsyncResponseHandler(response).handle_errors()
-            # If no error, return the JSON response
-            return await response.json()
+        return await self._send_async_request(request, session, auth)
 
