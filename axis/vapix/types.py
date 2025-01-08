@@ -1,5 +1,64 @@
 from enum import Enum
 
+class ActionType(Enum):
+    ADD = "add"
+    GET = "get"
+    LIST = "list"
+    LIST_DEFINITIONS = "listdefinitions"
+    NONE = None
+    REMOVE = "remove"
+    RESTART = "restart"
+    SET = "set"
+    START = "start"
+    STOP = "stop"
+    UPDATE = "update"
+
+class ApiPathType(Enum):
+    AXIS_CGI_ADMIN_LEGACY_PARAMETER_HANDLING = "axis-cgi/admin/param.cgi?action="
+    AXIS_CGI_ANALYTICS_METADATA_CONFIG = "axis-cgi/analyticsmetadataconfig.cgi"
+    AXIS_CGI_API_DISCOVERY = "axis-cgi/apidiscovery.cgi"
+    AXIS_CGI_APPLICATIONS = "axis-cgi/applications/"
+    AXIS_CGI_APPLICATIONS_CONFIG = "axis-cgi/applications/config.cgi?"
+    AXIS_CGI_APPLICATIONS_CONTROL = "axis-cgi/applications/control.cgi?"
+    AXIS_CGI_APPLICATIONS_LICENSE = "axis-cgi/applications/license.cgi?"
+    AXIS_CGI_APPLICATIONS_LIST = "axis-cgi/applications/list.cgi"
+    AXIS_CGI_APPLICATIONS_UPLOAD = "axis-cgi/applications/upload.cgi"
+    AXIS_CGI_AUDIO_DEVICE_CONTROL = "axis-cgi/audiodevicecontrol.cgi"
+    AXIS_CGI_AUDIO_RECEIVE = "axis-cgi/audio/receive.cgi"
+    AXIS_CGI_AUDIO_TRANSMIT = "axis-cgi/audio/transmit.cgi"
+    AXIS_CGI_BASIC_DEVICE_INFO = "axis-cgi/basicdeviceinfo.cgi"
+    AXIS_CGI_CAPTURE_MODE = "axis-cgi/capturemode.cgi"
+    AXIS_CGI_CLEAR_VIEW = "axis-cgi/clearviewcontrol.cgi"
+    AXIS_CGI_DYNAMIC_OVERLAY = "axis-cgi/dynamicoverlay.cgi?" # Dynamic text overlay
+    AXIS_CGI_DYNAMIC_OVERLAY_API = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi" # Dynamic overlay API
+    AXIS_CGI_FACTORYDEFAULT = "axis-cgi/factorydefault.cgi"
+    AXIS_CGI_FIND_MY_DEVICE = "axis-cgi/findmydevice.cgi"
+    AXIS_CGI_FIRMWARE_MANAGEMENT = "axis-cgi/firmwaremanagement.cgi"
+    AXIS_CGI_FIRMWARE_UPGRADE = "axis-cgi/firmwareupgrade.cgi?"
+    AXIS_CGI_HARDFACTORYDEFAULT = "axis-cgi/hardfactorydefault.cgi"
+    AXIS_CGI_LEGACY_PARAMETER_HANDLING = "axis-cgi/param.cgi?action="
+    AXIS_CGI_NETWORK_SETTINGS_API = "axis-cgi/network_settings.cgi"
+    AXIS_CGI_NTP = "axis-cgi/ntp.cgi"
+    AXIS_CGI_PARAM = "axis-cgi/param.cgi?"
+    AXIS_CGI_PWDGRP = "axis-cgi/pwdgrp.cgi?"
+    AXIS_CGI_RESTART = "axis-cgi/restart.cgi"
+    AXIS_CGI_TIME = "axis-cgi/time.cgi"
+    LOCAL_LOITERING_GUARD = "local/loiteringguard/control.cgi"
+    LOCAL_OBJECT_ANALYTICS = "local/objectanalytics/control.cgi"
+    NONE = None
+
+class AutoCommitType(Enum):
+    NEVER = "never"
+    BOOT = "boot"
+    STARTED = "started"
+    DEFAULT = "default"
+    NONE = None
+
+class AutoRollbackType(Enum):
+    NEVER = "never"
+    DEFAULT = "default"
+    NONE = None
+
 class DevicePropertyType(Enum):
     ARCHITECTURE = "Architecture"
     BRAND = "Brand"
@@ -16,14 +75,25 @@ class DevicePropertyType(Enum):
     VERSION = "Version"
     WEB_URL = "WebURL"
 
-class RequestParamType(Enum):
-    API_VERSION = "apiVersion"
-    PARAMS = "params"
-    CHANNEL = "channel"
-    CAPTURE_MODE_ID = "captureModeId"
-    CONTEXT = "context"
-    METHOD = "method"
-    FACTORY_DEFAULT_MODE = "factoryDefaultMode"
+class FactoryDefaultModeType(Enum):
+    SOFT = "soft"
+    HARD = "hard"
+    NONE = None
+
+class FirmwareUpgradeType(Enum):
+    NORMAL = "normal"
+    FACTORY_DEFAULT = "factorydefault"
+    NONE = None
+
+class IPAddressConfigurationModeType(Enum):
+    DHCP = "DHCP"
+    STATIC = "static"
+    NONE = None
+
+class LinkLocalModeType(Enum):
+    OFF = "off"
+    ON = "on"
+    FALLBACK = "fallback"
 
 class MethodType(Enum):
     FACTORY_DEFAULT = "factoryDefault"
@@ -80,62 +150,24 @@ class MethodType(Enum):
     STOP_AUTO = "stopAuto"
     SET_CONFIGURATION = "setConfiguration"
 
-class ApiPathType(Enum):
-    AXIS_CGI_ANALYTICS_METADATA_CONFIG = "axis-cgi/analyticsmetadataconfig.cgi"
-    AXIS_CGI_API_DISCOVERY = "axis-cgi/apidiscovery.cgi"
-    AXIS_CGI_AUDIO_DEVICE_CONTROL = "axis-cgi/audiodevicecontrol.cgi"
-    AXIS_CGI_AUDIO_TRANSMIT = "axis-cgi/audio/transmit.cgi"
-    AXIS_CGI_AUDIO_RECEIVE = "axis-cgi/audio/receive.cgi"
-    AXIS_CGI_BASIC_DEVICE_INFO = "axis-cgi/basicdeviceinfo.cgi"
-    AXIS_CGI_CAPTURE_MODE = "axis-cgi/capturemode.cgi"
-    AXIS_CGI_CLEAR_VIEW = "axis-cgi/clearviewcontrol.cgi"
-    AXIS_CGI_DYNAMIC_OVERLAY_API = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi" # Dynamic overlay API
-    AXIS_CGI_DYNAMIC_OVERLAY = "axis-cgi/dynamicoverlay.cgi?" # Dynamic text overlay
-    AXIS_CGI_FIND_MY_DEVICE = "axis-cgi/findmydevice.cgi"
-    AXIS_CGI_FIRMWARE_MANAGEMENT = "axis-cgi/firmwaremanagement.cgi"
-    AXIS_CGI_LEGACY_PARAMETER_HANDLING = "axis-cgi/param.cgi?action="
-    AXIS_CGI_ADMIN_LEGACY_PARAMETER_HANDLING = "axis-cgi/admin/param.cgi?action="
-    AXIS_CGI_NETWORK_SETTINGS_API = "axis-cgi/network_settings.cgi"
-    AXIS_CGI_TIME = "axis-cgi/time.cgi"
-    AXIS_CGI_NTP = "axis-cgi/ntp.cgi"
-    AXIS_CGI_APPLICATIONS = "axis-cgi/applications/"
-    AXIS_CGI_APPLICATIONS_UPLOAD = "axis-cgi/applications/upload.cgi"
-    AXIS_CGI_APPLICATIONS_CONTROL = "axis-cgi/applications/control.cgi?"
-    AXIS_CGI_APPLICATIONS_CONFIG = "axis-cgi/applications/config.cgi?"
-    AXIS_CGI_APPLICATIONS_LICENSE = "axis-cgi/applications/license.cgi?"
-    AXIS_CGI_APPLICATIONS_LIST = "axis-cgi/applications/list.cgi"
-    LOCAL_OBJECT_ANALYTICS = "local/objectanalytics/control.cgi"
-    LOCAL_LOITERING_GUARD = "local/loiteringguard/control.cgi"
-    AXIS_CGI_SYSTEM_SETTINGS_PWDGRP = "axis-cgi/pwdgrp.cgi?"
-    AXIS_CGI_SYSTEM_SETTINGS_FACTORYDEFAULT = "axis-cgi/factorydefault.cgi"
-    AXIS_CGI_SYSTEM_SETTINGS_HARDFACTORYDEFAULT = "axis-cgi/hardfactorydefault.cgi"
-    AXIS_CGI_SYSTEM_SETTINGS_FIRMWARE_UPGRADE = "axis-cgi/firmwareupgrade.cgi?"
-    AXIS_CGI_SYSTEM_SETTINGS_RESTART = "axis-cgi/restart.cgi"
-    AXIS_CGI_PARAM = "axis-cgi/param.cgi?"
+class OverlayColorType(Enum):
+    WHITE = "white"
+    BLACK = "black"
+    GREY = "grey"
+    MOSAIC = "mosaic" # Hardware dependent
+    CAMELEON = "cameleon" # Hardware dependent
+    RED = "red"
+    TRANSPARENT = "transparent"
+    SEMI_TRANSPARENT = "semiTransparent"
     NONE = None
 
-class FirmwareUpgradeType(Enum):
-    NORMAL = "normal"
-    FACTORY_DEFAULT = "factorydefault"
-    NONE = None
-
-class RequestUrlParamType(Enum):
-    TYPE = "type="
-    ACTION = "action="
-    USERGROUP = "usergroup="
-    GROUP = "group"
-
-class ActionType(Enum):
-    ADD = "add"
-    REMOVE = "remove"
-    UPDATE = "update"
-    LIST = "list"
-    LIST_DEFINITIONS = "listdefinitions"
-    START = "start"
-    STOP = "stop"
-    RESTART = "restart"
-    GET = "get"
-    SET = "set"
+class OverlayPositionType(Enum):
+    BOTTOM_RIGHT = "bottomRight"
+    TOP_RIGHT = "topRight"
+    BOTTOM = "bottom"
+    TOP = "top"
+    BOTTOM_LEFT = "bottomLeft"
+    TOP_LEFT = "topleft"
     NONE = None
 
 class ParamType(Enum):
@@ -228,41 +260,27 @@ class ParamType(Enum):
     CLASSIFICATORS = "classificators"
     SCENARIOS = "scenarios"
 
-class StaticAddressConfigurationParamsType(Enum):
-    ADRESS = "address"
-    PREFIX_LENGTH = "prefixLength"
-    BROADCAST = "broadcast"
-
-class LinkLocalModeType(Enum):
-    OFF = "off"
-    ON = "on"
-    FALLBACK = "fallback"
-
-class OverlayPositionType(Enum):
-    BOTTOM_RIGHT = "bottomRight"
-    TOP_RIGHT = "topRight"
-    BOTTOM = "bottom"
-    TOP = "top"
-    BOTTOM_LEFT = "bottomLeft"
-    TOP_LEFT = "topleft"
-    NONE = None
-
-class OverlayColorType(Enum):
-    WHITE = "white"
-    BLACK = "black"
-    GREY = "grey"
-    MOSAIC = "mosaic" # Hardware dependent
-    CAMELEON = "cameleon" # Hardware dependent
-    RED = "red"
-    TRANSPARENT = "transparent"
-    SEMI_TRANSPARENT = "semiTransparent"
-    NONE = None
-
-class ResponseType(Enum):
-    DATA = "data"
+class RequestParamType(Enum):
     API_VERSION = "apiVersion"
+    PARAMS = "params"
+    CHANNEL = "channel"
+    CAPTURE_MODE_ID = "captureModeId"
+    CONTEXT = "context"
     METHOD = "method"
-    ERROR = "error"
+    FACTORY_DEFAULT_MODE = "factoryDefaultMode"
+
+class RequestUrlParamType(Enum):
+    TYPE = "type="
+    ACTION = "action="
+    USERGROUP = "usergroup="
+    GROUP = "group"
+    
+class ResponseDataApiType(Enum):
+    ID = "id"
+    VERSION = "version"
+    NAME = "name"
+    DOCK_LINK = "dockLink"
+    STATUS = "status"
 
 class ResponseDataType(Enum):
     API_LIST = "apiList"
@@ -276,41 +294,18 @@ class ResponseDataType(Enum):
     IMAGE_OVERLAYS = "imageOverlays"
     TEXT_OVERLAYS = "textOverlays"
 
-class ResponseDataApiType(Enum):
-    ID = "id"
-    VERSION = "version"
-    NAME = "name"
-    DOCK_LINK = "dockLink"
-    STATUS = "status"
+class ResponseType(Enum):
+    DATA = "data"
+    API_VERSION = "apiVersion"
+    METHOD = "method"
+    ERROR = "error"
 
 class ServersSourceType(Enum):
     DHCP = "DHCP"
     STATIC = "static"
     NONE = None
 
-class FactoryDefaultModeType(Enum):
-    SOFT = "soft"
-    HARD = "hard"
-    NONE = None
-
-class AutoCommitType(Enum):
-    NEVER = "never"
-    BOOT = "boot"
-    STARTED = "started"
-    DEFAULT = "default"
-    NONE = None
-
-class IPAddressConfigurationModeType(Enum):
-    DHCP = "DHCP"
-    STATIC = "static"
-    NONE = None
-
-class ContentType(Enum):
-    APPLICATION_JSON = "application/json"
-    APPLICATION_OCTETSTREAM = "application/octet-stream"
-    MUILTPART_FORMDATA = "multipart/form-data"
-
-class AutoRollbackType(Enum):
-    NEVER = "never"
-    DEFAULT = "default"
-    NONE = None
+class StaticAddressConfigurationParamsType(Enum):
+    ADRESS = "address"
+    PREFIX_LENGTH = "prefixLength"
+    BROADCAST = "broadcast"
