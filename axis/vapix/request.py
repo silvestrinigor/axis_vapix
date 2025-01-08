@@ -1,3 +1,4 @@
+import aiohttp
 import requests
 
 class AxisRequest(requests.Request):
@@ -9,4 +10,6 @@ class AxisVapixSession(requests.Session):
     def __init__(self):
         super().__init__()
 
-
+class AxisVapixAsyncSession(aiohttp.ClientSession):
+    def __init__(self):
+        super().__init__()
