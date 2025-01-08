@@ -57,3 +57,8 @@ class AnalyticsMetadataProducerConfiguration(RequestAnalyticsMetadataProducerCon
         request = super().get_supported_metadata(producers)
         request.auth = auth
         self._send_request(request, session)
+        
+    def get_supported_versions(self, session: request.AxisVapixSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        self._send_request(request, session)
