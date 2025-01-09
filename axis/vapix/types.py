@@ -274,31 +274,6 @@ class RequestUrlParamType(Enum):
     ACTION = "action="
     USERGROUP = "usergroup="
     GROUP = "group"
-    
-class ResponseDataApiType(Enum):
-    ID = "id"
-    VERSION = "version"
-    NAME = "name"
-    DOCK_LINK = "dockLink"
-    STATUS = "status"
-
-class ResponseDataType(Enum):
-    API_LIST = "apiList"
-    PROPERTY_LIST = "propertyList"
-    DATE_TIME = "dateTime"
-    LOCAL_DATE_TIME = "localDateTime"
-    TIME_ZONE = "timeZone"
-    POSIX_TIME_ZONE = "posixTimeZone"
-    DST_ENABLE = "dstEnabled"
-    IMAGE_FILES = "imageFiles"
-    IMAGE_OVERLAYS = "imageOverlays"
-    TEXT_OVERLAYS = "textOverlays"
-
-class ResponseType(Enum):
-    DATA = "data"
-    API_VERSION = "apiVersion"
-    METHOD = "method"
-    ERROR = "error"
 
 class ServersSourceType(Enum):
     DHCP = "DHCP"
