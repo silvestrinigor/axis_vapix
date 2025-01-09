@@ -5,6 +5,7 @@ https://developer.axis.com/vapix/applications/axis-object-analytics-api
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, RequestParamType, MethodType, ParamType
 from ..params import ApiVersion, ObjectAnalyticsConfiguration
+from .. import request
 
 class RequestObjectAnalyticsApi(IRequestAxisVapix):
 
@@ -60,3 +61,82 @@ class RequestObjectAnalyticsApi(IRequestAxisVapix):
 
     def get_supported_versions(self):
         return super()._get_supported_versions()
+    
+class ObjectAnalyticsApi(RequestObjectAnalyticsApi):
+    def __init__(self, host, port, api_version, context = None):
+        super().__init__(host, port, api_version, context)
+
+    def get_configuration_capabilities(self, session: request.AxisVapixSession, auth):
+        request = super().get_configuration_capabilities()
+        request.auth = auth
+        self._send_request(request, session)
+
+    def get_configuration(self, session: request.AxisVapixSession, auth):
+        request = super().get_configuration()
+        request.auth = auth
+        self._send_request(request, session)
+
+    def set_configuration(self, configuration: ObjectAnalyticsConfiguration, session: request.AxisVapixSession, auth):
+        request = super().set_configuration(configuration)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def send_alarm(self, scenario: int, session: request.AxisVapixSession, auth):
+        request = super().send_alarm(scenario)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def get_accumulated_count(self, scenario: int, session: request.AxisVapixSession, auth):
+        request = super().get_accumulated_count(scenario)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def reset_accumulated_counts(self, scenario: int, session: request.AxisVapixSession, auth):
+        request = super().reset_accumulated_counts(scenario)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def reset_passthrough(self, scenario: int, session: request.AxisVapixSession, auth):
+        request = super().reset_passthrough(scenario)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def get_occupancy(self, scenario: int, session: request.AxisVapixSession, auth):
+        request = super().get_occupancy(scenario)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def get_supported_versions(self, session: request.AxisVapixSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        self._send_request(request, session)
+
+    async def get_configuration_capabilities_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_configuration_capabilities()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_configuration_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_configuration()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def set_configuration_async(self, configuration: ObjectAnalyticsConfiguration, session: request.AxisVapixAsyncSession, auth):
+        request = super().set_configuration(configuration)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def send_alarm_async(self, scenario: int, session: request.AxisVapixAsyncSession, auth):
+        request = super().send_alarm(scenario)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_accumulated_count_async(self, scenario: int, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_accumulated_count(scenario)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def reset_accumulated_counts_async(self, scenario: int, session: request.AxisVapixAsyncSession, auth):
+        request = super().reset_accumulated_counts(scenario)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)

@@ -5,6 +5,7 @@ https://developer.axis.com/vapix/applications/application-api
 from ..interfaces import IRequestAxisVapix
 from ..types import ApiPathType, ActionType, RequestUrlParamType
 from ..params import ApiVersion
+from ..handlers import AxisVapixAsyncResponseHandler
 from .. import request
 
 class RequestAplicationApi(IRequestAxisVapix):
@@ -116,3 +117,66 @@ class AplicationApi(RequestAplicationApi):
         request = super().list()
         request.auth = auth
         self._send_request(request, session)
+
+    async def async_upload(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().upload()
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_control_application(self, action: ActionType, session: request.AxisVapixAsyncSession, auth, **kwargs):
+        request = super().control_application(action, **kwargs)
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_start_application(self, package: str, session: request.AxisVapixAsyncSession, auth, return_page = None):
+        request = super().start_application(package, return_page)
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_stop_application(self, package: str, session: request.AxisVapixAsyncSession, auth, return_page = None):
+        request = super().stop_application(package, return_page)
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_restart_application(self, package: str, session: request.AxisVapixAsyncSession, auth, return_page = None):
+        request = super().restart_application(package, return_page)
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_remove_application(self, package: str, session: request.AxisVapixAsyncSession, auth, return_page = None):
+        request = super().remove_application(package, return_page)
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_set_configure_application(self, config_name: str, config_value: bool, session: request.AxisVapixAsyncSession, auth):
+        request = super().set_configure_application(config_name, config_value)
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_get_configure_application(self, config_name: str, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_configure_application(config_name)
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response
+    
+    async def async_list(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().list()
+        request.auth = auth
+        response = await session.post(request.url, headers=request.headers, auth=request.auth)
+        AxisVapixAsyncResponseHandler(response).handle_errors()
+        return response

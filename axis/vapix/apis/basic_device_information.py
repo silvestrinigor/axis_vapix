@@ -62,5 +62,20 @@ class BasicDeviceInformation(RequestBasicDeviceInformation):
         
     async def get_all_properties_async(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_all_properties()  # Get request information
-        return await self._send_async_request(request, session, auth)
-
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_all_unrestricted_properties_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_all_unrestricted_properties()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_properties_async(self, properties: list[DevicePropertyType], session: request.AxisVapixAsyncSession, auth):
+        request = super().get_properties(properties)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_supported_versions_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)

@@ -128,3 +128,49 @@ class FirmwareManagementApi(RequestFirmwareManagementApi):
         request = super().get_supported_versions()
         request.auth = auth
         self._send_request(request, session)
+
+    async def async_status(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().status()
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+
+    async def async_upgrade(self, session: request.AxisVapixAsyncSession, auth, file_path: str, factory_default = FactoryDefaultModeType.NONE, auto_commit = AutoCommitType.NONE, auto_rollback = AutoRollbackType.NONE):
+        request = super().upgrade(file_path, factory_default, auto_commit, auto_rollback)
+        request.auth = auth
+        await session.post(request.url, data=request.data, files=request.files, headers=request.headers, auth=request.auth)
+
+    async def async_commit(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().commit()
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+
+    async def async_roolback(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().roolback()
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+
+    async def async_purge(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().purge()
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+
+    async def async_factory_default(self, session: request.AxisVapixAsyncSession, auth, factory_default: FactoryDefaultModeType = FactoryDefaultModeType.NONE):
+        request = super().factory_default(factory_default)
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+
+    async def async_stop_auto(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().stop_auto()
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def async_reboot(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().reboot()
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def async_get_supported_versions(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    

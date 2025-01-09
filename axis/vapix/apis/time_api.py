@@ -59,6 +59,41 @@ class RequestTimeApi(IRequestAxisVapix):
 class TimeApi(RequestTimeApi):
     def __init__(self, host, port, api_version, context = None):
         super().__init__(host, port, api_version, context)
+
+    def get_date_time_info(self, session: request.AxisVapixSession, auth):
+        request = super().get_date_time_info()
+        request.auth = auth
+        self._send_request(request, session)
+
+    def get_all(self, session: request.AxisVapixSession, auth):
+        request = super().get_all()
+        request.auth = auth
+        self._send_request(request, session)
+
+    def set_date_time(self, date_time: datetime, session: request.AxisVapixSession, auth):
+        request = super().set_date_time(date_time)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def set_time_zone(self, timezone: str, session: request.AxisVapixSession, auth):
+        request = super().set_time_zone(timezone)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def set_posix_time_zone(self, posix_timezone: str, enable_dst: bool, session: request.AxisVapixSession, auth):
+        request = super().set_posix_time_zone(posix_timezone, enable_dst)
+        request.auth = auth
+        self._send_request(request, session)
+
+    def reset_time_zone(self, session: request.AxisVapixSession, auth):
+        request = super().reset_time_zone()
+        request.auth = auth
+        self._send_request(request, session)
+
+    def get_suported_versions(self, session: request.AxisVapixSession, auth):
+        request = super().get_suported_versions()
+        request.auth = auth
+        self._send_request(request, session)
         
     async def set_current_date_time_async(self, time_zone, session: request.AxisVapixAsyncSession, auth):
         from datetime import datetime

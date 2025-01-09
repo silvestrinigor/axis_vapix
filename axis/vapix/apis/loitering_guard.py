@@ -66,3 +66,28 @@ class LoiteringGuard(RequestLoiteringGuard):
         request = super().get_supported_versions()
         request.auth = auth
         self._send_request(request, session)
+
+    async def get_configuration_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_configuration()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def set_configuration_async(self, configuration: LoiteringGuardConfiguration, session: request.AxisVapixAsyncSession, auth):
+        request = super().set_configuration(configuration)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def send_alarm_async(self, profile: int, session: request.AxisVapixAsyncSession, auth):
+        request = super().send_alarm(profile)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_configuration_capabilities_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_configuration_capabilities()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_supported_versions_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_supported_versions()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
