@@ -45,27 +45,27 @@ class LoiteringGuard(RequestLoiteringGuard):
     def get_configuration(self, session: request.AxisVapixSession, auth):
         request = super().get_configuration()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def set_configuration(self, configuration: LoiteringGuardConfiguration, session: request.AxisVapixSession, auth):
         request = super().set_configuration(configuration)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def send_alarm(self, profile: int, session: request.AxisVapixSession, auth):
         request = super().send_alarm(profile)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def get_configuration_capabilities(self, session: request.AxisVapixSession, auth):
         request = super().get_configuration_capabilities()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def get_supported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_supported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def get_configuration_async(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_configuration()

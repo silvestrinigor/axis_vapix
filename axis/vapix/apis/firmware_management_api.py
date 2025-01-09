@@ -87,47 +87,47 @@ class FirmwareManagementApi(RequestFirmwareManagementApi):
     def status(self, session: request.AxisVapixSession, auth):
         request = super().status()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def upgrade(self, session: request.AxisVapixSession, auth, file_path: str, factory_default = FactoryDefaultModeType.NONE, auto_commit = AutoCommitType.NONE, auto_rollback = AutoRollbackType.NONE):
         request = super().upgrade(file_path, factory_default, auto_commit, auto_rollback)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def commit(self, session: request.AxisVapixSession, auth):
         request = super().commit()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def roolback(self, session: request.AxisVapixSession, auth):
         request = super().roolback()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def purge(self, session: request.AxisVapixSession, auth):
         request = super().purge()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def factory_default(self, session: request.AxisVapixSession, auth, factory_default: FactoryDefaultModeType = FactoryDefaultModeType.NONE):
         request = super().factory_default(factory_default)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def stop_auto(self, session: request.AxisVapixSession, auth):
         request = super().stop_auto()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def reboot(self, session: request.AxisVapixSession, auth):
         request = super().reboot()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def get_supported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_supported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def async_status(self, session: request.AxisVapixAsyncSession, auth):
         request = super().status()

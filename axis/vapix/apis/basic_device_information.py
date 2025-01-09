@@ -43,22 +43,22 @@ class BasicDeviceInformation(RequestBasicDeviceInformation):
     def get_properties(self, properties: list[DevicePropertyType], session: request.AxisVapixSession, auth):
         request = super().get_properties(properties)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
     
     def get_all_properties(self, session: request.AxisVapixSession, auth):
         request = super().get_all_properties()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
     
     def get_all_unrestricted_properties(self, session: request.AxisVapixSession, auth):
         request = super().get_all_unrestricted_properties()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def get_supported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_supported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     async def get_all_properties_async(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_all_properties()  # Get request information

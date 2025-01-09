@@ -103,32 +103,32 @@ class NetworkSettingsApi(RequestNetworkSettingsApi):
     def add_vlan(self, master_device_name: str, vlan_id: int, session: request.AxisVapixSession, auth):
         request = super().add_vlan(master_device_name, vlan_id)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def get_network_info(self, session: request.AxisVapixSession, auth):
         request = super().get_network_info()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def remove_vlam(self, session: request.AxisVapixSession, auth, master_device_name: str | None = None, vlan_id: int | None = None):
         request = super().remove_vlam(master_device_name, vlan_id)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def scan_wlan_networks(self, session: request.AxisVapixSession, auth, device_name: str, refresh: bool | None = None):
         request = super().scan_wlan_networks(device_name, refresh)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_hostname_configuration(self, session: request.AxisVapixSession, auth, use_dhcp_hostname: bool | None = None, static_hostname: str | None = None):
         request = super().set_hostname_configuration(use_dhcp_hostname, static_hostname)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_ipv4_address_configuration(self, ipv4_configuration: IPv4AddressConfiguration, session: request.AxisVapixSession, auth):
         request = super().set_ipv4_address_configuration(ipv4_configuration)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_ipv6_address_configuration(self, session: request.AxisVapixSession, auth): # TODO: Implement this function
         raise NotImplementedError("This function is not implemented yet.")
@@ -136,7 +136,7 @@ class NetworkSettingsApi(RequestNetworkSettingsApi):
     def get_supported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_supported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def add_vlan_async(self, master_device_name: str, vlan_id: int, session: request.AxisVapixAsyncSession, auth):
         request = super().add_vlan(master_device_name, vlan_id)

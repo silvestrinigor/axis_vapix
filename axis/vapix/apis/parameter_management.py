@@ -58,27 +58,27 @@ class ParameterManagement(RequestParameterManagement):
     def list(self, session: request.AxisVapixSession, auth, **kwargs):
         request = super().list(**kwargs)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def list_definitions(self, session: request.AxisVapixSession, auth, **kwargs):
         request = super().list_definitions(**kwargs)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def update(self, session: request.AxisVapixSession, auth, **kwargs):
         request = super().update(**kwargs)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def add(self, session: request.AxisVapixSession, auth, **kwargs):
         request = super().add(**kwargs)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def remove(self, session: request.AxisVapixSession, auth, **kwargs):
         request = super().remove(**kwargs)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def list_async(self, session: request.AxisVapixAsyncSession, auth, **kwargs):
         request = super().list(**kwargs)

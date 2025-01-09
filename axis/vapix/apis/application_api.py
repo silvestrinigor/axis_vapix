@@ -76,47 +76,47 @@ class AplicationApi(RequestAplicationApi):
     def upload(self, session: request.AxisVapixSession, auth):
         request = super().upload()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def control_application(self, action: ActionType, session: request.AxisVapixSession, auth, **kwargs):
         request = super().control_application(action, **kwargs)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def start_application(self, package: str, session: request.AxisVapixSession, auth, return_page = None):
         request = super().start_application(package, return_page)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def stop_application(self, package: str, session: request.AxisVapixSession, auth, return_page = None):
         request = super().stop_application(package, return_page)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def restart_application(self, package: str, session: request.AxisVapixSession, auth, return_page = None):
         request = super().restart_application(package, return_page)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def remove_application(self, package: str, session: request.AxisVapixSession, auth, return_page = None):
         request = super().remove_application(package, return_page)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def set_configure_application(self, config_name: str, config_value: bool, session: request.AxisVapixSession, auth):
         request = super().set_configure_application(config_name, config_value)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def get_configure_application(self, config_name: str, session: request.AxisVapixSession, auth):
         request = super().get_configure_application(config_name)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
     
     def list(self, session: request.AxisVapixSession, auth):
         request = super().list()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def async_upload(self, session: request.AxisVapixAsyncSession, auth):
         request = super().upload()

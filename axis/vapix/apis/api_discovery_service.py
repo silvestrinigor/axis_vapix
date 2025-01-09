@@ -31,12 +31,12 @@ class ApiDiscoveryService(RequestApiDiscoveryService):
     def get_api_list(self, session: request.AxisVapixSession, auth):
         request = super().get_api_list()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
     
     def get_supported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_supported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def get_api_list_async(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_api_list()

@@ -67,72 +67,72 @@ class DynamicOverlayApi(RequestDynamicOverlayApi):
     def add_image(self, image_overlay: ImageOverlay, session: request.AxisVapixSession, auth):
         request = super().add_image(image_overlay)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def add_text(self, text_overlay: TextOverlay, session: request.AxisVapixSession, auth):
         request = super().add_text(text_overlay)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def list(self, session: request.AxisVapixSession, auth, camera: str | None = None, identity: int | None = None):
         request = super().list(camera, identity)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def remove(self, session: request.AxisVapixSession, auth, identity: int | None = None):
         request = super().remove(identity)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_image(self, image_overlay: ImageOverlay, session: request.AxisVapixSession, auth):
         request = super().set_image(image_overlay)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_text(self, text_overlay: TextOverlay, session: request.AxisVapixSession, auth):
         request = super().set_text(text_overlay)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def get_overlay_capabilities(self, session: request.AxisVapixSession, auth):
         request = super().get_overlay_capabilities()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def async_add_image(self, image_overlay: ImageOverlay, session: request.AxisVapixAsyncSession, auth):
         request = super().add_image(image_overlay)
         request.auth = auth
-        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
 
     async def async_add_text(self, text_overlay: TextOverlay, session: request.AxisVapixAsyncSession, auth):
         request = super().add_text(text_overlay)
         request.auth = auth
-        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
 
     async def async_list(self, session: request.AxisVapixAsyncSession, auth, camera: str | None = None, identity: int | None = None):
         request = super().list(camera, identity)
         request.auth = auth
-        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
 
     async def async_remove(self, session: request.AxisVapixAsyncSession, auth, identity: int | None = None):
         request = super().remove(identity)
         request.auth = auth
-        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
 
     async def async_set_image(self, image_overlay: ImageOverlay, session: request.AxisVapixAsyncSession, auth):
         request = super().set_image(image_overlay)
         request.auth = auth
-        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
 
     async def async_set_text(self, text_overlay: TextOverlay, session: request.AxisVapixAsyncSession, auth):
         request = super().set_text(text_overlay)
         request.auth = auth
-        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
 
     async def async_get_overlay_capabilities(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_overlay_capabilities()
         request.auth = auth
-        await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
 
 class RequestOverlayModifiers(IRequestAxisVapix): # TODO: Implement this class
 

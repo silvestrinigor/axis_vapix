@@ -47,22 +47,22 @@ class AnalyticsMetadataProducerConfiguration(RequestAnalyticsMetadataProducerCon
     def list_producers(self, producers: list[str], session: request.AxisVapixSession, auth):
         request = super().list_producers(producers)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
     
     def set_enable_producers(self, producers: list[str], session: request.AxisVapixSession, auth):
         request = super().set_enable_producers(producers)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def get_supported_metadata(self, producers: list[str], session: request.AxisVapixSession, auth):
         request = super().get_supported_metadata(producers)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
         
     def get_supported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_supported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def async_list_producers(self, producers: list[str], session: request.AxisVapixAsyncSession, auth):
         request = super().list_producers(producers)

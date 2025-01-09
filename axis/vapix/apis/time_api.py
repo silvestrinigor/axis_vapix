@@ -63,22 +63,22 @@ class TimeApi(RequestTimeApi):
     def get_date_time_info(self, session: request.AxisVapixSession, auth):
         request = super().get_date_time_info()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def get_all(self, session: request.AxisVapixSession, auth):
         request = super().get_all()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_date_time(self, date_time: datetime, session: request.AxisVapixSession, auth):
         request = super().set_date_time(date_time)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_time_zone(self, timezone: str, session: request.AxisVapixSession, auth):
         request = super().set_time_zone(timezone)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_current_date_time(self, time_zone, session: request.AxisVapixSession, auth):
         from datetime import datetime
@@ -89,22 +89,22 @@ class TimeApi(RequestTimeApi):
         
         request = super().set_date_time(date_time)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_posix_time_zone(self, posix_timezone: str, enable_dst: bool, session: request.AxisVapixSession, auth):
         request = super().set_posix_time_zone(posix_timezone, enable_dst)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def reset_time_zone(self, session: request.AxisVapixSession, auth):
         request = super().reset_time_zone()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def get_suported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_suported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
     
     async def get_date_time_info_async(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_date_time_info()

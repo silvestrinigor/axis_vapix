@@ -37,17 +37,17 @@ class NtpApi(RequestNtpApi):
     def get_ntp_info(self, session: request.AxisVapixSession, auth):
         request = super().get_ntp_info()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def set_ntp_client_configuration(self, ntp_client_configuration: NTPClientConfiguration, session: request.AxisVapixSession, auth):
         request = super().set_ntp_client_configuration(ntp_client_configuration)
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     def get_supported_versions(self, session: request.AxisVapixSession, auth):
         request = super().get_supported_versions()
         request.auth = auth
-        self._send_request(request, session)
+        return self._send_request(request, session)
 
     async def get_ntp_info_async(self, session: request.AxisVapixAsyncSession, auth):
         request = super().get_ntp_info()
