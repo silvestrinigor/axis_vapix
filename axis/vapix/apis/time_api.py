@@ -80,6 +80,17 @@ class TimeApi(RequestTimeApi):
         request.auth = auth
         self._send_request(request, session)
 
+    def set_current_date_time(self, time_zone, session: request.AxisVapixSession, auth):
+        from datetime import datetime
+        import pytz
+        
+        timezone = pytz.timezone(time_zone)
+        date_time = datetime.now(timezone)
+        
+        request = super().set_date_time(date_time)
+        request.auth = auth
+        self._send_request(request, session)
+
     def set_posix_time_zone(self, posix_timezone: str, enable_dst: bool, session: request.AxisVapixSession, auth):
         request = super().set_posix_time_zone(posix_timezone, enable_dst)
         request.auth = auth
