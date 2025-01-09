@@ -94,7 +94,42 @@ class TimeApi(RequestTimeApi):
         request = super().get_suported_versions()
         request.auth = auth
         self._send_request(request, session)
-        
+    
+    async def get_date_time_info_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_date_time_info()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_all_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_all()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def set_date_time_async(self, date_time: datetime, session: request.AxisVapixAsyncSession, auth):
+        request = super().set_date_time(date_time)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+
+    async def set_time_zone_async(self, timezone: str, session: request.AxisVapixAsyncSession, auth):
+        request = super().set_time_zone(timezone)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def set_posix_time_zone_async(self, posix_timezone: str, enable_dst: bool, session: request.AxisVapixAsyncSession, auth):
+        request = super().set_posix_time_zone(posix_timezone, enable_dst)
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def reset_time_zone_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().reset_time_zone()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+    
+    async def get_suported_versions_async(self, session: request.AxisVapixAsyncSession, auth):
+        request = super().get_suported_versions()
+        request.auth = auth
+        return await session.post(request.url, json=request.json, headers=request.headers, auth=request.auth)
+
     async def set_current_date_time_async(self, time_zone, session: request.AxisVapixAsyncSession, auth):
         from datetime import datetime
         import pytz
