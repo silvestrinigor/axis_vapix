@@ -59,8 +59,4 @@ class BasicDeviceInformation(RequestBasicDeviceInformation):
         request = super().get_supported_versions()
         request.auth = auth
         self._send_request(request, session)
-        
-    async def get_all_properties_async(self, session: request.AxisVapixAsyncSession, auth):
-        request = super().get_all_properties()  # Get request information
-        return await self._send_async_request(request, session, auth)
 
