@@ -33,10 +33,3 @@ class IRequestAxisVapix(ABC):
         response = session.send(request)
         AxisVapixResponseHandler(response)
         return response.json()
-    
-    async def _send_async_request(self, request: AxisRequest, session: AxisVapixAsyncSession, auth):
-        async with session.post(request.url, json=request.json, auth=auth) as response:
-            # Handle any errors in the response (raises exception if error exists)
-            await AxisVapixAsyncResponseHandler(response).handle_errors()
-            # If no error, return the JSON response
-            return await response.json()
