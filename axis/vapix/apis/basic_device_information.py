@@ -1,62 +1,95 @@
 """
 https://developer.axis.com/vapix/network-video/basic-device-information
 """
+from enum import Enum
+from ..api import IVapixApiClass, FirmwareVersion, ApiVersion
+from ..requests import VapixRequest, AxisSession
+from .. import utils
 
-from ..interfaces import IRequestAxisVapix
-from ..types import ApiPathType, DevicePropertyType, ParamType, RequestParamType, MethodType
-from ..params import ApiVersion, FirmwareVersion
-from .. import request
+LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 40, 0)
+DISCOVERY_API_ID = "basic-device-info"
+PATH = "axis-cgi/basicdeviceinfo.cgi"
+REQUEST_METHOD = "POST"
 
-BASIC_DEVICE_INFORMATION_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 40, 0)
-BASIC_DEVICE_INFORMATION_API_DISCOVERY_API_ID = "basic-device-info"
+BODY = {
+    "apiVersion": None,
+    "context": None,
+    "method": None,
+    "params": None
+}
 
-class RequestBasicDeviceInformation(IRequestAxisVapix):
 
-    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
-        super().__init__(host, port, api_version, context)
-        self._api_path_type = ApiPathType.AXIS_CGI_BASIC_DEVICE_INFO
+class DevicePropertyType(Enum):
+    ARCHITECTURE = "Architecture"
+    BRAND = "Brand"
+    BUILD_DATE = "BuildDate"
+    HARDWARE_ID = "hardwareId"
+    PROD_FULL_NAME = "ProdFullName"
+    PROD_NBR = "ProdNbr"
+    PROD_SHORT_NAME = "ProdShortName"
+    PROD_TYPE = "ProdType"
+    PROD_VARIANT = "ProdVariant"
+    SERIAL_NUMBER = "SerialNumber"
+    SOC = "Soc"
+    SOC_SERIAL_NUMBER = "SocSerialNumber"
+    VERSION = "Version"
+    WEB_URL = "WebURL"
+
+
+class MethodType(Enum):
+    GET_PROPERTIES = "getProperties"
+    GET_ALL_PROPERTIES = "getAllProperties"
+    GET_ALL_UNRESTRICTED_PROPERTIES = "getAllUnrestrictedProperties"
+    GET_SUPPORTED_VERSIONS = "getSupportedVersions"
+
+
+class BasicDeviceInformation(IVapixApiClass):
+    def __init__(self, session: AxisSession, api_version: ApiVersion):
+        super().__init__(session, api_version)
     
     def get_properties(self, properties: list[DevicePropertyType]):
-        params = {ParamType.PROPERTY_LIST.value: [prop.value for prop in properties]}
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_PROPERTIES.value
-        request_body[RequestParamType.PARAMS.value] = params
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-
+        params = {"propertyList": [prop.value for prop in properties]}
+        body = self._create_body(MethodType.GET_PROPERTIES, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
     def get_all_properties(self):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_ALL_PROPERTIES.value
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-
+        body = self._create_body(MethodType.GET_ALL_PROPERTIES)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
     def get_all_unrestricted_properties(self):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_ALL_UNRESTRICTED_PROPERTIES.value
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        body = self._create_body(MethodType.GET_ALL_UNRESTRICTED_PROPERTIES)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
     def get_supported_versions(self):
-        return super()._get_supported_versions()
+        body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
-class BasicDeviceInformation(RequestBasicDeviceInformation):
-    def __init__(self, host, port, api_version, context = None):
-        super().__init__(host, port, api_version, context)
+    def _create_request(self, json: dict):
+        request = VapixRequest(
+            method=REQUEST_METHOD, 
+            url=self._base_url + PATH, 
+            json=json, 
+            auth=self.session.auth_type.value(
+                self.session.credencial.username, 
+                self.session.credencial.password
+                )
+            )
+        return request
     
-    def get_properties(self, properties: list[DevicePropertyType], session: request.AxisVapixSession, auth):
-        request = super().get_properties(properties)
-        request.auth = auth
-        self._send_request(request, session)
-    
-    def get_all_properties(self, session: request.AxisVapixSession, auth):
-        request = super().get_all_properties()
-        request.auth = auth
-        self._send_request(request, session)
-    
-    def get_all_unrestricted_properties(self, session: request.AxisVapixSession, auth):
-        request = super().get_all_unrestricted_properties()
-        request.auth = auth
-        self._send_request(request, session)
-
-    def get_supported_versions(self, session: request.AxisVapixSession, auth):
-        request = super().get_supported_versions()
-        request.auth = auth
-        self._send_request(request, session)
+    def _create_body(self, method: MethodType, params: dict | None = None):
+        body = BODY
+        body["apiVersion"] = str(self.api_version)
+        body["context"] = self.session.context
+        body["method"] = method.value
+        body["params"] = params
+        body = utils.remove_none_values(body)
+        return body
 

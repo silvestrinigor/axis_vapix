@@ -2,73 +2,99 @@
 https://developer.axis.com/vapix/network-video/time-api
 """
 
+from enum import Enum
 from datetime import datetime
-from ..interfaces import IRequestAxisVapix
-from ..types import ApiPathType, RequestParamType, MethodType, ParamType
-from ..params import ApiVersion, FirmwareVersion
-from ..utils import serialize_datetime
-from .. import request
-from .. import handlers
+from dataclasses import dataclass, asdict
+from ..api import IVapixApiClass, ApiVersion, FirmwareVersion
+from ..requests import VapixRequest, AxisSession
+from .. import utils
 
-TIME_API_LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 30, 0)
-TIME_API_DISCOVERY_API_ID = "time-service"
+PATH = "axis-cgi/time.cgi"
+REQUEST_METHOD = "POST"
+LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 30, 0)
 
-class RequestTimeApi(IRequestAxisVapix):
+BODY = {
+    "apiVersion": None,
+    "context": None,
+    "method": None,
+    "params": None
+}
 
-    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
-        super().__init__(host, port, api_version, context)
-        self._api_path_type = ApiPathType.AXIS_CGI_TIME
+class MethodType(Enum):
+    GET_DATE_TIME_INFO = "getDateTimeInfo"
+    GET_ALL = "getAll"
+    SET_DATE_TIME = "setDateTime"
+    SET_TIME_ZONE = "setTimeZone"
+    SET_POSIX_TIME_ZONE = "setPosixTimeZone"
+    RESET_TIME_ZONE = "resetTimeZone"
+    GET_SUPPORTED_VERSIONS = "getSupportedVersions"
+    
+
+class TimeApi(IVapixApiClass):
+    def __init__(self, session: AxisSession, api_version: ApiVersion):
+        super().__init__(session, api_version)
     
     def get_date_time_info(self):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_DATE_TIME_INFO.value
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-    
-    def get_all(self):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_ALL.value
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-    
-    def set_date_time(self, date_time: datetime):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.SET_DATE_TIME.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.DATE_TIME.value: serialize_datetime(date_time)}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-    
-    def set_time_zone(self, timezone: str):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.SET_TIME_ZONE.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.TIME_ZONE.value: timezone}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-    
-    def set_posix_time_zone(self, posix_timezone: str, enable_dst: bool):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.SET_POSIX_TIME_ZONE.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.POSIX_TIME_ZONE.value: posix_timezone}
-        request_body[RequestParamType.PARAMS.value][ParamType.ENABLE_DST.value] = enable_dst
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-    
-    def reset_time_zone(self):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.RESET_TIME_ZONE.value
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-    
-    def get_suported_versions(self):
-        return super()._get_supported_versions()
+        body = self._create_body(MethodType.GET_DATE_TIME_INFO)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
-class TimeApi(RequestTimeApi):
-    def __init__(self, host, port, api_version, context = None):
-        super().__init__(host, port, api_version, context)
-        
-    async def set_current_date_time_async(self, time_zone, session: request.AxisVapixAsyncSession, auth):
-        from datetime import datetime
-        import pytz
-        
-        timezone = pytz.timezone(time_zone)
-        date_time = datetime.now(timezone)
-        
-        request = super().set_date_time(date_time)
-        response = await session.post(request.url, json=request.json, auth=auth)
-        
-        await handlers.AxisVapixAsyncResponseHandler(response).handle_errors()
-        return await response.json()
+    def get_all(self):
+        body = self._create_body(MethodType.GET_ALL)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+
+    def set_date_time(self, date_time: datetime):
+        serialized_date_time = utils.serialize_datetime(date_time)
+        params = {"dateTime": serialized_date_time}
+
+        body = self._create_body(MethodType.SET_DATE_TIME, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+
+    def set_time_zone(self, timezone: str):
+        params = {"timezone": timezone}
+        body = self._create_body(MethodType.SET_DATE_TIME, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+
+    def set_posix_time_zone(self, posix_timezone: str, enable_dst: bool):
+        params = {
+            "posixTimezone" : posix_timezone,
+            "enableDst" : enable_dst
+        }
+        body = self._create_body(MethodType.SET_DATE_TIME, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+
+    def get_supported_versions(self):
+        body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
+    def _create_request(self, json: dict):
+        request = VapixRequest(
+            method=REQUEST_METHOD, 
+            url=self._base_url + PATH, 
+            json=json, 
+            auth=self.session.auth_type.value(
+                self.session.credencial.username, 
+                self.session.credencial.password
+                )
+            )
+        return request
+    
+    def _create_body(self, method: MethodType, params: dict | None = None):
+        body = BODY
+        body["apiVersion"] = str(self.api_version)
+        body["context"] = self.session.context
+        body["method"] = method.value
+        body["params"] = params
+        body = utils.remove_none_values(body)
+        return body

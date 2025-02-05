@@ -2,63 +2,98 @@
 https://developer.axis.com/vapix/network-video/analytics-metadata-producer-configuration
 """
 
-from ..types import ApiPathType, RequestParamType, MethodType, ParamType
-from ..params import AnalyticsMetadataProducer, ApiVersion
-from ..interfaces import IRequestAxisVapix
-from .. import request
+from dataclasses import dataclass, asdict
+from enum import Enum
+from ..api import IVapixApiClass, ApiVersion
+from ..requests import VapixRequest, AxisSession
+from .. import utils
 
-ANALYTICS_METADATA_PRODUCER_CONFIGURATION_DISCOVERY_API_ID = "analytics-metadata-config"
+DISCOVERY_API_ID = "analytics-metadata-config"
+PATH = "axis-cgi/analyticsmetadataconfig.cgi"
+REQUEST_METHOD = "POST"
 
-class RequestAnalyticsMetadataProducerConfiguration(IRequestAxisVapix):
+BODY = {
+    "apiVersion": None,
+    "context": None,
+    "method": None,
+    "params": None
+}
 
-    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
-        super().__init__(host, port, api_version, context)
-        self._api_path_type = ApiPathType.AXIS_CGI_ANALYTICS_METADATA_CONFIG
 
-    def list_producers(self, producers: list[str]):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.LIST_PRODUCERS.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+class MethodType(Enum):
+    LIST_PRODURERS = "listProducers"
+    SET_ENABLE_PRODUCERS = "setEnabledProducers"
+    GET_SUPPORTED_METADATA = "getSupportedMetadata"
+    GET_SUPPORTED_VERSIONS = "getSupportedVersions"
 
+
+@dataclass
+class AnalyticsMetadataVideoChannel:
+    channel: int | None = None
+    enabled: bool | None = None
+
+
+@dataclass
+class AnalyticsMetadataProducer:
+    name: str | None = None
+    videoChannels: list[AnalyticsMetadataVideoChannel] | None = None
+
+
+class AnalyticsMetadataProducerConfiguration(IVapixApiClass):
+    def __init__(self, session: AxisSession, api_version: ApiVersion):
+        super().__init__(session, api_version)
+
+    def list_producers(self, producers: list[str] | None = None):
+        params = None
+        if producers != None:
+            params = {"producers": producers}
+        body = self._create_body(MethodType.LIST_PRODURERS, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
     def set_enable_producers(self, producers: list[AnalyticsMetadataProducer]):
-        producers = {}
+        producers_dict = []
         for producer in producers:
-            producers.append(producer.get_all_params())
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.SET_ENABLED_PRODUCERS.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+            producers_dict.append(asdict(producer))
+        params = {"producers": producers_dict}
+        body = self._create_body(MethodType.SET_ENABLE_PRODUCERS, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
-    def get_supported_metadata(self, producers: list[str]):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_SUPPORTED_METADATA.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.PRODUCERS.value: producers}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+    def get_supported_metadata(self, producers: list[str] | None = None):
+        params = None
+        if producers != None:
+            params = {"producers": producers}
+        body = self._create_body(MethodType.GET_SUPPORTED_METADATA, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
     def get_supported_versions(self):
-        return super()._get_supported_versions()
-
-class AnalyticsMetadataProducerConfiguration(RequestAnalyticsMetadataProducerConfiguration):
-    def __init__(self, host, port, api_version, context = None):
-        super().__init__(host, port, api_version, context)
-        
-    def list_producers(self, producers: list[str], session: request.AxisVapixSession, auth):
-        request = super().list_producers(producers)
-        request.auth = auth
-        self._send_request(request, session)
+        body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
     
-    def set_enable_producers(self, producers: list[str],session: request.AxisVapixSession, auth):
-        request = super().set_enable_producers(producers)
-        request.auth = auth
-        self._send_request(request, session)
-        
-    def get_supported_metadata(self, producers: list[str],session: request.AxisVapixSession, auth):
-        request = super().get_supported_metadata(producers)
-        request.auth = auth
-        self._send_request(request, session)
-        
-    def get_supported_versions(self, session: request.AxisVapixSession, auth):
-        request = super().get_supported_versions()
-        request.auth = auth
-        self._send_request(request, session)
+    def _create_request(self, json: dict):
+        request = VapixRequest(
+            method=REQUEST_METHOD, 
+            url=self._base_url + PATH, 
+            json=json, 
+            auth=self.session.auth_type.value(
+                self.session.credencial.username, 
+                self.session.credencial.password
+                )
+            )
+        return request
+    
+    def _create_body(self, method: MethodType, params: dict | None = None):
+        body = BODY
+        body["apiVersion"] = str(self.api_version)
+        body["context"] = self.session.context
+        body["method"] = method.value
+        body["params"] = params
+        body = utils.remove_none_values(body)
+        return body

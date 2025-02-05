@@ -2,61 +2,191 @@
 https://developer.axis.com/vapix/applications/axis-object-analytics-api
 """
 
-from ..interfaces import IRequestAxisVapix
-from ..types import ApiPathType, RequestParamType, MethodType, ParamType
-from ..params import ApiVersion, ObjectAnalyticsConfiguration
+from enum import Enum
+from dataclasses import dataclass, asdict
+from ..api import IVapixApiClass, ApiVersion
+from ..requests import VapixRequest, AxisSession
+from .. import utils
 
-class RequestObjectAnalyticsApi(IRequestAxisVapix):
+PATH = "local/objectanalytics/control.cgi"
+REQUEST_METHOD = "POST"
 
-    def __init__(self, host: str, port: int, api_version: ApiVersion, context: str | None = None):
-        super().__init__(host, port, api_version, context)
-        self._api_path_type = ApiPathType.LOCAL_OBJECT_ANALYTICS
+BODY = {
+    "apiVersion": None,
+    "context": None,
+    "method": None,
+    "params": None
+}
 
+class MethodType(Enum):
+    GET_CONFIGURATION_CAPABILITIES = "getConfigurationCapabilities"
+    SET_CONFIGURATION = "setConfiguration"
+    GET_CONFIGURATION = "get_configuration"
+    GET_SUPPORTED_VERSIONS = "getSupportedVersions"
+    SEND_ALARM = "sendAlarm"
+    GET_ACCUMULATED_COUNTS = "getAccumulatedCounts"
+    RESET_ACCUMULATED_COUNTS = "resetAccumulatedCounts"
+    RESET_PASSTHROUGH = "resetPassthrough"
+    GET_OCCUPANCY = "getOccupancy"
+
+
+@dataclass
+class ObjectAnalyticsDevice:
+    id: int | None = None
+    deviceYype: str | None = None
+    rotation: str | None = None
+    isActive: bool | None = None
+
+
+@dataclass
+class ObjectAnalyticsMetadataOverlay:
+    id: int | None = None
+    drawOnAllResolutions: bool | None = None
+    resolutions: list[int] | None = None # "resolutions": ["<width>x<height>", "<width>x<height>", ...]
+
+
+@dataclass
+class PerspectiveBar:
+    height: int | None = None
+    points: list | None = None # "points": [[<x>, <y>], [<x>, <y>], ...]
+
+
+@dataclass
+class ObjectAnalyticsPerspective:
+    id: int | None = None
+    bars: list[PerspectiveBar] | None = None
+
+
+@dataclass
+class ObjectAnalyticsTrigger:
+    triggerType: str | None = None
+    vertices: list | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
+    alarmDirection: str | None = None # "alarmDirection": "leftToRight", "rightToLeft"
+    countingDirection: str | None = None # "countingDirection": "leftToRight", "rightToLeft"
+
+
+@dataclass
+class ScenarioFilter:
+    filterType: str | None = None
+    width: int | None = None
+    height: int | None = None
+    time: int | None = None
+    distance: int | None = None
+    minSpeed: float | None = None
+    maxSpeed: float | None = None
+    vertices: list | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
+
+
+@dataclass
+class ObjectAnalyticsObjectClassificator:
+    classificatorType: str | None = None
+    subTypes: list | None = None 
+
+
+@dataclass
+class ObjectAnalyticsScenario:
+    id: int | None = None
+    name: str | None = None
+    scenarioType: str | None = None
+    metadataOverlay: int | None = None
+    alarmRate: str | None = None
+    devices: list[int] | None = None
+    triggers: list[ObjectAnalyticsTrigger] | None = None
+    filters: list[ScenarioFilter] | None = None
+    objectClassificators: list[ObjectAnalyticsObjectClassificator] | None = None
+    perspectives: list[int] | None = None # "perspectives": [id]
+    presets: list[int] | None = None # "presets": [id]
+
+
+@dataclass
+class ObjectAnalyticsConfiguration:
+    devices: list[ObjectAnalyticsDevice] | None = None
+    metadataOverlay: list[ObjectAnalyticsMetadataOverlay] | None = None
+    perspectives: list[ObjectAnalyticsPerspective] | None = None
+    scenarios: list[ObjectAnalyticsScenario] | None = None
+
+
+class ObjectAnalyticsApi(IVapixApiClass):
+    def __init__(self, session: AxisSession, api_version: ApiVersion):
+        super().__init__(session, api_version)
+    
     def get_configuration_capabilities(self):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION_CAPABILITIES.value
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        body = self._create_body(MethodType.GET_CONFIGURATION_CAPABILITIES)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
     def get_configuration(self):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_CONFIGURATION.value
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-
-    def set_configuration(self, configuration: ObjectAnalyticsConfiguration):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.SET_CONFIGURATION.value
-        request_body[RequestParamType.PARAMS.value] = configuration.get_all_params()
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        body = self._create_body(MethodType.GET_CONFIGURATION)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
     
+    def set_configuration(self, configuration: ObjectAnalyticsConfiguration):
+        params = asdict(configuration)        
+        body = self._create_body(MethodType.SET_CONFIGURATION, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+     
     def send_alarm(self, scenario: int):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.SEND_ALARM.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-
+        params = {"scenario": scenario}
+        body = self._create_body(MethodType.SEND_ALARM, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
     def get_accumulated_count(self, scenario: int):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_ACCUMULATED_COUNTS.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+        params = {"scenario": scenario}
+        body = self._create_body(MethodType.GET_ACCUMULATED_COUNTS, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
-    def reset_accumulated_counts(self, scenario: int):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.RESET_ACCUMULATED_COUNTS.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-
-    def reset_passthrough(self, scenario: int):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.RESET_PASSTHROUGH.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
+    def reset_accumulated_count(self, scenario: int):
+        params = {"scenario": scenario}
+        body = self._create_body(MethodType.RESET_ACCUMULATED_COUNTS, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
+    def reset_passthroungh(self, scenario: int):
+        params = {"scenario": scenario}
+        body = self._create_body(MethodType.RESET_PASSTHROUGH, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
 
     def get_occupancy(self, scenario: int):
-        request_body = self._get_basic_request_body()
-        request_body[RequestParamType.METHOD.value] = MethodType.GET_OCCUPANCY.value
-        request_body[RequestParamType.PARAMS.value] = {ParamType.SCENARIO.value: scenario}
-        return self._create_request("POST", f"http://{self._host}:{self._port}/{self._api_path_type.value}", json= request_body)
-
+        params = {"scenario": scenario}
+        body = self._create_body(MethodType.GET_OCCUPANCY, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
     def get_supported_versions(self):
-        return super()._get_supported_versions()
+        body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+    
+    def _create_request(self, json: dict):
+        request = VapixRequest(
+            method=REQUEST_METHOD, 
+            url=self._base_url + PATH, 
+            json=json, 
+            auth=self.session.auth_type.value(
+                self.session.credencial.username, 
+                self.session.credencial.password
+                )
+            )
+        return request
+    
+    def _create_body(self, method: MethodType, params: dict | None = None):
+        body = BODY
+        body["apiVersion"] = str(self.api_version)
+        body["context"] = self.session.context
+        body["method"] = method.value
+        body["params"] = params
+        body = utils.remove_none_values(body)
+        return body
