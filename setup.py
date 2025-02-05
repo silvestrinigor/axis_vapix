@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="axis_vapix",
-    version="0.1.9",
+    version="0.2.0",
     description="Python-based API handler for interacting with Axis devices using the VAPIX APIs",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -10,7 +10,7 @@ setup(
     author_email="silvestrinigor@icloud.com",
     url="https://github.com/silvestrinigor/axis_vapix",
     packages=find_packages(where=".", exclude=["tests"]),
-    install_requires=["requests==2.32.3", "packaging==24.2", "aiohttp==3.11.11", "pytz==2024.2"],
+    install_requires=["requests==2.32.3", "packaging==24.2", "pytz==2024.2"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

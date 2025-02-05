@@ -1,16 +1,17 @@
 """
-https://developer.axis.com/vapix/network-video/analytics-metadata-producer-configuration
+https://developer.axis.com/vapix/network-video/time-api
 """
 
-from dataclasses import dataclass, asdict
 from enum import Enum
-from ..api import IVapixApiClass, ApiVersion
+from datetime import datetime
+from dataclasses import dataclass, asdict
+from ..api import IVapixApiClass, ApiVersion, FirmwareVersion
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 
-DISCOVERY_API_ID = "analytics-metadata-config"
-PATH = "axis-cgi/analyticsmetadataconfig.cgi"
+PATH = "axis-cgi/time.cgi"
 REQUEST_METHOD = "POST"
+LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 30, 0)
 
 BODY = {
     "apiVersion": None,
@@ -19,54 +20,54 @@ BODY = {
     "params": None
 }
 
-
 class MethodType(Enum):
-    LIST_PRODURERS = "listProducers"
-    SET_ENABLE_PRODUCERS = "setEnabledProducers"
-    GET_SUPPORTED_METADATA = "getSupportedMetadata"
+    GET_DATE_TIME_INFO = "getDateTimeInfo"
+    GET_ALL = "getAll"
+    SET_DATE_TIME = "setDateTime"
+    SET_TIME_ZONE = "setTimeZone"
+    SET_POSIX_TIME_ZONE = "setPosixTimeZone"
+    RESET_TIME_ZONE = "resetTimeZone"
     GET_SUPPORTED_VERSIONS = "getSupportedVersions"
+    
 
-
-@dataclass
-class AnalyticsMetadataVideoChannel:
-    channel: int | None = None
-    enabled: bool | None = None
-
-
-@dataclass
-class AnalyticsMetadataProducer:
-    name: str | None = None
-    videoChannels: list[AnalyticsMetadataVideoChannel] | None = None
-
-
-class AnalyticsMetadataProducerConfiguration(IVapixApiClass):
+class TimeApi(IVapixApiClass):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version)
-
-    def list_producers(self, producers: list[str] | None = None):
-        params = None
-        if producers != None:
-            params = {"producers": producers}
-        body = self._create_body(MethodType.LIST_PRODURERS, params)
-        request = self._create_request(body)
-        response = self._send_request(request)
-        return response
     
-    def set_enable_producers(self, producers: list[AnalyticsMetadataProducer]):
-        producers_dict = []
-        for producer in producers:
-            producers_dict.append(asdict(producer))
-        params = {"producers": producers_dict}
-        body = self._create_body(MethodType.SET_ENABLE_PRODUCERS, params)
+    def get_date_time_info(self):
+        body = self._create_body(MethodType.GET_DATE_TIME_INFO)
         request = self._create_request(body)
         response = self._send_request(request)
         return response
 
-    def get_supported_metadata(self, producers: list[str] | None = None):
-        params = None
-        if producers != None:
-            params = {"producers": producers}
-        body = self._create_body(MethodType.GET_SUPPORTED_METADATA, params)
+    def get_all(self):
+        body = self._create_body(MethodType.GET_ALL)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+
+    def set_date_time(self, date_time: datetime):
+        serialized_date_time = utils.serialize_datetime(date_time)
+        params = {"dateTime": serialized_date_time}
+
+        body = self._create_body(MethodType.SET_DATE_TIME, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+
+    def set_time_zone(self, timezone: str):
+        params = {"timezone": timezone}
+        body = self._create_body(MethodType.SET_DATE_TIME, params)
+        request = self._create_request(body)
+        response = self._send_request(request)
+        return response
+
+    def set_posix_time_zone(self, posix_timezone: str, enable_dst: bool):
+        params = {
+            "posixTimezone" : posix_timezone,
+            "enableDst" : enable_dst
+        }
+        body = self._create_body(MethodType.SET_DATE_TIME, params)
         request = self._create_request(body)
         response = self._send_request(request)
         return response
