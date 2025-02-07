@@ -4,7 +4,8 @@ https://developer.axis.com/vapix/network-video/analytics-metadata-producer-confi
 
 from dataclasses import dataclass, asdict
 from enum import Enum
-from ..api import IVapixApiClass, ApiVersion
+from ..connection import ApiVersion
+from ..interfaces import IVapixApiClass
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 

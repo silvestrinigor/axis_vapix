@@ -3,7 +3,8 @@ https://developer.axis.com/vapix/network-video/api-discovery-service
 """
 
 from enum import Enum
-from ..api import IVapixApiClass, ApiVersion, FirmwareVersion
+from ..connection import ApiVersion, FirmwareVersion
+from ..interfaces import IVapixApiClass
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 

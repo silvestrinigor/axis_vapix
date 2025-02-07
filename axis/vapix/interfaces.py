@@ -1,16 +1,5 @@
-from packaging import version
-from .requests import VapixRequest, VapixResponse, AxisSession
-
-
-class ApiVersion(version.Version):
-    def __init__(self, major: int, minor: int):
-        super().__init__(f"{major}.{minor}")
-
-
-class FirmwareVersion(version.Version):
-    def __init__(self, major: int, minor: int, patch: int):
-        super().__init__(f"{major}.{minor}.{patch}")
-
+from .requests import AxisSession, VapixRequest, VapixResponse
+from .connection import ApiVersion
 
 class IVapixApiClass:
     def __init__(self, session: AxisSession, api_version: ApiVersion):

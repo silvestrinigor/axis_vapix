@@ -2,7 +2,8 @@
 https://developer.axis.com/vapix/network-video/basic-device-information
 """
 from enum import Enum
-from ..api import IVapixApiClass, FirmwareVersion, ApiVersion
+from ..connection import ApiVersion, FirmwareVersion
+from ..interfaces import IVapixApiClass
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 

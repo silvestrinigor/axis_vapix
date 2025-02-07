@@ -1,10 +1,10 @@
 """
 https://developer.axis.com/vapix/applications/loitering-guard
 """
-
 from enum import Enum
 from dataclasses import dataclass, asdict
-from ..api import IVapixApiClass, ApiVersion
+from ..connection import ApiVersion
+from ..interfaces import IVapixApiClass
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 

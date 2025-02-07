@@ -1,9 +1,8 @@
 """
 https://developer.axis.com/vapix/
 """
-from .connection import AxisServer, AxisCredencial
+from .connection import AxisServer, AxisCredencial, ApiVersion, FirmwareVersion
 from .requests import AxisSession, AuthType
-from .api import ApiVersion, FirmwareVersion
 
 __all__ = [
     "AxisServer",

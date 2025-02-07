@@ -2,10 +2,10 @@
 https://developer.axis.com/vapix/network-video/time-api
 """
 
-from enum import Enum
 from datetime import datetime
-from dataclasses import dataclass, asdict
-from ..api import IVapixApiClass, ApiVersion, FirmwareVersion
+from enum import Enum
+from ..connection import ApiVersion, FirmwareVersion
+from ..interfaces import IVapixApiClass
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 

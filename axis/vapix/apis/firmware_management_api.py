@@ -1,9 +1,10 @@
 """
 https://developer.axis.com/vapix/network-video/firmware-management-api
 """
-import json
 from enum import Enum
-from ..api import IVapixApiClass, FirmwareVersion, ApiVersion
+import json
+from ..connection import ApiVersion, FirmwareVersion
+from ..interfaces import IVapixApiClass
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 

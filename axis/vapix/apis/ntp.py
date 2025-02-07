@@ -4,7 +4,8 @@ https://developer.axis.com/vapix/network-video/ntp-api
 
 from enum import Enum
 from dataclasses import dataclass, asdict
-from ..api import IVapixApiClass, ApiVersion, FirmwareVersion
+from ..connection import ApiVersion, FirmwareVersion
+from ..interfaces import IVapixApiClass
 from ..requests import VapixRequest, AxisSession
 from .. import utils
 
