@@ -18,9 +18,9 @@ from axis.vapix.apis import basic_device_information
 
 server = vapix.AxisServer("192.168.0.90", "8000")
 credencial = vapix.AxisCredencial("root", "pass")
-api_version = vapix.ApiVersion(1,1)
+api_version = vapix.ApiVersion(1,0)
 
-with vapix.AxisSession(server, credencial, auth_type=vapix.AuthType.DIGEST_AUTH ,context="test") as session:
+with vapix.AxisSession(server, credencial, context="test") as session:
     api = basic_device_information.BasicDeviceInformation(session, api_version)
     response = api.get_all_properties()
     
@@ -28,13 +28,26 @@ print(response.json())
 
 # Output
 {
-    "apiVersion": "1.3", 
-    "data": {
-        "propertyList": {
-            ...        
-        }
-    }, 
-    "context": "test"
+  "apiVersion": "1.0",
+  "context": "test",
+  "data": {
+  "propertyList": {
+      "Archtecture": "mips",
+      "Brand": "AXIS",
+      "BuildDate": "Feb 14 2018 13:08",
+      "HardwareID": "714.4",
+      "ProdFullName": "AXIS Q3505 Mk II Fixed Dome Network Camera",
+      "ProdNbr": "Q3505 Mk II",
+      "ProdShortName": "AXIS Q3505 Mk II",
+      "ProdType": "Network Camera",
+      "ProdVariant": "",
+      "SerialNumber": "ACCC8E78B977",
+      "Soc": "Axis Artpec-5",
+      "SocSerialNumber": "00000000-00000000-44123C08-C840037D",
+      "Version": "8.20.1",
+      "WebURL": "http://www.axis.com"
+    }
+  }
 }
 ```
 
