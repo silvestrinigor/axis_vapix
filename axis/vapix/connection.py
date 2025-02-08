@@ -3,13 +3,9 @@ from packaging import version
 
 
 @dataclass
-class AxisServer:
+class AxisServerInfo:
     host: str
     port: int
-
-
-@dataclass
-class AxisCredencial:
     username: str
     password: str
 

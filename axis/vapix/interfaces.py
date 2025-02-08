@@ -22,8 +22,8 @@ class IVapixApi:
             url=self._base_url + self.path, 
             json=json, 
             auth=self.session.auth_type.value(
-                self.session.credencial.username, 
-                self.session.credencial.password
+                self.session.server.username, 
+                self.session.server.password
                 )
             )
         return request
