@@ -6,8 +6,7 @@ from enum import Enum
 from dataclasses import dataclass, asdict
 from ..connection import ApiVersion
 from ..interfaces import IVapixApiClass
-from ..requests import VapixRequest, AxisSession
-from .. import utils
+from ..requests import AxisSession
 
 PATH = "local/objectanalytics/control.cgi"
 REQUEST_METHOD = "POST"
@@ -109,85 +108,64 @@ class ObjectAnalyticsConfiguration:
 
 class ObjectAnalyticsApi(IVapixApiClass):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version)
+        super().__init__(session, api_version, path=PATH)
     
     def get_configuration_capabilities(self):
         body = self._create_body(MethodType.GET_CONFIGURATION_CAPABILITIES)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def get_configuration(self):
         body = self._create_body(MethodType.GET_CONFIGURATION)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def set_configuration(self, configuration: ObjectAnalyticsConfiguration):
         params = asdict(configuration)        
         body = self._create_body(MethodType.SET_CONFIGURATION, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
      
     def send_alarm(self, scenario: int):
         params = {"scenario": scenario}
         body = self._create_body(MethodType.SEND_ALARM, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def get_accumulated_count(self, scenario: int):
         params = {"scenario": scenario}
         body = self._create_body(MethodType.GET_ACCUMULATED_COUNTS, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def reset_accumulated_count(self, scenario: int):
         params = {"scenario": scenario}
         body = self._create_body(MethodType.RESET_ACCUMULATED_COUNTS, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def reset_passthroungh(self, scenario: int):
         params = {"scenario": scenario}
         body = self._create_body(MethodType.RESET_PASSTHROUGH, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def get_occupancy(self, scenario: int):
         params = {"scenario": scenario}
         body = self._create_body(MethodType.GET_OCCUPANCY, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def get_supported_versions(self):
         body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
-    
-    def _create_request(self, json: dict):
-        request = VapixRequest(
-            method=REQUEST_METHOD, 
-            url=self._base_url + PATH, 
-            json=json, 
-            auth=self.session.auth_type.value(
-                self.session.credencial.username, 
-                self.session.credencial.password
-                )
-            )
-        return request
-    
-    def _create_body(self, method: MethodType, params: dict | None = None):
-        body = BODY
-        body["apiVersion"] = str(self.api_version)
-        body["context"] = self.session.context
-        body["method"] = method.value
-        body["params"] = params
-        body = utils.remove_none_values(body)
-        return body

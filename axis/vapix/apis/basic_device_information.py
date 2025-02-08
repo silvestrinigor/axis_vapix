@@ -4,8 +4,7 @@ https://developer.axis.com/vapix/network-video/basic-device-information
 from enum import Enum
 from ..connection import ApiVersion, FirmwareVersion
 from ..interfaces import IVapixApiClass
-from ..requests import VapixRequest, AxisSession
-from .. import utils
+from ..requests import AxisSession
 
 LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 40, 0)
 DISCOVERY_API_ID = "basic-device-info"
@@ -46,50 +45,29 @@ class MethodType(Enum):
 
 class BasicDeviceInformation(IVapixApiClass):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version)
+        super().__init__(session, api_version, path=PATH)
     
     def get_properties(self, properties: list[DevicePropertyType]):
         params = {"propertyList": [prop.value for prop in properties]}
         body = self._create_body(MethodType.GET_PROPERTIES, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def get_all_properties(self):
         body = self._create_body(MethodType.GET_ALL_PROPERTIES)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def get_all_unrestricted_properties(self):
         body = self._create_body(MethodType.GET_ALL_UNRESTRICTED_PROPERTIES)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def get_supported_versions(self):
         body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
-
-    def _create_request(self, json: dict):
-        request = VapixRequest(
-            method=REQUEST_METHOD, 
-            url=self._base_url + PATH, 
-            json=json, 
-            auth=self.session.auth_type.value(
-                self.session.credencial.username, 
-                self.session.credencial.password
-                )
-            )
-        return request
-    
-    def _create_body(self, method: MethodType, params: dict | None = None):
-        body = BODY
-        body["apiVersion"] = str(self.api_version)
-        body["context"] = self.session.context
-        body["method"] = method.value
-        body["params"] = params
-        body = utils.remove_none_values(body)
-        return body

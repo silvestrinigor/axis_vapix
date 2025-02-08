@@ -6,8 +6,7 @@ from enum import Enum
 from dataclasses import dataclass, asdict
 from ..connection import ApiVersion, FirmwareVersion
 from ..interfaces import IVapixApiClass
-from ..requests import VapixRequest, AxisSession
-from .. import utils
+from ..requests import AxisSession
 
 PATH = "axis-cgi/network_settings.cgi"
 LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 50, 0)
@@ -77,7 +76,7 @@ class IPv4AddressConfiguration:
 
 class NetworkSettingsApi(IVapixApiClass):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version)
+        super().__init__(session, api_version, path=PATH)
     
     def add_vlan(self, master_device_name: str, vlan_id: int):
         params = {
@@ -85,13 +84,13 @@ class NetworkSettingsApi(IVapixApiClass):
             "VlanId": vlan_id
         }
         body = self._create_body(MethodType.ADD_VLAM, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def get_network_info(self):
         body = self._create_body(MethodType.GET_NETWORK_INFO)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
@@ -103,7 +102,7 @@ class NetworkSettingsApi(IVapixApiClass):
             params["VlanId"] = vlan_id
             
         body = self._create_body(MethodType.REMOVE_VLAM, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
@@ -114,7 +113,7 @@ class NetworkSettingsApi(IVapixApiClass):
             params["VlanId"] = refresh
         
         body = self._create_body(MethodType.SCAN_WLAN_NETWORKS, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
@@ -126,14 +125,14 @@ class NetworkSettingsApi(IVapixApiClass):
             params["staticHostname"] = static_hostname
 
         body = self._create_body(MethodType.SET_HOSTNAME_CONFIGURATION, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def set_ipv4_address_configuration(self, configuration: IPv4AddressConfiguration):
         params = asdict(configuration)
         body = self._create_body(MethodType.SET_IPV4_ADDRESS_CONFIGURATION, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
@@ -163,27 +162,6 @@ class NetworkSettingsApi(IVapixApiClass):
     
     def get_supported_versions(self):
         body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
-    
-    def _create_request(self, json: dict):
-        request = VapixRequest(
-            method=REQUEST_METHOD, 
-            url=self._base_url + PATH, 
-            json=json, 
-            auth=self.session.auth_type.value(
-                self.session.credencial.username, 
-                self.session.credencial.password
-                )
-            )
-        return request
-    
-    def _create_body(self, method: MethodType, params: dict | None = None):
-        body = BODY
-        body["apiVersion"] = str(self.api_version)
-        body["context"] = self.session.context
-        body["method"] = method.value
-        body["params"] = params
-        body = utils.remove_none_values(body)
-        return body

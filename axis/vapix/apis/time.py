@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import Enum
 from ..connection import ApiVersion, FirmwareVersion
 from ..interfaces import IVapixApiClass
-from ..requests import VapixRequest, AxisSession
+from ..requests import AxisSession
 from .. import utils
 
 PATH = "axis-cgi/time.cgi"
@@ -32,17 +32,17 @@ class MethodType(Enum):
 
 class TimeApi(IVapixApiClass):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version)
+        super().__init__(session, api_version, path=PATH)
     
     def get_date_time_info(self):
         body = self._create_body(MethodType.GET_DATE_TIME_INFO)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def get_all(self):
         body = self._create_body(MethodType.GET_ALL)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
@@ -51,14 +51,14 @@ class TimeApi(IVapixApiClass):
         params = {"dateTime": serialized_date_time}
 
         body = self._create_body(MethodType.SET_DATE_TIME, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def set_time_zone(self, timezone: str):
         params = {"timezone": timezone}
         body = self._create_body(MethodType.SET_DATE_TIME, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
@@ -68,33 +68,12 @@ class TimeApi(IVapixApiClass):
             "enableDst" : enable_dst
         }
         body = self._create_body(MethodType.SET_DATE_TIME, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def get_supported_versions(self):
         body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
-    
-    def _create_request(self, json: dict):
-        request = VapixRequest(
-            method=REQUEST_METHOD, 
-            url=self._base_url + PATH, 
-            json=json, 
-            auth=self.session.auth_type.value(
-                self.session.credencial.username, 
-                self.session.credencial.password
-                )
-            )
-        return request
-    
-    def _create_body(self, method: MethodType, params: dict | None = None):
-        body = BODY
-        body["apiVersion"] = str(self.api_version)
-        body["context"] = self.session.context
-        body["method"] = method.value
-        body["params"] = params
-        body = utils.remove_none_values(body)
-        return body

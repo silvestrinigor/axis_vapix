@@ -6,8 +6,7 @@ from enum import Enum
 from dataclasses import dataclass, asdict
 from ..connection import ApiVersion, FirmwareVersion
 from ..interfaces import IVapixApiClass
-from ..requests import VapixRequest, AxisSession
-from .. import utils
+from ..requests import AxisSession
 
 PATH = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi"
 REQUEST_METHOD = "POST"
@@ -86,19 +85,19 @@ class ImageOverlay:
 
 class DynamicOverlayApi(IVapixApiClass):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version)
+        super().__init__(session, api_version, path=PATH)
     
     def add_image(self, overlay: ImageOverlay):
         params = asdict(overlay)
         body = self._create_body(MethodType.ADD_IMAGE, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def add_text(self, overlay: TextOverlay):
         params = asdict(overlay)
         body = self._create_body(MethodType.ADD_TEXT, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
@@ -112,60 +111,39 @@ class DynamicOverlayApi(IVapixApiClass):
             params = None
         
         body = self._create_body(MethodType.LIST, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def remove(self, identity: int):
         params = {"identity": identity}
         body = self._create_body(MethodType.REMOVE, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def set_image(self, overlay: ImageOverlay):
         params = asdict(overlay)
         body = self._create_body(MethodType.SET_IMAGE, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def set_text(self, overlay: ImageOverlay):
         params = asdict(overlay)
         body = self._create_body(MethodType.SET_TEXT, params)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def get_overlay_capabilities(self):
         body = self._create_body(MethodType.GET_OVERLAY_CAPABILITIES)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def get_supported_versions(self):
         body = self._create_body(MethodType.GET_SUPPORTED_VERSIONS)
-        request = self._create_request(body)
+        request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
-    
-    def _create_request(self, json: dict):
-        request = VapixRequest(
-            method=REQUEST_METHOD, 
-            url=self._base_url + PATH, 
-            json=json, 
-            auth=self.session.auth_type.value(
-                self.session.credencial.username, 
-                self.session.credencial.password
-                )
-            )
-        return request
-    
-    def _create_body(self, method: MethodType, params: dict | None = None):
-        body = BODY
-        body["apiVersion"] = str(self.api_version)
-        body["context"] = self.session.context
-        body["method"] = method.value
-        body["params"] = params
-        body = utils.remove_none_values(body)
-        return body
