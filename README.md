@@ -14,13 +14,13 @@ pip install git+https://github.com/silvestrinigor/axis_vapix
 
 ```python
 from axis import vapix
-from axis.vapix.apis import basic_device_information
+from axis.vapix.apis import BasicDeviceInformation
 
 server = vapix.AxisServerInfo("192.168.0.90", "8000", "root", "pass")
 api_version = vapix.ApiVersion(1,0)
 
 with vapix.AxisSession(server, context="test") as session:
-    api = basic_device_information.BasicDeviceInformation(session, api_version)
+    api = BasicDeviceInformation(session, api_version)
     response = api.get_all_properties()
 
 print(response.json())
