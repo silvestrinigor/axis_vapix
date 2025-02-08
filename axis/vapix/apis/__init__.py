@@ -3,11 +3,11 @@ from .api_discovery_service import ApiDiscoveryService
 from .basic_device_information import BasicDeviceInformation
 from .firmware_management_api import FirmwareManagementApi
 from .loitering_guard import LoiteringGuard
-from .network_settings import NetworkSettingsApi
-from .ntp import NtpApi
-from .object_analytics import ObjectAnalyticsApi
-from .overlay import DynamicOverlayApi
-from .time import TimeApi
+from .network_settings_api import NetworkSettingsApi
+from .ntp_api import NtpApi
+from .object_analytics_api import ObjectAnalyticsApi
+from .overlay_api import DynamicOverlayApi
+from .time_api import TimeApi
 
 __all__ = [
     'AnalyticsMetadataProducerConfiguration',
