@@ -21,8 +21,8 @@ credencial = vapix.AxisCredencial("root", "pass")
 api_version = vapix.ApiVersion(1,1)
 
 with vapix.AxisSession(server, credencial, auth_type=vapix.AuthType.DIGEST_AUTH ,context="test") as session:
-    bas_dev_info = basic_device_information.BasicDeviceInformation(session, api_version)
-    response = bas_dev_info.get_all_properties()
+    api = basic_device_information.BasicDeviceInformation(session, api_version)
+    response = api.get_all_properties()
     
 print(response.json())
 
