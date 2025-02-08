@@ -13,6 +13,12 @@ LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 10, 0)
 DISCOVERY_API_ID = "ntp"
 REQUEST_METHOD = "POST"
 
+
+PROPERTIES = [
+    "Properties.API.HTTP.Version=3"
+]
+
+
 BODY = {
     "apiVersion": None,
     "context": None,

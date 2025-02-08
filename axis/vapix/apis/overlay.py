@@ -12,6 +12,14 @@ PATH = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi"
 REQUEST_METHOD = "POST"
 LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(7, 10, 0)
 
+
+PROPERTIES = [
+    "Properties.API.HTTP.Version=3",
+    "Properties.DynamicOverlay.DynamicOverlay=yes",
+    "Properties.DynamicOverlay.Version=1.00"
+]
+
+
 BODY = {
     "apiVersion": None,
     "context": None,

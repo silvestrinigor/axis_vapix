@@ -13,6 +13,12 @@ LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 50, 0)
 DISCOVERY_API_ID = "network-settings"
 REQUEST_METHOD = "POST"
 
+
+PROPERTIES = [
+    "Properties.API.HTTP.Version=3"
+]
+
+
 BODY = {
     "apiVersion": None,
     "context": None,

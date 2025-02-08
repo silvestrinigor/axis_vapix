@@ -11,6 +11,12 @@ LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 50, 0)
 PATH = "axis-cgi/apidiscovery.cgi"
 REQUEST_METHOD = "POST"
 
+
+PROPERTIES = [
+    "Properties.ApiDiscovery.ApiDiscovery=yes"
+]
+
+
 BODY = {
     "apiVersion": None,
     "context": None,

@@ -12,6 +12,12 @@ DISCOVERY_API_ID = "fwmgr"
 PATH = "axis-cgi/firmwaremanagement.cgi"
 REQUEST_METHOD = "POST"
 
+
+PROPERTIES = [
+    "Properties.FirmwareManagement.Version=1.3"
+]
+
+
 BODY = {
     "apiVersion": None,
     "context": None,

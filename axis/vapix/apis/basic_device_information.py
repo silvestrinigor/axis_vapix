@@ -11,6 +11,12 @@ DISCOVERY_API_ID = "basic-device-info"
 PATH = "axis-cgi/basicdeviceinfo.cgi"
 REQUEST_METHOD = "POST"
 
+
+PROPERTIES = [
+    "BasicDeviceInfo.BasicDeviceInfo=yes"
+]
+
+
 BODY = {
     "apiVersion": None,
     "context": None,
