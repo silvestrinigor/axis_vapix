@@ -3,7 +3,7 @@ from .requests import AxisSession, VapixRequest, VapixResponse
 from .connection import ApiVersion
 from . import utils
 
-class IVapixApiClass:
+class IVapixApi:
     def __init__(self, session: AxisSession, api_version: ApiVersion, path: str):
         self.session = session
         self.api_version = api_version

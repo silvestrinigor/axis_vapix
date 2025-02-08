@@ -4,7 +4,7 @@ https://developer.axis.com/vapix/applications/loitering-guard
 from enum import Enum
 from dataclasses import dataclass, asdict
 from ..connection import ApiVersion
-from ..interfaces import IVapixApiClass
+from ..interfaces import IVapixApi
 from ..requests import AxisSession
 
 PATH = "local/loiteringguard/control.cgi"
@@ -73,7 +73,7 @@ class LoiteringGuardConfiguration:
 
 
 
-class LoiteringGuard(IVapixApiClass):
+class LoiteringGuard(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version, path=PATH)
     

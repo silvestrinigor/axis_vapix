@@ -5,7 +5,7 @@ https://developer.axis.com/vapix/network-video/overlay-api
 from enum import Enum
 from dataclasses import dataclass, asdict
 from ..connection import ApiVersion, FirmwareVersion
-from ..interfaces import IVapixApiClass
+from ..interfaces import IVapixApi
 from ..requests import AxisSession
 
 PATH = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi"
@@ -83,7 +83,7 @@ class ImageOverlay:
     visible: bool | None = None
 
 
-class DynamicOverlayApi(IVapixApiClass):
+class DynamicOverlayApi(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version, path=PATH)
     

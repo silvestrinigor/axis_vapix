@@ -4,7 +4,7 @@ https://developer.axis.com/vapix/network-video/firmware-management-api
 from enum import Enum
 import json
 from ..connection import ApiVersion, FirmwareVersion
-from ..interfaces import IVapixApiClass
+from ..interfaces import IVapixApi
 from ..requests import VapixRequest, AxisSession
 
 LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(7, 40, 0)
@@ -46,7 +46,7 @@ class AutoCommitType(Enum):
     NONE = None
 
 
-class FirmwareManagementApi(IVapixApiClass):
+class FirmwareManagementApi(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version, path=PATH)
 
