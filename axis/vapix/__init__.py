@@ -5,10 +5,11 @@ from .connection import AxisServerInfo, ApiVersion, FirmwareVersion
 from .requests import AxisSession, AuthType
 
 __all__ = [
-    "AxisServer",
+    "AxisServerInfo",
     "AxisCredencial",
     "AxisSession",
     "ApiVersion",
     "FirmwareVersion",
     "AuthType"
 ]
+
