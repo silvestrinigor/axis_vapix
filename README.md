@@ -52,6 +52,21 @@ print(response.json())
 
 ---
 
+## Supported APIs:
+- Analytics Metadata Producer Configuration
+- API Discovery service
+- Basic device information
+- Capture mode
+- Firmware management API
+- Loitering guard
+- Network settings API
+- NTP API
+- AXIS Object analytics API
+- Dynamic overlay API
+- Time API
+
+---
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
