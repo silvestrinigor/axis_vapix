@@ -14,7 +14,7 @@ pip install git+https://github.com/silvestrinigor/axis_vapix
 
 ```python
 from axis import vapix
-from axis.vapix.apis import BasicDeviceInformation
+from axis.vapix import BasicDeviceInformation
 
 server = vapix.AxisServerInfo("192.168.0.90", "8000", "root", "pass")
 api_version = vapix.ApiVersion(1,0)

@@ -8,6 +8,7 @@ from .ntp_api import NtpApi
 from .object_analytics_api import ObjectAnalyticsApi
 from .overlay_api import DynamicOverlayApi
 from .time_api import TimeApi
+from .capture_mode import CaptureMode
 
 __all__ = [
     'AnalyticsMetadataProducerConfiguration',
@@ -19,5 +20,6 @@ __all__ = [
     'NtpApi',
     'ObjectAnalyticsApi',
     'DynamicOverlayApi',
-    'TimeApi'
+    'TimeApi',
+    'CaptureMode'
 ]
