@@ -10,10 +10,11 @@ class IVapixApi:
         self._base_url = f"http://{session.server.host}:{session.server.port}/"
         self.path = path
         self.body = body
+        self.timeout = 10
 
     def _send_request(self, request: VapixRequest):
         prepared_request = request.prepare()
-        response = self.session.send(request=prepared_request)
+        response = self.session.send(request=prepared_request, timeout=self.timeout)
         response: VapixResponse
         return response
 
