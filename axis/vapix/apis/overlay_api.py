@@ -4,7 +4,7 @@ https://developer.axis.com/vapix/network-video/overlay-api
 
 from enum import Enum
 from dataclasses import dataclass
-from ..utils import asdict_custom
+from ..utils import asdict_custom, remove_none_values
 from ..connection import ApiVersion, FirmwareVersion
 from ..interfaces import IVapixApi
 from ..requests import AxisSession
@@ -97,14 +97,14 @@ class DynamicOverlayApi(IVapixApi):
         super().__init__(session, api_version, path=PATH, body=BODY)
     
     def add_image(self, overlay: ImageOverlay):
-        params = asdict_custom(overlay)
+        params = remove_none_values(asdict_custom(overlay))
         body = self._create_body(MethodType.ADD_IMAGE, params)
         request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
     
     def add_text(self, overlay: TextOverlay):
-        params = asdict_custom(overlay)
+        params = remove_none_values(asdict_custom(overlay))
         body = self._create_body(MethodType.ADD_TEXT, params)
         request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
@@ -132,14 +132,14 @@ class DynamicOverlayApi(IVapixApi):
         return response
 
     def set_image(self, overlay: ImageOverlay):
-        params = asdict_custom(overlay)
+        params = remove_none_values(asdict_custom(overlay))
         body = self._create_body(MethodType.SET_IMAGE, params)
         request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
         return response
 
     def set_text(self, overlay: ImageOverlay):
-        params = asdict_custom(overlay)
+        params = remove_none_values(asdict_custom(overlay))
         body = self._create_body(MethodType.SET_TEXT, params)
         request = self._create_request(body, REQUEST_METHOD)
         response = self._send_request(request)
