@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
-
+import dataclasses
+from typing import Any
+from enum import Enum
 
 def serialize_datetime(date_time: datetime) -> str:
     if not is_timezone_aware(date_time=date_time): 
@@ -22,3 +24,12 @@ def remove_none_values(body: dict) -> dict:
         for key, value in body.items()
         if value is not None
     }
+
+def asdict_custom(obj: Any) -> dict:
+    result = {}
+    for field in dataclasses.fields(obj):
+        value = getattr(obj, field.name)
+        if isinstance(value, Enum):
+            value = str(value)  # Convert Enum to string
+        result[field.name] = value
+    return result
