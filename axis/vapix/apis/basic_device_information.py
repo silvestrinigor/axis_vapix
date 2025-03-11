@@ -51,7 +51,7 @@ class MethodType(Enum):
 
 class BasicDeviceInformation(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version, path=PATH)
+        super().__init__(session, api_version, path=PATH, body=BODY)
     
     def get_properties(self, properties: list[DevicePropertyType]):
         params = {"propertyList": [prop.value for prop in properties]}

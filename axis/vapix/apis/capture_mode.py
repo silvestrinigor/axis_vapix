@@ -26,7 +26,7 @@ class MethodType(Enum):
 
 class CaptureMode(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion, path):
-        super().__init__(session, api_version, path)
+        super().__init__(session, api_version, path=PATH, body=BODY)
 
     def get_capture_mode(self):
         body = self._create_body(MethodType.GET_CAPTURE_MODE)

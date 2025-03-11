@@ -31,7 +31,7 @@ class MethodType(Enum):
 
 class ApiDiscoveryService(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version, path=PATH)
+        super().__init__(session, api_version, path=PATH, body=BODY)
 
     def get_api_list(self):
         body = self._create_body(MethodType.GET_API_LIST)

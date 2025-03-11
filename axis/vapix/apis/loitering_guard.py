@@ -74,7 +74,7 @@ class LoiteringGuardConfiguration:
 
 class LoiteringGuard(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version, path=PATH)
+        super().__init__(session, api_version, path=PATH, body=BODY)
     
     def get_configuration(self):
         body = self._create_body(MethodType.GET_CONFIGURATION)

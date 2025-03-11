@@ -41,7 +41,7 @@ class AnalyticsMetadataProducer:
 
 class AnalyticsMetadataProducerConfiguration(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version, path=PATH)
+        super().__init__(session, api_version, path=PATH, body=BODY)
 
     def list_producers(self, producers: list[str] | None = None):
         params = None

@@ -32,7 +32,7 @@ class MethodType(Enum):
 
 class TimeApi(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version, path=PATH)
+        super().__init__(session, api_version, path=PATH, body=BODY)
     
     def get_date_time_info(self):
         body = self._create_body(MethodType.GET_DATE_TIME_INFO)

@@ -82,7 +82,7 @@ class IPv4AddressConfiguration:
 
 class NetworkSettingsApi(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version, path=PATH)
+        super().__init__(session, api_version, path=PATH, body=BODY)
     
     def add_vlan(self, master_device_name: str, vlan_id: int):
         params = {
