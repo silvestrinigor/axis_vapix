@@ -93,7 +93,7 @@ class ImageOverlay:
 
 class DynamicOverlayApi(IVapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
-        super().__init__(session, api_version, path=PATH)
+        super().__init__(session, api_version, path=PATH, body=BODY)
     
     def add_image(self, overlay: ImageOverlay):
         params = asdict(overlay)

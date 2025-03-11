@@ -4,11 +4,12 @@ from .connection import ApiVersion
 from . import utils
 
 class IVapixApi:
-    def __init__(self, session: AxisSession, api_version: ApiVersion, path: str):
+    def __init__(self, session: AxisSession, api_version: ApiVersion, path: str, body: dict):
         self.session = session
         self.api_version = api_version
         self._base_url = f"http://{session.server.host}:{session.server.port}/"
         self.path = path
+        self.body = body
 
     def _send_request(self, request: VapixRequest):
         prepared_request = request.prepare()
@@ -29,7 +30,7 @@ class IVapixApi:
         return request
     
     def _create_body(self, method: Enum, params: dict | None = None):
-        body = body
+        body = self.body
         body["apiVersion"] = str(self.api_version)
         body["context"] = self.session.context
         body["method"] = method.value
