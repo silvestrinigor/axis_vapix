@@ -63,8 +63,7 @@ class LoiteringGuardProfile:
     filters: list[ProfileFilter] | None = None
     triggers: list[LoiteringGuardTrigger] | None = None
     presets: list | None = None
-    perspectives: list[LoiteringGuardPerspective] | None
-
+    perspectives: list[LoiteringGuardPerspective] | None = None
 
 @dataclass
 class LoiteringGuardConfiguration:
