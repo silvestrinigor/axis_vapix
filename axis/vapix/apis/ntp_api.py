@@ -5,7 +5,7 @@ https://developer.axis.com/vapix/network-video/ntp-api
 from enum import Enum
 from dataclasses import dataclass, asdict
 from ..connection import ApiVersion, FirmwareVersion
-from ..interfaces import IVapixApi
+from ..abc import VapixApi
 from ..requests import AxisSession
 
 PATH = "axis-cgi/ntp.cgi"
@@ -47,7 +47,7 @@ class NTPClientConfiguration:
     staticNtskeServersList: list[str] | None = None
 
 
-class NtpApi(IVapixApi):
+class NtpApi(VapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version, path=PATH, body=BODY)
     

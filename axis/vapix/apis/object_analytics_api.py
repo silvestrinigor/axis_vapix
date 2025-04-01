@@ -5,7 +5,7 @@ https://developer.axis.com/vapix/applications/axis-object-analytics-api
 from enum import Enum
 from dataclasses import dataclass, asdict
 from ..connection import ApiVersion
-from ..interfaces import IVapixApi
+from ..abc import VapixApi
 from ..requests import AxisSession
 
 PATH = "local/objectanalytics/control.cgi"
@@ -106,7 +106,7 @@ class ObjectAnalyticsConfiguration:
     scenarios: list[ObjectAnalyticsScenario] | None = None
 
 
-class ObjectAnalyticsApi(IVapixApi):
+class ObjectAnalyticsApi(VapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version, path=PATH, body=BODY)
     

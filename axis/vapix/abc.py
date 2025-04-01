@@ -1,9 +1,10 @@
 from enum import Enum
+from abc import ABC
 from .requests import AxisSession, VapixRequest, VapixResponse
 from .connection import ApiVersion
 from . import utils
 
-class IVapixApi:
+class VapixApi(ABC):
     def __init__(self, session: AxisSession, api_version: ApiVersion, path: str, body: dict):
         self.session = session
         self.api_version = api_version

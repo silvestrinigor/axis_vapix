@@ -5,7 +5,7 @@ https://developer.axis.com/vapix/network-video/analytics-metadata-producer-confi
 from dataclasses import dataclass, asdict
 from enum import Enum
 from ..connection import ApiVersion
-from ..interfaces import IVapixApi
+from ..abc import VapixApi
 from ..requests import AxisSession
 
 DISCOVERY_API_ID = "analytics-metadata-config"
@@ -39,7 +39,7 @@ class AnalyticsMetadataProducer:
     videoChannels: list[AnalyticsMetadataVideoChannel] | None = None
 
 
-class AnalyticsMetadataProducerConfiguration(IVapixApi):
+class AnalyticsMetadataProducerConfiguration(VapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version, path=PATH, body=BODY)
 

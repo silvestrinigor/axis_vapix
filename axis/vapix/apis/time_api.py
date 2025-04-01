@@ -5,7 +5,7 @@ https://developer.axis.com/vapix/network-video/time-api
 from datetime import datetime
 from enum import Enum
 from ..connection import ApiVersion, FirmwareVersion
-from ..interfaces import IVapixApi
+from ..abc import VapixApi
 from ..requests import AxisSession
 from .. import utils
 
@@ -30,7 +30,7 @@ class MethodType(Enum):
     GET_SUPPORTED_VERSIONS = "getSupportedVersions"
     
 
-class TimeApi(IVapixApi):
+class TimeApi(VapixApi):
     def __init__(self, session: AxisSession, api_version: ApiVersion):
         super().__init__(session, api_version, path=PATH, body=BODY)
     
