@@ -4,9 +4,9 @@ https://developer.axis.com/vapix/network-video/ntp-api
 
 from enum import Enum
 from dataclasses import dataclass, asdict
-from ..connection import ApiVersion, FirmwareVersion
-from ..abc import VapixApi
-from ..requests import AxisSession
+from .connection import ApiVersion, FirmwareVersion
+from .abc import VapixApi
+from .requests import AxisSession
 
 PATH = "axis-cgi/ntp.cgi"
 LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(9, 10, 0)

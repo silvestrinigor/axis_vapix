@@ -3,9 +3,9 @@ https://developer.axis.com/vapix/network-video/api-discovery-service
 """
 
 from enum import Enum
-from ..connection import ApiVersion, FirmwareVersion
-from ..abc import VapixApi
-from ..requests import AxisSession
+from .connection import ApiVersion, FirmwareVersion
+from .abc import VapixApi
+from .requests import AxisSession
 
 LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(8, 50, 0)
 PATH = "axis-cgi/apidiscovery.cgi"

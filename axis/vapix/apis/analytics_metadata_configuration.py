@@ -4,9 +4,9 @@ https://developer.axis.com/vapix/network-video/analytics-metadata-producer-confi
 
 from dataclasses import dataclass, asdict
 from enum import Enum
-from ..connection import ApiVersion
-from ..abc import VapixApi
-from ..requests import AxisSession
+from .connection import ApiVersion
+from .abc import VapixApi
+from .requests import AxisSession
 
 DISCOVERY_API_ID = "analytics-metadata-config"
 PATH = "axis-cgi/analyticsmetadataconfig.cgi"

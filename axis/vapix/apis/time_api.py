@@ -4,10 +4,10 @@ https://developer.axis.com/vapix/network-video/time-api
 
 from datetime import datetime
 from enum import Enum
-from ..connection import ApiVersion, FirmwareVersion
-from ..abc import VapixApi
-from ..requests import AxisSession
-from .. import utils
+from .connection import ApiVersion, FirmwareVersion
+from .abc import VapixApi
+from .requests import AxisSession
+from . import utils
 
 PATH = "axis-cgi/time.cgi"
 REQUEST_METHOD = "POST"

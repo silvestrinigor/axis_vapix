@@ -4,10 +4,10 @@ https://developer.axis.com/vapix/network-video/overlay-api
 
 from enum import Enum
 from dataclasses import dataclass
-from ..utils import asdict_custom, remove_none_values
-from ..connection import ApiVersion, FirmwareVersion
-from ..abc import VapixApi
-from ..requests import AxisSession
+from .utils import asdict_custom, remove_none_values
+from .connection import ApiVersion, FirmwareVersion
+from .abc import VapixApi
+from .requests import AxisSession
 
 PATH = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi"
 REQUEST_METHOD = "POST"

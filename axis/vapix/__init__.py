@@ -1,8 +1,8 @@
 """
 https://developer.axis.com/vapix/
 """
-from .connection import AxisServerInfo, ApiVersion, FirmwareVersion
-from .requests import AxisSession, AuthType
+from .apis.connection import AxisServerInfo, ApiVersion, FirmwareVersion
+from .apis.requests import AxisSession, AuthType
 
 from .apis.analytics_metadata_configuration import AnalyticsMetadataProducerConfiguration
 from .apis.api_discovery_service import ApiDiscoveryService

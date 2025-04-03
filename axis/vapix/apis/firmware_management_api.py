@@ -3,9 +3,9 @@ https://developer.axis.com/vapix/network-video/firmware-management-api
 """
 from enum import Enum
 import json
-from ..connection import ApiVersion, FirmwareVersion
-from ..abc import VapixApi
-from ..requests import VapixRequest, AxisSession
+from .connection import ApiVersion, FirmwareVersion
+from .abc import VapixApi
+from .requests import VapixRequest, AxisSession
 
 LOWER_FIRMWARE_VERSION_SUPPORTED = FirmwareVersion(7, 40, 0)
 DISCOVERY_API_ID = "fwmgr"

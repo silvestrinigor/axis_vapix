@@ -4,9 +4,9 @@ https://developer.axis.com/vapix/applications/axis-object-analytics-api
 
 from enum import Enum
 from dataclasses import dataclass, asdict
-from ..connection import ApiVersion
-from ..abc import VapixApi
-from ..requests import AxisSession
+from .connection import ApiVersion
+from .abc import VapixApi
+from .requests import AxisSession
 
 PATH = "local/objectanalytics/control.cgi"
 REQUEST_METHOD = "POST"
