@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="axis_vapix",
-    version="0.2.6",
+    version="0.2.7",
     description="Python-based API handler for interacting with Axis devices using the VAPIX APIs",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -16,5 +16,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         ],
-    python_requires=">=3.11"
+    python_requires=">=3.10"
 )
