@@ -22,7 +22,7 @@ class AnalyticsMetadataProducerConfigurationABC(ABC):
         pass
     
     @abstractmethod
-    def setEnableProducers(self, producers: list[AnalyticsMetadataProducer]):
+    def setEnableProducers(self, producers: list[dict] | list[AnalyticsMetadataProducer]):
         pass
     
     @abstractmethod
@@ -59,8 +59,9 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
         
         return Request("POST", self.url, json=json_request, auth=self.auth)
     
-    def setEnableProducers(self, producers: list[AnalyticsMetadataProducer]):
-        producers_dict = [asdict(producer) for producer in producers]
+    def setEnableProducers(self, producers: list[dict] | list[AnalyticsMetadataProducer]):
+        if isinstance(producers, list[AnalyticsMetadataProducer]):
+            producers_dict = [self._remove_none_values(asdict(producer)) for producer in producers]
         
         json_request = {
             "apiVersion": self.api_version,
@@ -95,3 +96,11 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
             "method": "getSupportedVersions",
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
+    
+    def _remove_none_values(self, body: dict) -> dict:
+        if not isinstance(body, dict):
+            return body
+        return {
+            key: self._remove_none_values(value)
+            for key, value in body.items() if value is not None
+        }

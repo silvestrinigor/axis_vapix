@@ -15,7 +15,7 @@ class CaptureModeABC(ABC):
         pass
 
 class CaptureModeRequest(CaptureModeABC):
-    
+
     def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str = "1.0", context: str = ""):
         protocol = "https" if secure else "http"
         self.api_version = api_version
@@ -25,6 +25,7 @@ class CaptureModeRequest(CaptureModeABC):
 
     def getCaptureModes(self):
         json_request = {
+            "apiVersion": self.api_version,
             "context": self.context,
             "method": "getCaptureModes",
         }
@@ -32,6 +33,7 @@ class CaptureModeRequest(CaptureModeABC):
 
     def setCaptureMode(self, channel: int, captureModeId: int):
         json_request = {
+            "apiVersion": self.api_version,
             "context": self.context,
             "method": "setCaptureModes",
             "channel": channel,

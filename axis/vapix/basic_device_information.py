@@ -26,7 +26,7 @@ class BasicDeviceInformationABC(ABC):
     FIRMWARE_LOWER_SUPPORTED_VERSION = "8.40"
     
     @abstractmethod
-    def getProperties(self, properties: list[str]):
+    def getProperties(self, properties: list[str] | list[DevicePropertyType]):
         pass
     
     @abstractmethod
@@ -50,7 +50,10 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC):
         self.auth = auth
         self.url = f"{protocol}://{host}:{port}/{self.API_PATH}"
 
-    def getProperties(self, properties: list[str]):
+    def getProperties(self, properties: list[str] | list[DevicePropertyType]):
+        if isinstance(properties, list[DevicePropertyType]):
+            properties = [prop.value for prop in properties]
+        
         json_request = {
             "apiVersion": self.api_version,
             "context": self.context,
