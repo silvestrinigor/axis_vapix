@@ -62,7 +62,7 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
         json_request = {
             "apiVersion": self.api_version,
             "context": self.context,
-            "method": "getAllProperties",
+            "method": "getAllProperties"
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
     
@@ -70,13 +70,13 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
         json_request = {
             "apiVersion": self.api_version,
             "context": self.context,
-            "method": "getAllUnrestrictedProperties",
+            "method": "getAllUnrestrictedProperties"
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
     
     def getSupportedVersions(self):
         json_request = {
             "context": self.context,
-            "method": "getSupportedVersions",
+            "method": "getSupportedVersions"
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)

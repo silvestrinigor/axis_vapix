@@ -22,7 +22,7 @@ class CaptureModeRequest(CaptureModeABC, VapixApiRequest):
         json_request = {
             "apiVersion": self.api_version,
             "context": self.context,
-            "method": "getCaptureModes",
+            "method": "getCaptureModes"
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
 
@@ -32,6 +32,6 @@ class CaptureModeRequest(CaptureModeABC, VapixApiRequest):
             "context": self.context,
             "method": "setCaptureModes",
             "channel": channel,
-            "captureModeId": captureModeId,
+            "captureModeId": captureModeId
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
