@@ -55,15 +55,15 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
         return Request("POST", self.url, json=json_request, auth=self.auth)
     
     def setEnableProducers(self, producers: list[dict] | list[AnalyticsMetadataProducer]):
-        if isinstance(producers, list[AnalyticsMetadataProducer]):
-            producers_dict = [self._remove_none_values(asdict(producer)) for producer in producers]
+        if isinstance(producers, list) and all(isinstance(prop, AnalyticsMetadataProducer) for prop in producers):
+            producers = [self._remove_none_values(asdict(producer)) for producer in producers]
         
         json_request = {
             "apiVersion": self.api_version,
             "context": self.context,
             "method": "setEnableProducers",
             "params": {
-                "producers": producers_dict
+                "producers": producers
             }
         }
          
