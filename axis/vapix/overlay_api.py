@@ -143,17 +143,16 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
             "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "list",
+            "params": {
+                
+            }
         }
         
-        params = {}
         if camera is not None:
-            params["camera"] = camera
+            json_request["params"]["camera"] = camera
         if identity is not None:
-            params["identity"] = identity
+            json_request["params"]["identity"] = identity
         
-        if params:
-            json_request["params"] = params
-
         return Request("POST", self.url, json=json_request, auth=self.auth)
 
     def remove(self, identity: int):
