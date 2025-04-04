@@ -144,10 +144,8 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
             "context": self.context,
             "method": "list",
             "params": {
-                
             }
         }
-        
         if camera is not None:
             json_request["params"]["camera"] = camera
         if identity is not None:
