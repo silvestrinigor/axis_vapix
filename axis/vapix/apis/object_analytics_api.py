@@ -42,8 +42,7 @@ class ObjectAnalyticsDevice:
 class ObjectAnalyticsMetadataOverlay:
     id: int | None = None
     drawOnAllResolutions: bool | None = None
-    resolutions: list[int] | None = None # "resolutions": ["<width>x<height>", "<width>x<height>", ...]
-
+    resolutions: list[(int, int)] | None = None # "resolutions": ["<width>x<height>", "<width>x<height>", ...]
 
 @dataclass
 class PerspectiveBar:
