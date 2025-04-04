@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from requests import Request
 from requests.auth import AuthBase
+from .requests import VapixApiRequest
+from .api import VapixApiABC
 
-class CaptureModeABC(ABC):
+class CaptureModeABC(VapixApiABC, ABC):
     API_PATH = "axis-cgi/capturemode.cgi"
     FIRMWARE_LOWER_SUPPORTED_VERSION = "8.50"
     
@@ -14,14 +16,7 @@ class CaptureModeABC(ABC):
     def setCaptureMode(self, channel: int, captureModeId: int):
         pass
 
-class CaptureModeRequest(CaptureModeABC):
-
-    def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str = "1.0", context: str = ""):
-        protocol = "https" if secure else "http"
-        self.api_version = api_version
-        self.context = context
-        self.auth = auth
-        self.url = f"{protocol}://{host}:{port}/{self.API_PATH}"
+class CaptureModeRequest(CaptureModeABC, VapixApiRequest):
 
     def getCaptureModes(self):
         json_request = {

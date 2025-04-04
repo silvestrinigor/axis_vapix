@@ -3,6 +3,8 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 from requests import Request
 from requests.auth import AuthBase
+from .requests import VapixApiRequest
+from .api import VapixApiABC
 
 class OverlayColorType(Enum):
     NONE = None
@@ -54,7 +56,7 @@ class ImageOverlay:
     position: str | OverlayPositionCustomValue | None = None
     visible: bool | None = None
 
-class DynamicOverlayApiABC(ABC):
+class DynamicOverlayApiABC(VapixApiABC, ABC):
     API_PATH = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi"
     FIRMWARE_LOWER_SUPPORTED_VERSION = "7.10"
     
@@ -86,7 +88,7 @@ class DynamicOverlayApiABC(ABC):
     def getSupportedVersions(self):
         pass
     
-class DynamicOverlayApiRequest(DynamicOverlayApiABC):
+class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
     
     def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str = "1.0", context: str = ""):
         protocol = "https" if secure else "http"
@@ -178,11 +180,3 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC):
             "method": "getSupportedVersions",
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def _remove_none_values(self, body: dict) -> dict:
-        if not isinstance(body, dict):
-            return body
-        return {
-            key: self._remove_none_values(value)
-            for key, value in body.items() if value is not None
-        }

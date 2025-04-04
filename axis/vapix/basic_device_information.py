@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from requests import Request
-from requests.auth import AuthBase
+from .requests import VapixApiRequest
+from .api import VapixApiABC
 
 class DevicePropertyType(Enum):
     NONE = None
@@ -20,7 +21,7 @@ class DevicePropertyType(Enum):
     VERSION = "Version"
     WEB_URL = "WebURL"
 
-class BasicDeviceInformationABC(ABC):
+class BasicDeviceInformationABC(VapixApiABC, ABC):
     API_PATH = "axis-cgi/basicdeviceinfo.cgi"
     API_DISCOVERY_ID = "basic-device-info"
     FIRMWARE_LOWER_SUPPORTED_VERSION = "8.40"
@@ -41,19 +42,12 @@ class BasicDeviceInformationABC(ABC):
     def getSupportedVersions(self):
         pass
 
-class BasicDeviceInformationRequest(BasicDeviceInformationABC):
-    
-    def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str = "1.0", context: str = ""):
-        protocol = "https" if secure else "http"
-        self.api_version = api_version
-        self.context = context
-        self.auth = auth
-        self.url = f"{protocol}://{host}:{port}/{self.API_PATH}"
+class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
 
     def getProperties(self, properties: list[str] | list[DevicePropertyType]):
-        if isinstance(properties, list[DevicePropertyType]):
+        if isinstance(properties, list) and all(isinstance(prop, DevicePropertyType) for prop in properties):
             properties = [prop.value for prop in properties]
-        
+
         json_request = {
             "apiVersion": self.api_version,
             "context": self.context,
@@ -86,4 +80,3 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC):
             "method": "getSupportedVersions",
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
-

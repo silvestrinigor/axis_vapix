@@ -2,8 +2,10 @@ from abc import ABC, abstractmethod
 from requests import Request
 from requests.auth import AuthBase
 from datetime import datetime, timezone
+from .requests import VapixApiRequest
+from .api import VapixApiABC
 
-class TimeApiABC(ABC):
+class TimeApiABC(VapixApiABC, ABC):
     API_PATH = "axis-cgi/time.cgi"
     API_DISCOVERY_ID = "time-service"
     FIRMWARE_LOWER_SUPPORTED_VERSION = "9.30"
@@ -36,14 +38,7 @@ class TimeApiABC(ABC):
     def getSupportedVersions(self):
         pass
 
-class TimeApiRequest(TimeApiABC):
-    
-    def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str = "1.0", context: str = ""):
-        protocol = "https" if secure else "http"
-        self.api_version = api_version
-        self.context = context
-        self.auth = auth
-        self.url = f"{protocol}://{host}:{port}/{self.API_PATH}"
+class TimeApiRequest(TimeApiABC, VapixApiRequest):
 
     def getDateTimeInfo(self):
         json_request = {
@@ -111,13 +106,3 @@ class TimeApiRequest(TimeApiABC):
             "method": "getSupportedVersions",
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
-    
-    def _serialize_datetime(self, date_time: datetime) -> str:
-        if not self._is_timezone_aware(date_time=date_time): 
-            raise ValueError("The datetime object must be timezone-aware")
-        date_time_utc = date_time.astimezone(timezone.utc)
-        serialized_date_time = date_time_utc.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
-        return serialized_date_time
-
-    def _is_timezone_aware(self, date_time: datetime) -> bool:
-        return date_time.tzinfo is not None and date_time.tzinfo.utcoffset(date_time) is not None

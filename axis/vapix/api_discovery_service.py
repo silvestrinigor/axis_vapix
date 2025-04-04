@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from requests import Request
 from requests.auth import AuthBase
+from .requests import VapixApiRequest
+from .api import VapixApiABC
 
-class ApiDiscoveryServiceABC(ABC):
+class ApiDiscoveryServiceABC(VapixApiABC, ABC):
     API_PATH = "axis-cgi/apidiscovery.cgi"
     FIRMWARE_LOWER_SUPPORTED_VERSION = "8.50"
     
@@ -13,15 +15,8 @@ class ApiDiscoveryServiceABC(ABC):
     def getSupportedVersions(self):
         pass
     
-class ApiDiscoveryServiceRequest(ApiDiscoveryServiceABC):
+class ApiDiscoveryServiceRequest(ApiDiscoveryServiceABC, VapixApiRequest):
     
-    def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str = "1.0", context: str = ""):
-        protocol = "https" if secure else "http"
-        self.api_version = api_version
-        self.context = context
-        self.auth = auth
-        self.url = f"{protocol}://{host}:{port}/{self.API_PATH}"
-
     def getApiList(self, id=None, version=None):
         json_request = {
             "apiVersion": self.api_version,

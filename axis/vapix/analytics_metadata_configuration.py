@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from requests import Request
 from requests.auth import AuthBase
 from dataclasses import dataclass, asdict
+from .requests import VapixApiRequest
+from .api import VapixApiABC
 
 @dataclass
 class AnalyticsMetadataVideoChannel:
@@ -13,7 +15,7 @@ class AnalyticsMetadataProducer:
     name: str | None = None
     videoChannels: list[AnalyticsMetadataVideoChannel] | None = None
 
-class AnalyticsMetadataProducerConfigurationABC(ABC):
+class AnalyticsMetadataProducerConfigurationABC(VapixApiABC, ABC):
     API_PATH = "axis-cgi/analyticsmetadataconfig.cgi"
     API_DISCOVERY_ID = "analytics-metadata-config"
     
@@ -33,14 +35,7 @@ class AnalyticsMetadataProducerConfigurationABC(ABC):
     def getSupportedVersions(self):
         pass
     
-class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerConfigurationABC):
-    
-    def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str = "1.0", context: str = ""):
-        protocol = "https" if secure else "http"
-        self.api_version = api_version
-        self.context = context
-        self.auth = auth
-        self.url = f"{protocol}://{host}:{port}/{self.API_PATH}"
+class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerConfigurationABC, VapixApiRequest):
     
     def listProducers(self, producers: list[str] | None = None):
         json_request = {
@@ -97,10 +92,3 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
     
-    def _remove_none_values(self, body: dict) -> dict:
-        if not isinstance(body, dict):
-            return body
-        return {
-            key: self._remove_none_values(value)
-            for key, value in body.items() if value is not None
-        }
