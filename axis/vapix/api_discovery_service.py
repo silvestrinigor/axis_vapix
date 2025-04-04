@@ -19,7 +19,7 @@ class ApiDiscoveryServiceRequest(ApiDiscoveryServiceABC, VapixApiRequest):
     
     def getApiList(self, id=None, version=None):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getApiList",
         }

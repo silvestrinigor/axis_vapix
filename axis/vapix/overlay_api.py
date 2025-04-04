@@ -95,7 +95,7 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
             overlay = self._remove_none_values(asdict(overlay))
         
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "addImage",
             "params": overlay,
@@ -107,7 +107,7 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
             overlay = self._remove_none_values(asdict(overlay))
         
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "addText",
             "params": overlay,
@@ -119,7 +119,7 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
             overlay = self._remove_none_values(asdict(overlay))
         
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "setImage",
             "params": overlay,
@@ -131,7 +131,7 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
             overlay = self._remove_none_values(asdict(overlay))
         
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "setText",
             "params": overlay,
@@ -140,7 +140,7 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
     
     def list(self, camera: int | None = None, identity: int | None = None):        
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "list",
         }
@@ -158,7 +158,7 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
 
     def remove(self, identity: int):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "remove",
             "params": {

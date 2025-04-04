@@ -39,7 +39,7 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
     
     def listProducers(self, producers: list[str] | None = None):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "listProducers",
         }
@@ -59,7 +59,7 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
             producers = [self._remove_none_values(asdict(producer)) for producer in producers]
         
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "setEnableProducers",
             "params": {
@@ -71,7 +71,7 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
 
     def getSupportedMetadata(self, producers: list[str] | None = None):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getSupportedMetadata",
         }

@@ -20,7 +20,7 @@ class CaptureModeRequest(CaptureModeABC, VapixApiRequest):
 
     def getCaptureModes(self):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getCaptureModes"
         }
@@ -28,7 +28,7 @@ class CaptureModeRequest(CaptureModeABC, VapixApiRequest):
 
     def setCaptureMode(self, channel: int, captureModeId: int):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "setCaptureModes",
             "channel": channel,

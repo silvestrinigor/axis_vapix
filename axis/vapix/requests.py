@@ -9,7 +9,7 @@ class VapixApiRequest:
         
         if isinstance(api_version, Version):
             api_version = str(api_version)
-        self.api_version = api_version
+        self.apiVersion = api_version
         
         self.context = context
         self.auth = auth

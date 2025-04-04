@@ -49,7 +49,7 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
             properties = [prop.value for prop in properties]
 
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getProperties",
             "params": {
@@ -60,7 +60,7 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
     
     def getAllProperties(self):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getAllProperties"
         }
@@ -68,7 +68,7 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
     
     def getAllUnrestrictedProperties(self):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getAllUnrestrictedProperties"
         }

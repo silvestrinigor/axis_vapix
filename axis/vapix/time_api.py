@@ -42,7 +42,7 @@ class TimeApiRequest(TimeApiABC, VapixApiRequest):
 
     def getDateTimeInfo(self):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getDateTimeInfo",
         }
@@ -50,7 +50,7 @@ class TimeApiRequest(TimeApiABC, VapixApiRequest):
     
     def getAll(self):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "getAll",
         }
@@ -61,7 +61,7 @@ class TimeApiRequest(TimeApiABC, VapixApiRequest):
             date_time = self._serialize_datetime(date_time)
         
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "setDateTime",
             "params": {
@@ -72,7 +72,7 @@ class TimeApiRequest(TimeApiABC, VapixApiRequest):
     
     def setTimeZone(self, time_zone: str):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "setTimeZone",
             "params": {
@@ -83,7 +83,7 @@ class TimeApiRequest(TimeApiABC, VapixApiRequest):
     
     def setPosixTimeZone(self, posix_time_zone: str, enable_dst: bool):
         json_request = {
-            "apiVersion": self.api_version,
+            "apiVersion": self.apiVersion,
             "context": self.context,
             "method": "setPosixTimeZone",
             "params": {
