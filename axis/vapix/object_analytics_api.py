@@ -55,7 +55,7 @@ class ScenarioFilter:
     distance: int | None = None
     minSpeed: float | None = None
     maxSpeed: float | None = None
-    vertices: list | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
+    vertices: list[list[(int, int)]] | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
 
 @dataclass
 class ObjectAnalyticsObjectClassificator:
