@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from requests import Request
-from requests.auth import AuthBase
 from enum import Enum
 from .requests import VapixApiRequest
 from .api import VapixApiABC
@@ -91,7 +90,7 @@ class ObjectAnalyticsABC(VapixApiABC, ABC):
         pass
     
     @abstractmethod
-    def setConfiguration(self):
+    def setConfiguration(self, configuration: ObjectAnalyticsConfiguration | dict):
         pass
     
     @abstractmethod
@@ -103,23 +102,23 @@ class ObjectAnalyticsABC(VapixApiABC, ABC):
         pass
     
     @abstractmethod
-    def sendAlarmEvent(self):
+    def sendAlarmEvent(self, scenario: int):
         pass
     
     @abstractmethod
-    def getAccumulatedCounts(self):
+    def getAccumulatedCounts(self, scenario: int):
         pass
     
     @abstractmethod
-    def resetAccumulatedCounts(self):
+    def resetAccumulatedCounts(self, scenario: int):
         pass
     
     @abstractmethod
-    def resetPassthrough(self):
+    def resetPassthrough(self, scenario: int):
         pass
     
     @abstractmethod
-    def getOccupancy(self):
+    def getOccupancy(self, scenario: int):
         pass
     
 class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixApiRequest):
@@ -140,7 +139,7 @@ class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixApiRequest):
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
 
-    def setConfiguration(self, configuration: ObjectAnalyticsConfiguration):
+    def setConfiguration(self, configuration: ObjectAnalyticsConfiguration | dict):
         if isinstance(configuration, ObjectAnalyticsConfiguration):
             configuration = self._remove_none_values(asdict(configuration))
 

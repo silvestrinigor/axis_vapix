@@ -1,6 +1,5 @@
-from abc import ABC, abstractmethod
 from requests import Request
-from requests.auth import AuthBase
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from .requests import VapixApiRequest
 from .api import VapixApiABC

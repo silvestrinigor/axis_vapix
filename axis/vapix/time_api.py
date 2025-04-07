@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from requests import Request
-from requests.auth import AuthBase
-from datetime import datetime, timezone
+from datetime import datetime
 from .requests import VapixApiRequest
 from .api import VapixApiABC
 
@@ -19,15 +18,15 @@ class TimeApiABC(VapixApiABC, ABC):
         pass
     
     @abstractmethod
-    def setDateTime(self, date_time: str):
+    def setDateTime(self, date_time: str | datetime):
         pass
     
     @abstractmethod
-    def setTimeZone(self):
+    def setTimeZone(self, time_zone: str):
         pass
     
     @abstractmethod
-    def setPosixTimeZone(self):
+    def setPosixTimeZone(self, posix_time_zone: str, enable_dst: bool):
         pass
     
     @abstractmethod

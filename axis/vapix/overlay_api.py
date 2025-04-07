@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from enum import Enum
 from requests import Request
-from requests.auth import AuthBase
 from .requests import VapixApiRequest
 from .api import VapixApiABC
 
