@@ -46,7 +46,6 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
         params = {}
         if producers is not None:
             params["producers"] = producers
-            
         if params:
             json_request["params"] = params
         
@@ -76,7 +75,6 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
         params = {}
         if producers is not None:
             params["producers"] = producers
-            
         if params:
             json_request["params"] = params
         

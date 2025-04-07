@@ -27,7 +27,6 @@ class ApiDiscoveryServiceRequest(ApiDiscoveryServiceABC, VapixApiRequest):
             params["id"] = id
         if version is not None:
             params["version"] = version
-        
         if params:
             json_request["params"] = params
         
