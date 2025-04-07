@@ -42,7 +42,6 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
             "context": self.context,
             "method": "listProducers",
         }
-        
         params = {}
         if producers is not None:
             params["producers"] = producers
