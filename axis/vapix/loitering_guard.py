@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from requests import Request
 from enum import Enum
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 @dataclass
@@ -68,7 +68,7 @@ class LoiteringGuardABC(VapixApiABC, ABC):
     def getConfigurationCapabilities(self):
         pass
 
-class LoiteringGuardRequest(LoiteringGuardABC, VapixApiRequest):
+class LoiteringGuardRequest(LoiteringGuardABC, VapixApiRequestWithVersion):
     
     def getConfiguration(self):
         json_request = {
@@ -90,13 +90,6 @@ class LoiteringGuardRequest(LoiteringGuardABC, VapixApiRequest):
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
 
-    def getSupportedVersions(self):
-        json_request = {
-            "context": self.context,
-            "method": "getSupportedVersions",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
     def sendAlarmEvent(self, scenario: int):
         json_request = {
             "apiVersion": self.apiVersion,
@@ -114,3 +107,6 @@ class LoiteringGuardRequest(LoiteringGuardABC, VapixApiRequest):
             "method": "getConfigurationCapabilities",
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
+
+    def getSupportedVersions(self):
+        return super().getSupportedVersions()

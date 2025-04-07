@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from requests import Request
 from enum import Enum
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 class ObjectAnalyticsDirectionType(Enum):
@@ -121,7 +121,7 @@ class ObjectAnalyticsABC(VapixApiABC, ABC):
     def getOccupancy(self, scenario: int):
         pass
     
-class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixApiRequest):
+class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixApiRequestWithVersion):
     
     def getConfigurationCapabilities(self):
         json_request = {
@@ -148,13 +148,6 @@ class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixApiRequest):
             "context": self.context,
             "method": "setConfiguration",
             "params": configuration
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        json_request = {
-            "context": self.context,
-            "method": "getSupportedVersions",
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
 
@@ -212,3 +205,6 @@ class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixApiRequest):
             }
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
+
+    def getSupportedVersions(self):
+        return super().getSupportedVersions()

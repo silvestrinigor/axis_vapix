@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from enum import Enum
 from requests import Request
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 class OverlayColorType(Enum):
@@ -87,7 +87,7 @@ class DynamicOverlayApiABC(VapixApiABC, ABC):
     def getSupportedVersions(self):
         pass
     
-class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
+class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequestWithVersion):
     
     def addImage(self, overlay: ImageOverlay | dict):
         if isinstance(overlay, ImageOverlay):
@@ -162,10 +162,6 @@ class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixApiRequest):
             }
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
-
+    
     def getSupportedVersions(self):
-        json_request = {
-            "context": self.context,
-            "method": "getSupportedVersions",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return super().getSupportedVersions()

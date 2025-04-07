@@ -1,7 +1,7 @@
 from requests import Request
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 @dataclass
@@ -34,7 +34,7 @@ class AnalyticsMetadataProducerConfigurationABC(VapixApiABC, ABC):
     def getSupportedVersions(self):
         pass
     
-class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerConfigurationABC, VapixApiRequest):
+class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerConfigurationABC, VapixApiRequestWithVersion):
     
     def listProducers(self, producers: list[str] | None = None):
         json_request = {
@@ -78,11 +78,6 @@ class AnalyticsMetadataProducerConfigurationRequest(AnalyticsMetadataProducerCon
             json_request["params"] = params
         
         return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        json_request = {
-            "context": self.context,
-            "method": "getSupportedVersions",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
     
+    def getSupportedVersions(self):
+        return super().getSupportedVersions()

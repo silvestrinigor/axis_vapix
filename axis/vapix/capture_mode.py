@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from requests import Request
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 class CaptureModeABC(VapixApiABC, ABC):
@@ -15,7 +15,7 @@ class CaptureModeABC(VapixApiABC, ABC):
     def setCaptureMode(self, channel: int, captureModeId: int):
         pass
 
-class CaptureModeRequest(CaptureModeABC, VapixApiRequest):
+class CaptureModeRequest(CaptureModeABC, VapixApiRequestWithVersion):
 
     def getCaptureModes(self):
         json_request = {
@@ -34,3 +34,6 @@ class CaptureModeRequest(CaptureModeABC, VapixApiRequest):
             "captureModeId": captureModeId
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
+
+    def getSupportedVersions(self):
+        return super().getSupportedVersions()

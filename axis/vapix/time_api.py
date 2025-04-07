@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from requests import Request
 from datetime import datetime
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 class TimeApiABC(VapixApiABC, ABC):
@@ -37,7 +37,7 @@ class TimeApiABC(VapixApiABC, ABC):
     def getSupportedVersions(self):
         pass
 
-class TimeApiRequest(TimeApiABC, VapixApiRequest):
+class TimeApiRequest(TimeApiABC, VapixApiRequestWithVersion):
 
     def getDateTimeInfo(self):
         json_request = {
@@ -98,10 +98,6 @@ class TimeApiRequest(TimeApiABC, VapixApiRequest):
             "method": "resetTimeZone",
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
-    
+
     def getSupportedVersions(self):
-        json_request = {
-            "context": self.context,
-            "method": "getSupportedVersions",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return super().getSupportedVersions()

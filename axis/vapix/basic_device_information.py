@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from requests import Request
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 class DevicePropertyType(Enum):
@@ -42,7 +42,7 @@ class BasicDeviceInformationABC(VapixApiABC, ABC):
     def getSupportedVersions(self):
         pass
 
-class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
+class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequestWithVersion):
 
     def getProperties(self, properties: list[str] | list[DevicePropertyType]):
         if isinstance(properties, list) and all(isinstance(prop, DevicePropertyType) for prop in properties):
@@ -73,10 +73,6 @@ class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixApiRequest):
             "method": "getAllUnrestrictedProperties"
         }
         return Request("POST", self.url, json=json_request, auth=self.auth)
-    
+
     def getSupportedVersions(self):
-        json_request = {
-            "context": self.context,
-            "method": "getSupportedVersions"
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return super().getSupportedVersions()

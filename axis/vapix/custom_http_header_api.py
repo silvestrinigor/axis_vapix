@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from requests import Request
 from requests.auth import AuthBase
-from .requests import VapixApiRequest
+from .requests import VapixApiRequestWithVersion
 from .api import VapixApiABC
 
 class CustomHTTPheaderAPIABC(VapixApiABC, ABC):
@@ -14,7 +14,7 @@ class CustomHTTPheaderAPIABC(VapixApiABC, ABC):
         pass
     
     @abstractmethod
-    def set(self):
+    def set(self, CustomHeaderName, CustomHeaderValue):
         pass
     
     @abstractmethod
@@ -24,3 +24,38 @@ class CustomHTTPheaderAPIABC(VapixApiABC, ABC):
     @abstractmethod
     def getSupportedVersions(self):
         pass
+    
+class CustomHTTPheaderAPIRequest(VapixApiABC, VapixApiRequestWithVersion):
+    
+    def list(self):
+        json_request = {
+            "apiVersion": self.apiVersion,
+            "context": self.context,
+            "method": "getSupportedVersions",
+        }
+        return Request("POST", self.url, json=json_request, auth=self.auth)
+    
+    def set(self, CustomHeaderName, CustomHeaderValue):
+        json_request = {
+            "apiVersion": self.apiVersion,
+            "context": self.context,
+            "method": "set",
+            "params": {
+                CustomHeaderName: CustomHeaderValue
+            }
+        }
+        return Request("POST", self.url, json=json_request, auth=self.auth)
+
+    def remove(self, CustomHeaderName, CustomHeaderValue):
+        json_request = {
+            "apiVersion": self.apiVersion,
+            "context": self.context,
+            "method": "remove",
+            "params": {
+                CustomHeaderName: CustomHeaderValue
+            }
+        }
+        return Request("POST", self.url, json=json_request, auth=self.auth)
+
+    def getSupportedVersions(self):
+        return super().getSupportedVersions()
