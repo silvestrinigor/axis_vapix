@@ -22,7 +22,6 @@ class ApiDiscoveryServiceRequest(ApiDiscoveryServiceABC, VapixApiRequest):
             "context": self.context,
             "method": "getApiList",
         }
-        
         params = {}
         if id is not None:
             params["id"] = id
