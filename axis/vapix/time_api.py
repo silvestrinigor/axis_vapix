@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from requests import Request
 from datetime import datetime
-from .requests import VapixApiRequestWithVersion
+from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 class TimeApiABC(VapixApiABC, ABC):
@@ -37,7 +37,7 @@ class TimeApiABC(VapixApiABC, ABC):
     def getSupportedVersions(self):
         pass
 
-class TimeApiRequest(TimeApiABC, VapixApiRequestWithVersion):
+class TimeApiRequest(TimeApiABC, VapixRequestBuilderWithVersion):
 
     def getDateTimeInfo(self):
         json_request = {

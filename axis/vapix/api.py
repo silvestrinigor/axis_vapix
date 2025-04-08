@@ -2,7 +2,8 @@ from abc import ABC
 from datetime import datetime, timezone
 
 class VapixApiABC(ABC):
-    
+    API_PATH = "axis-cgi"
+
     def _remove_none_values(self, body: dict) -> dict:
         if not isinstance(body, dict):
             return body

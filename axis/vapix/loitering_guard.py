@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from requests import Request
 from enum import Enum
-from .requests import VapixApiRequestWithVersion
+from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 @dataclass
@@ -68,7 +68,7 @@ class LoiteringGuardABC(VapixApiABC, ABC):
     def getConfigurationCapabilities(self):
         pass
 
-class LoiteringGuardRequest(LoiteringGuardABC, VapixApiRequestWithVersion):
+class LoiteringGuardRequest(LoiteringGuardABC, VapixRequestBuilderWithVersion):
     
     def getConfiguration(self):
         json_request = {

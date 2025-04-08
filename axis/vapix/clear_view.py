@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from requests import Request
-from .requests import VapixApiRequestWithVersion
+from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 class ClearViewABC(VapixApiABC, ABC):
@@ -27,7 +27,7 @@ class ClearViewABC(VapixApiABC, ABC):
     def stop(self):
         pass
         
-class ClearViewRequest(ClearViewABC, VapixApiRequestWithVersion):
+class ClearViewRequest(ClearViewABC, VapixRequestBuilderWithVersion):
 
     def getServiceInfo(self):
         json_request = {

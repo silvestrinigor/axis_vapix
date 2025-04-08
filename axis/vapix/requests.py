@@ -1,16 +1,16 @@
 from requests.auth import AuthBase
 from requests import Request
 from packaging.version import Version
+from .api import VapixApiABC
 
-class VapixApiRequest:
-    API_PATH = "axis-cgi"
+class VapixRequestBuilder(VapixApiABC):
     
     def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False):
         protocol = "https" if secure else "http"        
         self.auth = auth
         self.url = f"{protocol}://{host}:{port}/{self.API_PATH}"
 
-class VapixApiRequestWithVersion(VapixApiRequest):
+class VapixRequestBuilderWithVersion(VapixRequestBuilder):
     def __init__(self, host: str, port: int, auth: AuthBase | None = None, secure: bool = False, api_version: str | Version = "1.0", context: str = ""):
         self.context = context
 

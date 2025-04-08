@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from requests import Request
 from requests.auth import AuthBase
-from .requests import VapixApiRequestWithVersion
+from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 class CustomHTTPheaderAPIABC(VapixApiABC, ABC):
@@ -25,7 +25,7 @@ class CustomHTTPheaderAPIABC(VapixApiABC, ABC):
     def getSupportedVersions(self):
         pass
     
-class CustomHTTPheaderAPIRequest(VapixApiABC, VapixApiRequestWithVersion):
+class CustomHTTPheaderAPIRequest(VapixApiABC, VapixRequestBuilderWithVersion):
     
     def list(self):
         json_request = {

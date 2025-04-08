@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from requests import Request
-from .requests import VapixApiRequestWithVersion
+from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 class ApiDiscoveryServiceABC(VapixApiABC, ABC):
@@ -14,7 +14,7 @@ class ApiDiscoveryServiceABC(VapixApiABC, ABC):
     def getSupportedVersions(self):
         pass
     
-class ApiDiscoveryServiceRequest(ApiDiscoveryServiceABC, VapixApiRequestWithVersion):
+class ApiDiscoveryServiceRequest(ApiDiscoveryServiceABC, VapixRequestBuilderWithVersion):
     
     def getApiList(self, id=None, version=None):
         json_request = {

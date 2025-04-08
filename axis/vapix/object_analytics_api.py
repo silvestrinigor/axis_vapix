@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from requests import Request
 from enum import Enum
-from .requests import VapixApiRequestWithVersion
+from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 class ObjectAnalyticsDirectionType(Enum):
@@ -121,7 +121,7 @@ class ObjectAnalyticsABC(VapixApiABC, ABC):
     def getOccupancy(self, scenario: int):
         pass
     
-class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixApiRequestWithVersion):
+class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixRequestBuilderWithVersion):
     
     def getConfigurationCapabilities(self):
         json_request = {
