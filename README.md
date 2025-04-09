@@ -62,6 +62,40 @@ with requests.Session() as session:
 
 ---
 
+### Example: Add Text Overlay
+
+```python
+from axis.vapix import overlay_api
+import requests
+import requests.auth
+
+auth = requests.auth.HTTPDigestAuth("root", "pass")
+api = overlay_api.DynamicOverlayApiRequest("192.168.0.90", 80, auth)
+
+overlay = overlay_api.TextOverlay(
+    camera=1,
+    text=r"%d - %m - %Y - %X",
+    textColor=overlay_api.OverlayColorType.RED.value
+)
+request = api.addText(overlay)
+
+with requests.Session() as session:
+    response = session.send(request.prepare())
+    print(response.text)
+
+# Output
+{
+    "apiVersion": "1.7",
+    "data": {
+        "camera": 1,
+        "identity": 3
+    },
+    "method": "addText"
+}
+```
+
+---
+
 ## Supported APIs:
 - Analytics Metadata Producer Configuration
 - API Discovery service

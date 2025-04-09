@@ -82,10 +82,6 @@ class DynamicOverlayApiABC(VapixApiABC, ABC):
     def remove(self, identity: int):
         pass
     
-    @abstractmethod
-    def getSupportedVersions(self):
-        pass
-    
 class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixRequestBuilderWithVersion):
     
     def addImage(self, overlay):
