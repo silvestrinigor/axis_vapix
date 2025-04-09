@@ -32,6 +32,36 @@ with requests.Session() as session:
 
 ---
 
+### Example: Set Time
+
+```python
+from axis.vapix import time_api
+import requests
+import requests.auth
+from datetime import datetime, timezone, timedelta
+
+auth = requests.auth.HTTPDigestAuth("root", "pass")
+api = time_api.TimeApiRequest("192.168.0.90", 80, auth)
+
+time_now = datetime.now(timezone(timedelta(hours=-3)))
+request = api.setDateTime(time_now)
+
+with requests.Session() as session:
+    response = session.send(request.prepare())
+    print(response.text)
+
+# Output
+{
+  "apiVersion": "1.0",
+  "method": "setDateTime",
+  "data": {
+    "dateTime": "2025-04-09T15:51:39Z"
+  }
+}
+```
+
+---
+
 ## Supported APIs:
 - Analytics Metadata Producer Configuration
 - API Discovery service
