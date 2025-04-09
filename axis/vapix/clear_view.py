@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from requests import Request
+from typing import Optional
 from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
@@ -8,68 +9,34 @@ class ClearViewABC(VapixApiABC, ABC):
     FIRMWARE_LOWER_SUPPORTED_VERSION = "7.10"
 
     @abstractmethod
-    def getSupportedVersions(self):
-        pass
-    
-    @abstractmethod
     def getServiceInfo(self):
         pass
     
     @abstractmethod
-    def getStatus(self):
+    def getStatus(self, id: int):
         pass
     
     @abstractmethod
-    def start(self):
+    def start(self, id: int, duration: Optional[int] = None):
         pass
     
     @abstractmethod
-    def stop(self):
+    def stop(self, id: int):
         pass
         
 class ClearViewRequest(ClearViewABC, VapixRequestBuilderWithVersion):
 
     def getServiceInfo(self):
-        json_request = {
-            "context": self.context,
-            "method": "getServiceInfo",
-            "params": {
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.getServiceInfo.__name__, {})
+    
+    def getStatus(self, id):
+        return self._create_request_with_params(self.getStatus.__name__, {"id": id})
 
-    def getStatus(self, id: int):
-        json_request = {
-            "context": self.context,
-            "method": "getStatus",
-            "params": {
-                "id": id
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def start(self, id: int, duration: int | None = None):
-        json_request = {
-            "context": self.context,
-            "method": "start",
-            "params": {
-                "id": id
-            }
-        }
+    def start(self, id, duration = None):
+        params = {"id": id}
         if duration is not None:
-            json_request["params"]["duration"] = duration
+            params["duration"] = duration
+        return self._create_request_with_params(self.start.__name__, params)
         
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def stop(self, id: int):
-        json_request = {
-            "context": self.context,
-            "method": "stop",
-            "params": {
-                "id": id
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        return super().getSupportedVersions()
+    def stop(self, id):
+        return self._create_request_with_params(self.stop.__name__, {"id": id})

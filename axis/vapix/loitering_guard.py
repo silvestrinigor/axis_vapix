@@ -2,48 +2,49 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from requests import Request
 from enum import Enum
+from typing import Optional, List, Dict
 from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 @dataclass
 class LoiteringGuardCamera:
-    active: bool | None = None
-    rotation: str | None = None
-    overlayResolution: str | None = None
+    active: Optional[bool] = None
+    rotation: Optional[str] = None
+    overlayResolution: Optional[str] = None
 
 @dataclass
 class ProfileFilter:
-    filterType: str | None = None
-    data: list | None = None
-    active: bool | None = None
+    filterType: Optional[str] = None
+    data: Optional[List] = None
+    active: Optional[bool] = None
 
 @dataclass
 class LoiteringGuardTrigger:
-    triggerType: str | None = None
-    data: list | None = None
-    active: bool | None = None
+    triggerType: Optional[str] = None
+    data: Optional[List] = None
+    active: Optional[bool] = None
 
 @dataclass
 class LoiteringGuardPerspective:
-    triggerType: str | None = None
-    data: list | None = None
-    height: int | None = None
+    triggerType: Optional[str] = None
+    data: Optional[List] = None
+    height: Optional[int] = None
 
 @dataclass
 class LoiteringGuardProfile:
-    name: str | None = None
-    uid: int | None = None
-    camera: int | None = None
-    alarmOverlayEnabled: bool | None = None
-    filters: list[ProfileFilter] | None = None
-    triggers: list[LoiteringGuardTrigger] | None = None
-    presets: list | None = None
-    perspectives: list[LoiteringGuardPerspective] | None = None
+    name: Optional[str] = None
+    uid: Optional[int] = None
+    camera: Optional[int] = None
+    alarmOverlayEnabled: Optional[bool] = None
+    filters: Optional[List[ProfileFilter]] = None
+    triggers: Optional[List[LoiteringGuardTrigger]] = None
+    presets: Optional[List] = None
+    perspectives: Optional[List[LoiteringGuardPerspective]] = None
 
 @dataclass
 class LoiteringGuardConfiguration:
-    cameras: list[LoiteringGuardCamera] | None = None
-    profiles: list[LoiteringGuardProfile] | None = None
+    cameras: Optional[List[LoiteringGuardCamera]] = None
+    profiles: Optional[List[LoiteringGuardProfile]] = None
 
 class LoiteringGuardABC(VapixApiABC, ABC):
     API_PATH = "local/loiteringguard/control.cgi"
@@ -53,11 +54,7 @@ class LoiteringGuardABC(VapixApiABC, ABC):
         pass
 
     @abstractmethod
-    def setConfiguration(self, configuration: LoiteringGuardConfiguration | dict):
-        pass
-    
-    @abstractmethod
-    def getSupportedVersions(self):
+    def setConfiguration(self, configuration: LoiteringGuardConfiguration | Dict):
         pass
     
     @abstractmethod
@@ -71,42 +68,16 @@ class LoiteringGuardABC(VapixApiABC, ABC):
 class LoiteringGuardRequest(LoiteringGuardABC, VapixRequestBuilderWithVersion):
     
     def getConfiguration(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getConfiguration",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_no_params_request(self.getConfiguration.__name__)
 
-    def setConfiguration(self, configuration: LoiteringGuardConfiguration | dict):
+    def setConfiguration(self, configuration):
         if isinstance(configuration, LoiteringGuardConfiguration):
             configuration = self._remove_none_values(asdict(configuration))
 
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setConfiguration",
-            "params": configuration
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.setConfiguration.__name__, configuration)
 
-    def sendAlarmEvent(self, scenario: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "sendAlarmEvent",
-            "params": {
-                "scenario": scenario
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+    def sendAlarmEvent(self, scenario):
+        return self._create_request_with_params(self.sendAlarmEvent.__name__, {"scenario": scenario})
 
     def getConfigurationCapabilities(self):
-        json_request = {
-            "context": self.context,
-            "method": "getConfigurationCapabilities",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        return super().getSupportedVersions()
+        return self._create_no_params_request(self.getConfigurationCapabilities.__name__)

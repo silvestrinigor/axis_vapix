@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from requests import Request
 from enum import Enum
+from typing import Optional, List, Dict
 from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
@@ -17,70 +18,70 @@ class ObjectAnalyticsDeviceRotationType(Enum):
 
 @dataclass
 class ObjectAnalyticsDevice:
-    id: int | None = None
-    type: str | None = None
-    rotation: int | None = None # Valid values are 0, 90, 180 or 270
-    isActive: bool | None = None
+    id: Optional[int] = None
+    type: Optional[str] = None
+    rotation: Optional[int] = None # Valid values are 0, 90, 180 or 270
+    isActive: Optional[bool] = None
 
 @dataclass
 class ObjectAnalyticsMetadataOverlay:
-    id: int | None = None
-    drawOnAllResolutions: bool | None = None
-    resolutions: list[(int, int)] | None = None # "resolutions": ["<width>x<height>", "<width>x<height>", ...]
+    id: Optional[int] = None
+    drawOnAllResolutions: Optional[bool] = None
+    resolutions: Optional[List[(int, int)]] = None # "resolutions": ["<width>x<height>", "<width>x<height>", ...]
 
 @dataclass
 class PerspectiveBar:
-    height: int | None = None
-    points: list[list[(int, int)]] | None = None # "points": [[<x>, <y>], [<x>, <y>], ...]
+    height: Optional[int] = None
+    points: Optional[List[List[(int, int)]]] = None # "points": [[<x>, <y>], [<x>, <y>], ...]
 
 @dataclass
 class ObjectAnalyticsPerspective:
-    id: int | None = None
-    bars: list[PerspectiveBar] | None = None
+    id: Optional[int] = None
+    bars: Optional[List[PerspectiveBar]] = None
 
 @dataclass
 class ObjectAnalyticsTrigger:
-    triggerType: str | None = None
-    vertices: list[list[(int, int)]] | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
-    alarmDirection: str | None = None # "alarmDirection": "leftToRight", "rightToLeft"
-    countingDirection: str | None = None # "countingDirection": "leftToRight", "rightToLeft"
+    triggerType: Optional[str] = None
+    vertices: Optional[List[List[(int, int)]]] = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
+    alarmDirection: Optional[str] = None # "alarmDirection": "leftToRight", "rightToLeft"
+    countingDirection: Optional[str] = None # "countingDirection": "leftToRight", "rightToLeft"
 
 @dataclass
 class ScenarioFilter:
-    filterType: str | None = None
-    width: int | None = None
-    height: int | None = None
-    time: int | None = None
-    distance: int | None = None
-    minSpeed: float | None = None
-    maxSpeed: float | None = None
-    vertices: list[list[(int, int)]] | None = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
+    filterType: Optional[str] = None
+    width: Optional[int] = None
+    height: Optional[int] = None
+    time: Optional[int] = None
+    distance: Optional[int] = None
+    minSpeed: Optional[float] = None
+    maxSpeed: Optional[float] = None
+    vertices: Optional[List[List[(int, int)]]] = None # "vertices": [[<x>, <y>], [<x>, <y>], ...]
 
 @dataclass
 class ObjectAnalyticsObjectClassificator:
-    classificatorType: str | None = None
-    subTypes: list | None = None 
+    classificatorType: Optional[str] = None
+    subTypes: Optional[List] = None 
 
 @dataclass
 class ObjectAnalyticsScenario:
-    id: int | None = None
-    name: str | None = None
-    scenarioType: str | None = None
-    metadataOverlay: int | None = None
-    alarmRate: str | None = None
-    devices: list[int] | None = None
-    triggers: list[ObjectAnalyticsTrigger] | None = None
-    filters: list[ScenarioFilter] | None = None
-    objectClassificators: list[ObjectAnalyticsObjectClassificator] | None = None
-    perspectives: list[int] | None = None # "perspectives": [id]
-    presets: list[int] | None = None # "presets": [id]
+    id: Optional[int] = None
+    name: Optional[str] = None
+    scenarioType: Optional[str] = None
+    metadataOverlay: Optional[int] = None
+    alarmRate: Optional[str] = None
+    devices: Optional[List[int]] = None
+    triggers: Optional[List[ObjectAnalyticsTrigger]] = None
+    filters: Optional[List[ScenarioFilter]] = None
+    objectClassificators: Optional[List[ObjectAnalyticsObjectClassificator]] = None
+    perspectives: Optional[List[int]] = None # "perspectives": [id]
+    presets: Optional[List[int]] = None # "presets": [id]
 
 @dataclass
 class ObjectAnalyticsConfiguration:
-    devices: list[ObjectAnalyticsDevice] | None = None
-    metadataOverlay: list[ObjectAnalyticsMetadataOverlay] | None = None
-    perspectives: list[ObjectAnalyticsPerspective] | None = None
-    scenarios: list[ObjectAnalyticsScenario] | None = None
+    devices: Optional[List[ObjectAnalyticsDevice]] = None
+    metadataOverlay: Optional[List[ObjectAnalyticsMetadataOverlay]] = None
+    perspectives: Optional[List[ObjectAnalyticsPerspective]] = None
+    scenarios: Optional[List[ObjectAnalyticsScenario]] = None
 
 class ObjectAnalyticsABC(VapixApiABC, ABC):
     API_PATH = "local/objectanalytics/control.cgi"
@@ -90,15 +91,11 @@ class ObjectAnalyticsABC(VapixApiABC, ABC):
         pass
     
     @abstractmethod
-    def setConfiguration(self, configuration: ObjectAnalyticsConfiguration | dict):
+    def setConfiguration(self, configuration: ObjectAnalyticsConfiguration | Dict):
         pass
     
     @abstractmethod
     def getConfiguration(self):
-        pass
-    
-    @abstractmethod
-    def getSupportedVersions(self):
         pass
     
     @abstractmethod
@@ -124,87 +121,29 @@ class ObjectAnalyticsABC(VapixApiABC, ABC):
 class ObjectAnalyticsRequest(ObjectAnalyticsABC, VapixRequestBuilderWithVersion):
     
     def getConfigurationCapabilities(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getConfigurationCapabilities",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        self._create_no_params_request(self.getConfigurationCapabilities.__name__)
 
     def getConfiguration(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getConfiguration",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        self._create_no_params_request(self.getConfiguration.__name__)
 
-    def setConfiguration(self, configuration: ObjectAnalyticsConfiguration | dict):
+    def setConfiguration(self, configuration):
         if isinstance(configuration, ObjectAnalyticsConfiguration):
             configuration = self._remove_none_values(asdict(configuration))
 
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setConfiguration",
-            "params": configuration
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.setConfiguration.__name__, configuration)
+        
+    def sendAlarmEvent(self, scenario):
+        return self._create_request_with_params(self.sendAlarmEvent.__name__, {"scenario": scenario})
 
-    def sendAlarmEvent(self, scenario: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "sendAlarmEvent",
-            "params": {
-                "scenario": scenario
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+    def getAccumulatedCounts(self, scenario):
+        return self._create_request_with_params(self.getAccumulatedCounts.__name__, {"scenario": scenario})
 
-    def getAccumulatedCounts(self, scenario: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getAccumulatedCounts",
-            "params": {
-                "scenario": scenario
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+    def resetAccumulatedCounts(self, scenario):
+        return self._create_request_with_params(self.resetAccumulatedCounts.__name__, {"scenario": scenario})
 
-    def resetAccumulatedCounts(self, scenario: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "resetAccumulatedCounts",
-            "params": {
-                "scenario": scenario
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+    def resetPassthrough(self, scenario):
+        return self._create_request_with_params(self.resetPassthrough.__name__, {"scenario": scenario})
 
-    def resetPassthrough(self, scenario: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "resetPassthrough",
-            "params": {
-                "scenario": scenario
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getOccupancy(self, scenario: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getOccupancy",
-            "params": {
-                "scenario": scenario
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        return super().getSupportedVersions()
+    def getOccupancy(self, scenario):
+        return self._create_request_with_params(self.getOccupancy.__name__, {"scenario": scenario})
+        

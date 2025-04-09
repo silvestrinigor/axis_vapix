@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from requests import Request
+from typing import List
+from dataclasses import asdict
 from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 class DevicePropertyType(Enum):
-    NONE = None
     ARCHITECTURE = "Architecture"
     BRAND = "Brand"
     BUILD_DATE = "BuildDate"
@@ -27,7 +28,7 @@ class BasicDeviceInformationABC(VapixApiABC, ABC):
     FIRMWARE_LOWER_SUPPORTED_VERSION = "8.40"
     
     @abstractmethod
-    def getProperties(self, properties: list[str] | list[DevicePropertyType]):
+    def getProperties(self, propertyList: List[str | DevicePropertyType]):
         pass
     
     @abstractmethod
@@ -36,43 +37,17 @@ class BasicDeviceInformationABC(VapixApiABC, ABC):
     
     @abstractmethod
     def getAllUnrestrictedProperties(self):
-        pass
-    
-    @abstractmethod
-    def getSupportedVersions(self):
         pass
 
 class BasicDeviceInformationRequest(BasicDeviceInformationABC, VapixRequestBuilderWithVersion):
 
-    def getProperties(self, properties: list[str] | list[DevicePropertyType]):
-        if isinstance(properties, list) and all(isinstance(prop, DevicePropertyType) for prop in properties):
-            properties = [prop.value for prop in properties]
+    def getProperties(self, propertyList):
+        if isinstance(propertyList, list) and all(isinstance(prop, DevicePropertyType) for prop in propertyList):
+            propertyList = [str(prop.value) for prop in propertyList]
+        return self._create_request_with_params(self.getProperties.__name__, {"propertyList": propertyList})    
 
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getProperties",
-            "params": {
-                "propertyList": properties
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-    
     def getAllProperties(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getAllProperties"
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_no_params_request(self.getAllProperties.__name__)
     
     def getAllUnrestrictedProperties(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getAllUnrestrictedProperties"
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        return super().getSupportedVersions()
+        return self._create_no_params_request(self.getAllUnrestrictedProperties.__name__)

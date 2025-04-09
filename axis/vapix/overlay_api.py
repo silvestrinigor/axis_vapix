@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, asdict
 from enum import Enum
 from requests import Request
+from typing import Optional, List
 from .requests import VapixRequestBuilderWithVersion
 from .api import VapixApiABC
 
 class OverlayColorType(Enum):
-    NONE = None
     WHITE = "white"
     BLACK = "black"
     GREY = "grey"
@@ -17,7 +17,6 @@ class OverlayColorType(Enum):
     SEMI_TRANSPARENT = "semiTransparent"
 
 class OverlayPositionType(Enum):
-    NONE = None
     BOTTOM_RIGHT = "bottomRight"
     TOP_RIGHT = "topRight"
     BOTTOM = "bottom"
@@ -35,25 +34,25 @@ class OverlayPositionCustomValue:
 
 @dataclass
 class TextOverlay:
-    camera:int | None= None
-    fontSize:int | None = None
-    identity: int | None = None
-    indicator: str | None = None
-    position: str | OverlayPositionCustomValue | None = None
-    text: str | None = None
-    textBgColor: str | None = None
-    textColor: str | None = None
-    textLength: int | None = None
-    textOLColor: str | None = None
-    visible: bool | None = None
+    camera: Optional[int]= None
+    fontSize: Optional[int] = None
+    identity:  Optional[int] = None
+    indicator: Optional[str] = None
+    position: Optional[str | OverlayPositionCustomValue] = None
+    text: Optional[str] = None
+    textBgColor: Optional[str] = None
+    textColor: Optional[str] = None
+    textLength:  Optional[int] = None
+    textOLColor: Optional[str] = None
+    visible: Optional[bool] = None
 
 @dataclass
 class ImageOverlay:
-    camera:int | None = None
-    identity: int | None = None
-    overlayPath: str | None = None
-    position: str | OverlayPositionCustomValue | None = None
-    visible: bool | None = None
+    camera: Optional[int] = None
+    identity:  Optional[int] = None
+    overlayPath: Optional[str] = None
+    position: Optional[str | OverlayPositionCustomValue] = None
+    visible: Optional[bool] = None
 
 class DynamicOverlayApiABC(VapixApiABC, ABC):
     API_PATH = "axis-cgi/dynamicoverlay/dynamicoverlay.cgi"
@@ -76,7 +75,7 @@ class DynamicOverlayApiABC(VapixApiABC, ABC):
         pass
     
     @abstractmethod
-    def list(self, camera: int | None = None, identity: int | None = None):
+    def list(self, camera:  Optional[int] = None, identity:  Optional[int] = None):
         pass
     
     @abstractmethod
@@ -89,79 +88,38 @@ class DynamicOverlayApiABC(VapixApiABC, ABC):
     
 class DynamicOverlayApiRequest(DynamicOverlayApiABC, VapixRequestBuilderWithVersion):
     
-    def addImage(self, overlay: ImageOverlay | dict):
+    def addImage(self, overlay):
         if isinstance(overlay, ImageOverlay):
             overlay = self._remove_none_values(asdict(overlay))
         
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "addImage",
-            "params": overlay,
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.addImage.__name__, overlay)
     
-    def addText(self, overlay: TextOverlay | dict):
+    def addText(self, overlay):
         if isinstance(overlay, TextOverlay):
             overlay = self._remove_none_values(asdict(overlay))
         
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "addText",
-            "params": overlay,
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.addText.__name__, overlay)
 
-    def setImage(self, overlay: ImageOverlay | dict):
+    def setImage(self, overlay):
         if isinstance(overlay, ImageOverlay):
             overlay = self._remove_none_values(asdict(overlay))
         
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setImage",
-            "params": overlay,
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.setImage.__name__, overlay)
 
-    def setText(self, overlay: TextOverlay | dict):
+    def setText(self, overlay):
         if isinstance(overlay, TextOverlay):
             overlay = self._remove_none_values(asdict(overlay))
         
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setText",
-            "params": overlay,
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.setText.__name__, overlay)
     
-    def list(self, camera: int | None = None, identity: int | None = None):        
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "list",
-            "params": {
-            }
-        }
+    def list(self, camera = None, identity = None):        
+        params = {}
         if camera is not None:
-            json_request["params"]["camera"] = camera
+            params["camera"] = camera
         if identity is not None:
-            json_request["params"]["identity"] = identity
+            params["identity"] = identity
         
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.list.__name__, params)
 
-    def remove(self, identity: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "remove",
-            "params": {
-                "identity": identity
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-    
-    def getSupportedVersions(self):
-        return super().getSupportedVersions()
+    def remove(self, identity):
+        return self._create_request_with_params(self.remove.__name__, {"identity": identity})

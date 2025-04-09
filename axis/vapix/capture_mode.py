@@ -14,26 +14,15 @@ class CaptureModeABC(VapixApiABC, ABC):
     @abstractmethod
     def setCaptureMode(self, channel: int, captureModeId: int):
         pass
-
+        
 class CaptureModeRequest(CaptureModeABC, VapixRequestBuilderWithVersion):
 
     def getCaptureModes(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getCaptureModes"
-        }
+        return self._create_no_params_request(self.getCaptureModes.__name__)
+    
+    def setCaptureMode(self, channel, captureModeId):
+        json_request = self._BASE_JSON_REQUEST
+        json_request["method"] = str(self.setCaptureMode.__name__)
+        json_request["channel"] = channel
+        json_request["captureModeId"] = captureModeId
         return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def setCaptureMode(self, channel: int, captureModeId: int):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setCaptureModes",
-            "channel": channel,
-            "captureModeId": captureModeId
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        return super().getSupportedVersions()

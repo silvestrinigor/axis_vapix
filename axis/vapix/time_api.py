@@ -40,64 +40,28 @@ class TimeApiABC(VapixApiABC, ABC):
 class TimeApiRequest(TimeApiABC, VapixRequestBuilderWithVersion):
 
     def getDateTimeInfo(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getDateTimeInfo",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_no_params_request(self.getDateTimeInfo.__name__)
     
     def getAll(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getAll",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_no_params_request(self.getAll.__name__)
     
     def setDateTime(self, date_time: str | datetime):
         if isinstance(date_time, datetime):
             date_time = self._serialize_datetime(date_time)
-        
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setDateTime",
-            "params": {
-                "dateTime": date_time
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.setDateTime.__name__, {"dateTime": date_time})
     
     def setTimeZone(self, time_zone: str):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setTimeZone",
-            "params": {
-                "timeZone": time_zone
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.setTimeZone.__name__, {"timeZone": time_zone})
     
     def setPosixTimeZone(self, posix_time_zone: str, enable_dst: bool):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "setPosixTimeZone",
-            "params": {
-                "posixTimeZone": posix_time_zone,
-                "enableDst": enable_dst
-            }
+        params = {
+            "posixTimeZone": posix_time_zone,
+            "enableDst": enable_dst
         }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_request_with_params(self.setPosixTimeZone.__name__, params)
     
     def resetTimeZone(self):
-        json_request = {
-            "context": self.context,
-            "method": "resetTimeZone",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
+        return self._create_no_params_request(self.resetTimeZone.__name__)
 
     def getSupportedVersions(self):
-        return super().getSupportedVersions()
+        return self._create_no_params_request(self.getSupportedVersions.__name__)

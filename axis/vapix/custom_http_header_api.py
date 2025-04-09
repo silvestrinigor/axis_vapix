@@ -21,41 +21,13 @@ class CustomHTTPheaderAPIABC(VapixApiABC, ABC):
     def remove(self):
         pass
     
-    @abstractmethod
-    def getSupportedVersions(self):
-        pass
-    
 class CustomHTTPheaderAPIRequest(VapixApiABC, VapixRequestBuilderWithVersion):
     
     def list(self):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "getSupportedVersions",
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-    
+        return self._create_no_params_request(self.list.__name__)
+        
     def set(self, CustomHeaderName, CustomHeaderValue):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "set",
-            "params": {
-                CustomHeaderName: CustomHeaderValue
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
+        return self._create_request_with_params(self.set.__name__, {CustomHeaderName: CustomHeaderValue})
+    
     def remove(self, CustomHeaderName, CustomHeaderValue):
-        json_request = {
-            "apiVersion": self.apiVersion,
-            "context": self.context,
-            "method": "remove",
-            "params": {
-                CustomHeaderName: CustomHeaderValue
-            }
-        }
-        return Request("POST", self.url, json=json_request, auth=self.auth)
-
-    def getSupportedVersions(self):
-        return super().getSupportedVersions()
+        return self._create_request_with_params(self.remove.__name__, {CustomHeaderName: CustomHeaderValue})
