@@ -13,40 +13,21 @@ pip install git+https://github.com/silvestrinigor/axis_vapix
 ### Example: Get Basic Device Information
 
 ```python
-import axis.vapix
+from axis.vapix import basic_device_information
+import requests
+import requests.auth
 
-server = axis.vapix.AxisServerInfo("192.168.0.90", "8000", "root", "pass")
-api_version = axis.vapix.ApiVersion(1,0)
+auth = requests.auth.HTTPDigestAuth("root", "pass")
+api = basic_device_information.BasicDeviceInformationRequest("192.168.0.90", 80, auth)
 
-with axis.vapix.AxisSession(server, context="test") as session:
-    api = axis.vapix.BasicDeviceInformation(session, api_version)
-    response = api.get_all_properties()
+request = api.getProperties([basic_device_information.DevicePropertyType.ARCHITECTURE, basic_device_information.DevicePropertyType.BRAND])
 
-print(response.json())
+with requests.Session() as session:
+    response = session.send(request.prepare())
+    print(response.text)
 
 # Output
-{
-  "apiVersion": "1.0",
-  "context": "test",
-  "data": {
-  "propertyList": {
-      "Archtecture": "mips",
-      "Brand": "AXIS",
-      "BuildDate": "Feb 14 2018 13:08",
-      "HardwareID": "714.4",
-      "ProdFullName": "AXIS Q3505 Mk II Fixed Dome Network Camera",
-      "ProdNbr": "Q3505 Mk II",
-      "ProdShortName": "AXIS Q3505 Mk II",
-      "ProdType": "Network Camera",
-      "ProdVariant": "",
-      "SerialNumber": "ACCC8E78B977",
-      "Soc": "Axis Artpec-5",
-      "SocSerialNumber": "00000000-00000000-44123C08-C840037D",
-      "Version": "8.20.1",
-      "WebURL": "http://www.axis.com"
-    }
-  }
-}
+{"apiVersion": "1.3", "data": {"propertyList": {"Brand": "AXIS", "Architecture": "armv7hf"}}}
 ```
 
 ---
