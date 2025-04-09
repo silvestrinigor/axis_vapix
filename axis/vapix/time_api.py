@@ -33,10 +33,6 @@ class TimeApiABC(VapixApiABC, ABC):
     def resetTimeZone(self):
         pass
     
-    @abstractmethod
-    def getSupportedVersions(self):
-        pass
-
 class TimeApiRequest(TimeApiABC, VapixRequestBuilderWithVersion):
 
     def getDateTimeInfo(self):
@@ -62,6 +58,3 @@ class TimeApiRequest(TimeApiABC, VapixRequestBuilderWithVersion):
     
     def resetTimeZone(self):
         return self._create_no_params_request(self.resetTimeZone.__name__)
-
-    def getSupportedVersions(self):
-        return self._create_no_params_request(self.getSupportedVersions.__name__)
